@@ -1,0 +1,9 @@
+# Text files with fixed EOL requirements
+*.bat     text eol=crlf
+*.sh      text eol=lf
+*.mk      text eol=lf
+
+# Binary files
+*.a       binary
+*.so      binary
+*.png     binary
