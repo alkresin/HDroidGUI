@@ -97,6 +97,9 @@ MEMVAR hrbHandle
 FUNCTION h4a_WrLog( cMessage )
    RETURN h4a_calljava_s_v( cMessage, "hlog" )
 
+FUNCTION h4a_getSysDir( cType )
+   RETURN h4a_calljava_s_s( cType, "getSysDir" )
+
 FUNCTION h4a_BtnClick( cName )
    LOCAL s, oItem := HDGUIObject():oDefaultParent:aItems[1]
 

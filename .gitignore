@@ -3,6 +3,7 @@ bin/*
 lib/*
 libs/*
 obj/*
+jni/*.c
 
 *.a
 *.o
