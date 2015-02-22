@@ -3,8 +3,17 @@
  * Main header file
  */
 
+#define HDROIDGUI_VERSION         "0.1"
+#define HDROIDGUI_BUILD           1
+
 #define MATCH_PARENT   -1
 #define WRAP_CONTENT   -2
+
+#xcommand INIT WINDOW <oAct> TITLE <cTitle> ;
+             [ ON INIT <bInit> ]            ;
+             [ ON EXIT <bExit> ]            ;
+          => ;
+   <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 
 #xcommand ACTIVITY <oAct> TITLE <cTitle>    ;
              [ ON INIT <bInit> ]            ;
