@@ -1,0 +1,8 @@
+
+2015-02-23 11:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/h4droid.c
+    ! Warnings fixed
+  * src/include/hdroidgui.ch
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * SCROLL clause added to TEXTVIEW command
