@@ -239,16 +239,18 @@ METHOD ToString() CLASS HDButton
 CLASS HDEdit INHERIT HDWidget
 
    DATA cHint
+   DATA bKeyDown
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint )
+   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown )
    METHOD ToString()
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint ) CLASS HDEdit
+METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown ) CLASS HDEdit
 
    ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
    ::cHint := cHint
+   ::bKeyDown := bKeyDown
 
    RETURN Self
 
@@ -258,6 +260,9 @@ METHOD ToString() CLASS HDEdit
 
    IF ::cHint != Nil
       sRet += ",,hint:" + ::cHint
+   ENDIF
+   IF ::bKeyDown != Nil
+      sRet += ",,bkey:1"
    ENDIF
 
    RETURN "edi" + ::Super:ToString() + sRet

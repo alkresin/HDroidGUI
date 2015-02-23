@@ -94,14 +94,8 @@ EXTERNAL H4A_CALLJAVA_S_S, H4A_CALLJAVA_S_V
 
 MEMVAR hrbHandle
 
-FUNCTION h4a_WrLog( cMessage )
-   RETURN h4a_calljava_s_v( cMessage, "hlog" )
-
-FUNCTION h4a_getSysDir( cType )
-   RETURN h4a_calljava_s_s( cType, "getSysDir" )
-
-FUNCTION h4a_BtnClick( cName )
-   LOCAL s, oItem := HDGUIObject():oDefaultParent:aItems[1]
+FUNCTION event_BtnClick( cName )
+   LOCAL oItem := HDGUIObject():oDefaultParent:aItems[1]
 
    IF __ObjHasMsg( oItem, "AITEMS" )
       oItem := oItem:FindByName( cName )
@@ -113,6 +107,29 @@ FUNCTION h4a_BtnClick( cName )
    ENDIF
 
    RETURN Eval( oItem:bClick )
+
+FUNCTION event_KeyDown( cName )
+
+   LOCAL oItem := HDGUIObject():oDefaultParent:aItems[1]
+   LOCAL nPos := At( ":", cName ), nKey := Val( Substr( cName, nPos+1 ) )
+
+   cName := Left( cName, nPos-1 )
+   IF __ObjHasMsg( oItem, "AITEMS" )
+      oItem := oItem:FindByName( cName )
+   ELSEIF Empty( oItem:objname ) .OR. !(oItem:objname == cName)
+      oItem := Nil
+   ENDIF
+   IF Empty( oItem ) .OR. !__ObjHasMsg( oItem, "BKEYDOWN" ) .OR. Empty( oItem:bKeyDown )
+      RETURN "0"
+   ENDIF
+
+   RETURN Eval( oItem:bKeyDown, nKey )
+
+FUNCTION h4a_WrLog( cMessage )
+   RETURN h4a_calljava_s_v( cMessage, "hlog" )
+
+FUNCTION h4a_getSysDir( cType )
+   RETURN h4a_calljava_s_s( cType, "getSysDir" )
 
 FUNCTION h4a_ColorN2C( nColor )
 

@@ -58,14 +58,15 @@
    [; hd_SetCtrlName( <oBtn>,<(oBtn)> )]
 
 #xcommand EDITBOX <oEdit>                   ;
-             [ TEXT <cText> ]             ;
+             [ TEXT <cText> ]               ;
              [ HINT <cHint> ]               ;
              [ SIZE <width>, <height> ]     ;
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
+             [ ON KEYDOWN <bKeyDown>]       ;
           => ;
-   <oEdit> := HDEdit():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint> );
+   <oEdit> := HDEdit():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint>,<bKeyDown> );
     [; hd_SetCtrlName( <oEdit>,<(oEdit)> )]
 
 #xcommand CHECKBOX <oChe>                   ;

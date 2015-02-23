@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.view.KeyEvent;
 import android.widget.CheckBox;
 
 import android.widget.LinearLayout.LayoutParams;
@@ -260,7 +261,7 @@ public class Harbour {
                 if( !sObjName.isEmpty() )
                    mButton.setOnClickListener(new View.OnClickListener() {
                       public void onClick(View v) {
-                         String sRes = hrbCall( "H4A_BTNCLICK",(String)v.getTag() );
+                         String sRes = hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
                       }
                    });
              }
@@ -281,6 +282,18 @@ public class Harbour {
                 medit.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("hint") ) {
                 medit.setHint(aParams[iArr][1]);
+             } else if( aParams[iArr][0].equals("bkey") ) {
+                if( !sObjName.isEmpty() ) {
+                   medit.setOnKeyListener(new View.OnKeyListener() {
+                      public boolean onKey(View v, int keyCode, KeyEvent event) {
+                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                            String sRes = hrbCall( "EVENT_KEYDOWN",(String)v.getTag()+":"+keyCode );
+                            return sRes.equals( "1" )? true : false;
+                         }
+                         return false;
+                      }
+                   });
+                }
              }
              iArr ++;
           }
@@ -556,7 +569,7 @@ public class Harbour {
         public void onClick(DialogInterface dialog, int id) {
            dialog.cancel();
            //Log.i(TAG, "Dialog - click "+sBtnName);
-           hbobj.hrbCall( "H4A_BTNCLICK",sBtnName );
+           hbobj.hrbCall( "EVENT_BTNCLICK",sBtnName );
         }
     }
 

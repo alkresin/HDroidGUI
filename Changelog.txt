@@ -1,4 +1,13 @@
 
+2015-02-23 18:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * ON KEYDOWN clause added to EDITBOX command
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * handling of key down event in EditText implemented
+
 2015-02-23 11:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/h4droid.c
     ! Warnings fixed

@@ -13,6 +13,8 @@ ENDCLASS
 
 CLASS HDActivity INHERIT HDGUIObject
 
+   CLASS VAR aWindows SHARED INIT {}
+
    DATA title
    DATA oFont
 
