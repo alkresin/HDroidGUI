@@ -21,7 +21,7 @@ HB_FUNC( H4A_HOMEDIR )
 HB_FUNC( H4A_CALLJAVA_S_V )
 {
 
-   char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_v";
+   const char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_v";
    jclass cls = (*h_env)->GetObjectClass( h_env, h_thiz );
 
    jmethodID mid = (*h_env)->GetStaticMethodID( h_env, cls, szFunc, "(Ljava/lang/String;)V" );
@@ -34,7 +34,7 @@ HB_FUNC( H4A_CALLJAVA_S_V )
 HB_FUNC( H4A_CALLJAVA_S_S )
 {
    char * szRet;
-   char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_sz";
+   const char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_sz";
    jstring jsRet;
    jclass cls = (*h_env)->GetObjectClass( h_env, h_thiz );
 

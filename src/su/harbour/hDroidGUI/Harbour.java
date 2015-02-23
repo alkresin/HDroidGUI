@@ -11,6 +11,7 @@ import android.app.Activity;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -202,6 +203,7 @@ public class Harbour {
        String sName;
        String sObjName = "";
        View mView;
+       boolean bScroll = false;
        int nPos2 = sContent.indexOf(")]");
        int nPos = sContent.indexOf(",,/");
 
@@ -236,6 +238,8 @@ public class Harbour {
                 mtextview.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
                 mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( aParams[iArr][0].equals("scroll") ) {
+                bScroll = true;
              }
              iArr ++;
           }
@@ -300,11 +304,27 @@ public class Harbour {
        }  else
           return null;
 
-       SetSize( mView, aParams );
        if( !sObjName.isEmpty() )
           mView.setTag( sObjName );
 
-       return mView;
+
+       if( bScroll ) {
+
+          ScrollView sv = new ScrollView(context);
+
+          SetSize( sv, aParams );
+          LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+          mView.setLayoutParams(parms);
+
+          sv.addView(mView);
+          return sv;
+
+       } else {
+
+          SetSize( mView, aParams );
+          return mView;
+       }
     }
 
     private static void SetSize( View mView, String [][] aParams ) {

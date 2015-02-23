@@ -184,20 +184,29 @@ METHOD ToString() CLASS HDWidget
 
 CLASS HDTextView INHERIT HDWidget
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   DATA lScroll INIT .F.
+
+   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lScroll )
    METHOD ToString()
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDTextView
+METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lScroll ) CLASS HDTextView
 
    ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   ::lScroll := lScroll
 
    RETURN Self
 
 METHOD ToString() CLASS HDTextView
 
-   RETURN "txt" + ::Super:ToString()
+   LOCAL sRet := ""
+
+   IF ::lScroll != Nil
+      sRet += ",,scroll:t"
+   ENDIF
+
+   RETURN "txt" + ::Super:ToString() + sRet
 
 
 CLASS HDButton INHERIT HDWidget

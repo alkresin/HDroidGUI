@@ -41,8 +41,9 @@
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
+             [<lScroll: SCROLL>]            ;
           => ;
-   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont> );
+   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lScroll.> );
     [; hd_SetCtrlName( <oText>,<(oText)> )]
 
 #xcommand BUTTON <oBtn>                     ;
