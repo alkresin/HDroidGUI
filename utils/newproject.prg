@@ -246,12 +246,12 @@ STATIC FUNCTION CreateScripts( aFullName )
       "then" + crlf
    IF !lHrb
       cBody += 'export NDK_LIBS_OUT=lib' + crlf + ;
-         '$NDK_HOME/prebuilt/windows/bin/make -f $NDK_HOME/build/core/build-local.mk "$@" >a1.out 2>a2.out' + crlf
+         '$NDK_HOME/prebuilt/linux-x86/bin/make -f $NDK_HOME/build/core/build-local.mk "$@" >a1.out 2>a2.out' + crlf
    ENDIF
    cBody += '  if [ "$?" -eq 0 ]' + crlf + ;
       "  then" + crlf + ;
       '    echo "compile java sources"' + crlf + ;
-      '    $BUILD_TOOLS/aapt.exe package -f -m -S res -J src -M AndroidManifest.xml -I $ANDROID_JAR' + crlf + ;
+      '    $BUILD_TOOLS/aapt package -f -m -S res -J src -M AndroidManifest.xml -I $ANDROID_JAR' + crlf + ;
       "    javac -d obj -cp $ANDROID_JAR:$HDROIDGUI/hdroidgui.jar -sourcepath src src/$PACKAGE_PATH/*.java" + crlf + ;
       '    if [ "$?" -eq 0 ]' + crlf + ;
       "    then" + crlf + ;
@@ -514,3 +514,4 @@ STATIC FUNCTION CreatePrg( aFullName )
    FClose( handle )
 
    RETURN .T.
+
