@@ -1,3 +1,7 @@
+/*
+ * HDroidGUI - Harbour for Android GUI framework
+ * 
+ */
 
 #include <string.h>
 #include <jni.h>
