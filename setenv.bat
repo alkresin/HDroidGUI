@@ -6,5 +6,5 @@
 @set ADB=%ANDROID_HOME%\platform-tools\adb.exe
 @set ANDROID_JAR=%ANDROID_HOME%/platforms/android-19/android.jar
 
-@set HRB_BIN=c:/harbour/bin
-@set HRB_INC=c:/harbour/include
+@set HRB_BIN=c:\harbour\bin
+@set HRB_INC=c:\harbour\include

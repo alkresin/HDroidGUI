@@ -238,9 +238,9 @@ STATIC FUNCTION CreateScripts( aFullName )
       ". ./setenv.sh" + crlf + crlf + ;
       "./clear.sh" + crlf + crlf
    IF lHrb
-      cBody += "$HRB_BIN/harbour src/main.prg -gh -q -i$HRB_INC -i$HDROIDGUI/src/include -oassets/" + crlf
+      cBody += "$HRB_BIN/harbour src/main.prg -gh -q -i$HRB_INC -i$HDROIDGUI/src/include -i$HRB_INC -oassets/" + crlf
    ELSE
-      cBody += "$HRB_BIN/harbour src/main.prg -q -i$HRB_INC -i$HDROIDGUI/src/include -ojni/" + crlf
+      cBody += "$HRB_BIN/harbour src/main.prg -q -i$HRB_INC -i$HDROIDGUI/src/include -i$HRB_INC -ojni/" + crlf
    ENDIF
    cBody += 'if [ "$?" -eq 0 ]' + crlf + ;
       "then" + crlf
@@ -363,9 +363,9 @@ STATIC FUNCTION CreateScripts( aFullName )
    cBody := "@call setenv" + crlf + ;
       "@call clear" + crlf + crlf
    IF lHrb
-      cBody += "@harbour src\main.prg /gh /q /i%HDROIDGUI%\src\include /oassets\" + crlf
+      cBody += "@%HRB_BIN%\harbour src\main.prg /gh /q /i%HDROIDGUI%\src\include /i%HRB_INC% /oassets\" + crlf
    ELSE
-      cBody += "@harbour src\main.prg /q /i%HDROIDGUI%\src\include /ojni\" + crlf
+      cBody += "@%HRB_BIN%\harbour src\main.prg /q /i%HDROIDGUI%\src\include /i%HRB_INC% /ojni\" + crlf
    ENDIF
    cBody += "@if errorlevel 1 goto end" + crlf + crlf
    IF !lHrb
