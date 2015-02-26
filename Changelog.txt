@@ -1,4 +1,19 @@
 
+2015-02-26 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdext.ch
+  * src/include/hdroidgui.ch
+    * INIT DIALOG command added
+  * src/prg/h4droid.c
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * h4a_ prefixes changed to hd_
+    * Dialogs support added
+    * hd_MsgInfo( cText ), hd_MsgYesNo( cText, bContinie ) Harbour functions added
+  * utils/newproject.prg
+    ! Small fixes
+
 2015-02-24 16:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
     * HDDialog class added

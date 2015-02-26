@@ -103,7 +103,7 @@ METHOD ToString() CLASS HDLayout
       sRet += ",,h:" + Ltrim(Str(::nHeight))
    ENDIF
    IF ::bColor != Nil
-      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, h4a_ColorN2C(::bColor) )
+      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
    ENDIF
 
    sRet += ::Super:ToString()
@@ -145,7 +145,7 @@ METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDWidget
 METHOD GetText() CLASS HDWidget
 
    IF !Empty( ::objname )
-      ::cText := h4a_calljava_s_s( "gettxt:" + ::objname + ":" )
+      ::cText := hd_calljava_s_s( "gettxt:" + ::objname + ":" )
    ENDIF
 
    RETURN ::cText
@@ -154,7 +154,7 @@ METHOD SetText( cText ) CLASS HDWidget
 
    IF !Empty( ::objname )
       ::cText := cText
-      h4a_calljava_s_s( "settxt:" + ::objname + ":" + cText )
+      hd_calljava_s_v( "settxt:" + ::objname + ":" + cText )
    ENDIF
 
    RETURN cText
@@ -174,10 +174,10 @@ METHOD ToString() CLASS HDWidget
       sRet += ",,h:" + Ltrim(Str(::nHeight))
    ENDIF
    IF ::tColor != Nil
-      sRet += ",,ct:" + Iif( Valtype(::tColor)=="C", ::tColor, h4a_ColorN2C(::tColor) )
+      sRet += ",,ct:" + Iif( Valtype(::tColor)=="C", ::tColor, hd_ColorN2C(::tColor) )
    ENDIF
    IF ::bColor != Nil
-      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, h4a_ColorN2C(::bColor) )
+      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
    ENDIF
 
    RETURN sRet
@@ -202,7 +202,7 @@ METHOD ToString() CLASS HDTextView
 
    LOCAL sRet := ""
 
-   IF ::lScroll != Nil
+   IF !Empty( ::lScroll )
       sRet += ",,scroll:t"
    ENDIF
 

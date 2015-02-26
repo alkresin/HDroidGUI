@@ -22,6 +22,10 @@
    <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 
 
+#xcommand INIT DIALOG <oAct> [TITLE <cTitle>] ;
+          => ;
+   <oAct> := HDDialog():New( <cTitle> )
+
 #xcommand BEGIN LAYOUT <oLay>               ;
              [<lHorz: HORIZONTAL>]          ;
              [ SIZE <width>, <height> ]     ;
@@ -47,7 +51,7 @@
     [; hd_SetCtrlName( <oText>,<(oText)> )]
 
 #xcommand BUTTON <oBtn>                     ;
-             [ TEXT <cText> ]             ;
+             [ TEXT <cText> ]               ;
              [ SIZE <width>, <height> ]     ;
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;

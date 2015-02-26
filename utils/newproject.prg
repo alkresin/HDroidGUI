@@ -246,6 +246,7 @@ STATIC FUNCTION CreateScripts( aFullName )
       "then" + crlf
    IF !lHrb
       cBody += 'export NDK_LIBS_OUT=lib' + crlf + ;
+         'export SRC_FILES=main.c' + crlf + ;
          '$NDK_HOME/prebuilt/linux-x86/bin/make -f $NDK_HOME/build/core/build-local.mk "$@" >a1.out 2>a2.out' + crlf
    ENDIF
    cBody += '  if [ "$?" -eq 0 ]' + crlf + ;

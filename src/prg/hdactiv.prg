@@ -11,15 +11,60 @@ CLASS HDGUIObject
 
 ENDCLASS
 
-CLASS HDActivity INHERIT HDGUIObject
+CLASS HDWindow INHERIT HDGUIObject
 
    CLASS VAR aWindows SHARED INIT {}
 
    DATA title
-   DATA oFont
 
    DATA aItems   INIT {}
 
+   METHOD New( cTitle )
+   METHOD Close()
+   METHOD FindByName( cName )
+
+ENDCLASS
+
+METHOD New( cTitle ) CLASS HDWindow
+
+   ::oDefaultParent := Self
+
+   ::title := cTitle
+
+   Aadd( ::aWindows, Self )
+
+   RETURN Self
+
+METHOD Close() CLASS HDWindow
+   LOCAL i
+
+   FOR i := Len( ::aWindows ) TO 1 STEP -1
+      IF ::aWindows[i] == Self
+         ADel( ::aWindows, i )
+         ASize( ::aWindows, Len(::aWindows)-1 )
+         EXIT
+      ENDIF
+   NEXT
+
+   RETURN Nil
+
+METHOD FindByName( cName ) CLASS HDWindow
+ 
+   LOCAL aItems := ::aItems, oItem, o
+
+   FOR EACH oItem IN aItems
+      IF !Empty( oItem:objname ) .AND. oItem:objname == cName
+         RETURN oItem
+      ELSEIF __ObjHasMsg( oItem, "AITEMS" ) .AND. !Empty( o := oItem:FindByName( cName ) )
+         RETURN o
+      ENDIF
+   NEXT
+
+   RETURN Nil
+
+CLASS HDActivity INHERIT HDWindow
+
+   DATA oFont
    DATA bInit, bDestroy
 
    METHOD New( cTitle, bInit, bExit )
@@ -29,13 +74,9 @@ ENDCLASS
 
 METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
-   ::oDefaultParent := Self
-
-   ::title := cTitle
+   ::Super:New( cTitle )
    ::bInit := bInit
    ::bDestroy := bExit
-
-   Aadd( ::aWindows, Self )
 
    RETURN Self
 
@@ -49,35 +90,44 @@ METHOD ToString() CLASS HDActivity
 
    RETURN sRet
 
-CLASS HDDialog INHERIT HDGUIObject
+CLASS HDDialog INHERIT HDWindow
 
-   DATA title
-   DATA oFont
+   DATA aButtons
+   DATA nRes
 
-   DATA aItems   INIT {}
-
+   DATA bContinue
    DATA bInit, bDestroy
 
    METHOD New( cTitle, bInit, bExit )
+   METHOD onBtnClick( cName )
    METHOD ToString()
 
 ENDCLASS
 
 METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
 
-   ::oDefaultParent := Self
-
-   ::title := cTitle
+   ::Super:New( cTitle )
    ::bInit := bInit
    ::bDestroy := bExit
 
-   Aadd( HDActivity():aWindows, Self )
-
    RETURN Self
+
+METHOD onBtnClick( cName ) CLASS HDDialog
+
+   ::Close()
+
+   IF ::bContinue != Nil
+      IF !Empty( ::aButtons )
+         ::nRes := Ascan( ::aButtons, cName )
+      ENDIF
+      Eval( ::bContinue, Self )
+   ENDIF
+
+   RETURN "1"
 
 METHOD ToString() CLASS HDDialog
 
-   LOCAL sRet := "ad:Dlg,,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
+   LOCAL sRet := "ad:dlg,,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
 
    FOR i := 1 TO nLen
       sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )

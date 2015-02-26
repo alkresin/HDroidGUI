@@ -3,47 +3,46 @@
  * 
  */
 #include "hdext.ch"
+#include "hdroidgui.ch"
 
 MEMVAR hrbHandle
 
 FUNCTION event_BtnClick( cName )
-   LOCAL oItem := HDGUIObject():oDefaultParent:aItems[1]
 
-   IF __ObjHasMsg( oItem, "AITEMS" )
-      oItem := oItem:FindByName( cName )
-   ELSEIF Empty( oItem:objname ) .OR. !(oItem:objname == cName)
-      oItem := Nil
-   ENDIF
-   IF Empty( oItem ) .OR. !__ObjHasMsg( oItem, "BCLICK" ) .OR. Empty( oItem:bClick )
-      RETURN ""
+   LOCAL oWnd := Atail( HDWindow():aWindows ), oItem
+
+   IF __ObjHasMsg( oWnd, "ONBTNCLICK" )
+      RETURN oWnd:onBtnClick( cName )
+   ELSE
+      oItem := oWnd:FindByName( cName )
+      IF !Empty( oItem ) .AND. __ObjHasMsg( oItem, "BCLICK" ) .AND. !Empty( oItem:bClick )
+         RETURN Eval( oItem:bClick )
+      ENDIF    
    ENDIF
 
-   RETURN Eval( oItem:bClick )
+   RETURN ""
 
 FUNCTION event_KeyDown( cName )
 
-   LOCAL oItem := HDGUIObject():oDefaultParent:aItems[1]
+   LOCAL oItem
    LOCAL nPos := At( ":", cName ), nKey := Val( Substr( cName, nPos+1 ) )
 
    cName := Left( cName, nPos-1 )
-   IF __ObjHasMsg( oItem, "AITEMS" )
-      oItem := oItem:FindByName( cName )
-   ELSEIF Empty( oItem:objname ) .OR. !(oItem:objname == cName)
-      oItem := Nil
-   ENDIF
+   oItem := Atail( HDWindow():aWindows ):FindByName( cName )
+
    IF Empty( oItem ) .OR. !__ObjHasMsg( oItem, "BKEYDOWN" ) .OR. Empty( oItem:bKeyDown )
       RETURN "0"
    ENDIF
 
    RETURN Eval( oItem:bKeyDown, nKey )
 
-FUNCTION h4a_WrLog( cMessage )
-   RETURN h4a_calljava_s_v( cMessage, "hlog" )
+FUNCTION hd_WrLog( cMessage )
+   RETURN hd_calljava_s_v( cMessage, "hlog" )
 
-FUNCTION h4a_getSysDir( cType )
-   RETURN h4a_calljava_s_s( cType, "getSysDir" )
+FUNCTION hd_getSysDir( cType )
+   RETURN hd_calljava_s_s( cType, "getSysDir" )
 
-FUNCTION h4a_ColorN2C( nColor )
+FUNCTION hd_ColorN2C( nColor )
 
    LOCAL s := "#", n1, n2, i
 
@@ -55,7 +54,35 @@ FUNCTION h4a_ColorN2C( nColor )
 
    RETURN s
 
-FUNCTION h4a_HrbLoad( cName )
+FUNCTION hd_MsgInfo( cMessage )
+
+   LOCAL oDlg, oBtn
+
+   INIT DIALOG oDlg TITLE cMessage
+
+   BUTTON oBtn TEXT "Ok"
+
+   hd_calljava_s_v( oDlg:ToString() )
+
+   RETURN Nil
+
+FUNCTION hd_MsgYesNo( cMessage, bContinue )
+
+   LOCAL oDlg, oBtnYes, oBtnNo
+
+   INIT DIALOG oDlg TITLE cMessage
+
+   BUTTON oBtnYes TEXT "Yes"
+   BUTTON oBtnNo TEXT "No"
+
+   oDlg:bContinue := bContinue
+   oDlg:aButtons := { "OBTNYES", "OBTNNO" }
+
+   hd_calljava_s_v( oDlg:ToString() )
+
+   RETURN Nil
+
+FUNCTION hd_HrbLoad( cName )
 
    LOCAL cVarHandle := "HRBHANDLE"
    LOCAL sRet := ""
@@ -68,10 +95,10 @@ FUNCTION h4a_HrbLoad( cName )
    IF Empty( hrbHandle )
       bOldError := ErrorBlock( { |e|break( e ) } )
       BEGIN SEQUENCE
-         hrbHandle := hb_hrbLoad( 4, h4a_HomeDir() + cName )
+         hrbHandle := hb_hrbLoad( 4, hd_HomeDir() + cName )
          sRet := "0"
       RECOVER
-         FErase( h4a_HomeDir() + cName )
+         FErase( hd_HomeDir() + cName )
          sRet := "1"
       END SEQUENCE
       ErrorBlock( bOldError )
@@ -79,7 +106,7 @@ FUNCTION h4a_HrbLoad( cName )
 
    RETURN sRet
 
-FUNCTION h4a_Main( cAppType )
+FUNCTION hd_Main( cAppType )
 
    LOCAL hf, lRes := .F., oWnd, sRet, sMainFunc := "HDROIDMAIN"
    LOCAL bOldError
@@ -113,5 +140,5 @@ FUNCTION h4a_Main( cAppType )
       RETURN "Error"
    ENDIF
 
-   //h4a_Wrlog(sRet)
+   //hd_Wrlog(sRet)
    RETURN sRet

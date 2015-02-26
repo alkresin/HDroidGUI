@@ -65,7 +65,7 @@ public class Harbour {
        context = cont;
        if( bHrb )
           hrbOpen( MAINHRB );
-       String sMain = hrbCall( "H4A_MAIN", bHrb? "1" : "2" );
+       String sMain = hrbCall( "HD_MAIN", bHrb? "1" : "2" );
 
        //Log.i(TAG, "hrbmain-1");
        mainView = CreateActivity( (Activity)context, sMain);
@@ -453,9 +453,40 @@ public class Harbour {
        Log.i(TAG, message);
     }
 
+    public static void jcb_sz_v( String message ) {
+
+       String scmd, stag;
+       TextView tview = null;
+       int nPos = message.indexOf(":");
+       int nPos1;
+       
+       if( nPos <= 0 )
+          return;
+
+       scmd = message.substring( 0,nPos );
+       if( scmd.equals( "ad" ) ) {
+
+          adlg( message.substring( nPos+1 ) );
+       } else if( scmd.equals( "exit" ) ) {
+
+          android.os.Process.killProcess(android.os.Process.myPid());
+       } else {
+
+          nPos1 = message.indexOf(":",nPos+1);
+          if( nPos1 > 0 ) {
+             stag = message.substring( nPos+1,nPos1 );
+             tview = (TextView) mainView.findViewWithTag( stag );
+          }
+
+          if( scmd.equals( "settxt" ) ) {
+             if( tview != null )
+                tview.setText( message.substring( nPos1+1 ) );
+          }
+       }
+    }
+
     public static String jcb_sz_sz( String message ) {
 
-       //Log.i(TAG, message);
        String scmd, stag;
        TextView tview = null;
        int nPos = message.indexOf(":");
@@ -465,24 +496,15 @@ public class Harbour {
           return "err";
 
        scmd = message.substring( 0,nPos );
-       if( scmd.equals( "ad" ) ) {
-          adlg( message.substring( nPos+1 ) );
-       } else {
+       nPos1 = message.indexOf(":",nPos+1);
+       if( nPos1 > 0 ) {
+          stag = message.substring( nPos+1,nPos1 );
+          tview = (TextView) mainView.findViewWithTag( stag );
+       }
 
-          nPos1 = message.indexOf(":",nPos+1);
-          if( nPos1 > 0 ) {
-             stag = message.substring( nPos+1,nPos1 );
-             tview = (TextView) mainView.findViewWithTag( stag );
-          }
-
-          if( scmd.equals( "gettxt" ) ) {
-             if( tview != null )
-                return (String) tview.getText().toString();
-
-          } else if( scmd.equals( "settxt" ) ) {
-             if( tview != null )
-                tview.setText( message.substring( nPos1+1 ) );
-          }
+       if( scmd.equals( "gettxt" ) ) {
+          if( tview != null )
+             return (String) tview.getText().toString();
        }
        return "ok";
     }
@@ -509,7 +531,8 @@ public class Harbour {
           }
           iArr ++;
        }
-       //builder.setCancelable(false);
+       if( sDlg.indexOf(",,/btn") > 0 )
+          builder.setCancelable(false);
 
        do {
           nPos1 = nPosNext + 3;

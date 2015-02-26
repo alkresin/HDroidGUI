@@ -17,12 +17,12 @@ static char * szHrb = NULL;
 static JNIEnv* h_env;
 static jobject h_thiz;
 
-HB_FUNC( H4A_HOMEDIR )
+HB_FUNC( HD_HOMEDIR )
 {
    hb_retc( szHomePath );
 }
 
-HB_FUNC( H4A_CALLJAVA_S_V )
+HB_FUNC( HD_CALLJAVA_S_V )
 {
 
    const char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_v";
@@ -35,7 +35,7 @@ HB_FUNC( H4A_CALLJAVA_S_V )
 
 }
 
-HB_FUNC( H4A_CALLJAVA_S_S )
+HB_FUNC( HD_CALLJAVA_S_S )
 {
    char * szRet;
    const char * szFunc = (HB_ISCHAR(2))? hb_parc(2) : "jcb_sz_sz";
@@ -112,7 +112,7 @@ jstring Java_su_harbour_hDroidGUI_Harbour_hrbOpen( JNIEnv* env, jobject thiz )
    h_thiz = thiz;
 
    if( szHrb )
-      return (*env)->NewStringUTF( env, sz_callhrb_sz( "H4A_HRBLOAD", szHrb ) );
+      return (*env)->NewStringUTF( env, sz_callhrb_sz( "HD_HRBLOAD", szHrb ) );
    else
       return (*env)->NewStringUTF( env, "" );
 }
