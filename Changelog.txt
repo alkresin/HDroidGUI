@@ -1,4 +1,8 @@
 
+2015-02-26 22:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Beginning of menu implementation
+
 2015-02-26 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdext.ch
   * src/include/hdroidgui.ch

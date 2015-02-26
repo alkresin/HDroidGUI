@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 import android.content.Context;
 import android.app.Activity;
+import android.view.Menu;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ public class Harbour {
     private static Harbour hbobj;
     public static Context context;
     public static String cHomePath;
+    public static String cMenu = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -87,6 +89,19 @@ public class Harbour {
 
     }
 
+    public static void SetMenu( Menu menu ) {
+
+       if( cMenu == null )
+          return;
+
+       cMenu = null;
+
+    }
+
+    public static void onMenuSel( int id ) {
+
+    }
+
     private View CreateActivity( Activity act, String sContent ) {
 
        View rootView;
@@ -105,6 +120,12 @@ public class Harbour {
        }
 
        sContent = sContent.substring(nPos+3);
+
+       if( sContent.substring(0,4).equals("menu") ) {
+          nPos = sContent.indexOf(",,/",5);
+          cMenu = sContent.substring(4,nPos);
+          sContent = sContent.substring(nPos+3);
+       }
        if( sContent.substring(0,3).equals("lay") )
           rootView = CreateGroupView(sContent);
        else
