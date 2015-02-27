@@ -66,8 +66,14 @@ CLASS HDActivity INHERIT HDWindow
 
    DATA oFont
    DATA bInit, bDestroy
+   DATA aMenu
 
    METHOD New( cTitle, bInit, bExit )
+
+   METHOD AddMenu( nId, cTitle )
+   METHOD EndMenu()
+   METHOD AddMenuItem( cTitle, nId, bAction )
+
    METHOD ToString()
 
 ENDCLASS
@@ -80,9 +86,48 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
    RETURN Self
 
+METHOD AddMenu( nId, cTitle ) CLASS HDActivity
+
+   IF Valtype( ::aMenu ) == "A"
+   ELSE
+      ::aMenu := {}
+   ENDIF
+
+   RETURN Nil
+
+METHOD EndMenu() CLASS HDActivity
+
+   RETURN Nil
+
+METHOD AddMenuItem( cTitle, nId, bAction ) CLASS HDActivity
+
+   LOCAL nLen
+
+   IF Valtype( ::aMenu ) != "A"
+      RETURN Nil
+   ENDIF
+
+   nLen := Len( ::aMenu )
+   IF nLen > 0 .AND. Len( ::aMenu[nLen] ) > 3
+   ELSE
+      nLen ++
+      nId := Iif( nId == Nil, nLen, nId )
+      AAdd( ::aMenu, { cTitle, nId, bAction } )
+   ENDIF
+
+   RETURN Nil
+
 METHOD ToString() CLASS HDActivity
 
-   LOCAL sRet := "act,,t:" + ::title + ",,/"
+   LOCAL sRet := "act,,t:" + ::title + ",,/", i
+
+   IF !Empty( ::aMenu )
+      sRet += "menu[("
+      FOR i := 1 TO Len( ::aMenu )
+         sRet += Iif( i==1, "", ",," ) + ::aMenu[i,1]
+      NEXT
+      sRet += ")],,/"
+   ENDIF
 
    IF !Empty( ::aItems )
       sRet += ::aItems[1]:ToString()

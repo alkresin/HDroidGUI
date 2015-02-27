@@ -9,6 +9,15 @@
 #define MATCH_PARENT   -1
 #define WRAP_CONTENT   -2
 
+#define FONT_NORMAL     0
+#define FONT_SANS       1
+#define FONT_SERIF      2
+#define FONT_MONOSPACE  3
+
+#define FONT_BOLD         1
+#define FONT_ITALIC       2
+#define FONT_BOLD_ITALIC  3
+
 #xcommand INIT WINDOW <oAct> TITLE <cTitle> ;
              [ ON INIT <bInit> ]            ;
              [ ON EXIT <bExit> ]            ;
@@ -25,6 +34,26 @@
 #xcommand INIT DIALOG <oAct> [TITLE <cTitle>] ;
           => ;
    <oAct> := HDDialog():New( <cTitle> )
+
+
+#xcommand MENU [ ID <nId> ] [ TITLE <cTitle> ] ;
+          => ;
+    HDActivity():oDefaultParent:AddMenu( <nId>, <cTitle> )
+
+#xcommand ENDMENU => HDActivity():oDefaultParent:EndMenu()
+
+#xcommand MENUITEM <title> [ ID <nId> ]   ;
+            ACTION <act>                  ;
+          => ;
+    HDActivity():oDefaultParent:AddMenuItem( <title>, <nId>, <{act}> )
+
+
+#xcommand PREPARE FONT <oFont>     ;
+             [ FACE <face> ]       ;
+             [ STYLE <style> ]     ;
+             [ HEIGHT <height> ]   ;
+          => ;
+    <oFont> := HDFont():Add( <face>, <style>, <height> )
 
 #xcommand BEGIN LAYOUT <oLay>               ;
              [<lHorz: HORIZONTAL>]          ;

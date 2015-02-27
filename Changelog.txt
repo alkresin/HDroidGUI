@@ -1,4 +1,18 @@
 
+2015-02-27 15:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  + src/prg/drawwidg.prg
+    * added source file for HDFont class
+  * ndkBuild.bat
+  * ndkbuild.sh
+    * changed to include the drawwidg.prg
+  * src/include/hdroidgui.ch
+    * New commands added: PREPARE FONT, MENU, ENDMENU, MENUITEM
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Added initial fonts and menu support
+
 2015-02-26 22:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     * Beginning of menu implementation

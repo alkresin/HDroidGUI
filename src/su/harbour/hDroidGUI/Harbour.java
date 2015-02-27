@@ -22,6 +22,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout.LayoutParams;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.TypedValue;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -39,7 +41,7 @@ public class Harbour {
     private static Harbour hbobj;
     public static Context context;
     public static String cHomePath;
-    public static String cMenu = null;
+    public static String sMenu = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -91,15 +93,27 @@ public class Harbour {
 
     public static void SetMenu( Menu menu ) {
 
-       if( cMenu == null )
+       if( sMenu == null )
           return;
 
-       cMenu = null;
+       int nPos1 = 2, nPos2, nPosEnd = sMenu.indexOf( ")]" );
+       int nIndex = 1;
+
+       do {
+          nPos2 = sMenu.indexOf( ",,",nPos1 );
+          if( nPos2 <= 0 || nPos2 > nPosEnd )
+             nPos2 = nPosEnd;
+          menu.add( Menu.NONE, nIndex, Menu.NONE, sMenu.substring( nPos1,nPos2 ) );
+          nIndex ++;
+          nPos1 = nPos2 + 2;
+       } while( nPos1 < nPosEnd );
+
+       sMenu = null;
 
     }
 
     public static void onMenuSel( int id ) {
-
+       hbobj.hrbCall( "EVENT_MENU", "/" + id );
     }
 
     private View CreateActivity( Activity act, String sContent ) {
@@ -123,7 +137,7 @@ public class Harbour {
 
        if( sContent.substring(0,4).equals("menu") ) {
           nPos = sContent.indexOf(",,/",5);
-          cMenu = sContent.substring(4,nPos);
+          sMenu = sContent.substring(4,nPos);
           sContent = sContent.substring(nPos+3);
        }
        if( sContent.substring(0,3).equals("lay") )
@@ -260,6 +274,8 @@ public class Harbour {
                 mtextview.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
                 mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( aParams[iArr][0].equals("f") ) {
+                setFont( mtextview, aParams[iArr][1] );
              } else if( aParams[iArr][0].equals("scroll") ) {
                 bScroll = true;
              }
@@ -278,6 +294,8 @@ public class Harbour {
                 mButton.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
                 mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( aParams[iArr][0].equals("f") ) {
+                setFont( mButton, aParams[iArr][1] );
              } else if( aParams[iArr][0].equals("bcli") ) {
                 if( !sObjName.isEmpty() )
                    mButton.setOnClickListener(new View.OnClickListener() {
@@ -303,6 +321,8 @@ public class Harbour {
                 medit.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("hint") ) {
                 medit.setHint(aParams[iArr][1]);
+             } else if( aParams[iArr][0].equals("f") ) {
+                setFont( medit, aParams[iArr][1] );
              } else if( aParams[iArr][0].equals("bkey") ) {
                 if( !sObjName.isEmpty() ) {
                    medit.setOnKeyListener(new View.OnKeyListener() {
@@ -361,7 +381,35 @@ public class Harbour {
        }
     }
 
-    private static void SetSize( View mView, String [][] aParams ) {
+    private static void setFont( TextView mView, String sFont ) {
+       
+       int nface = Integer.parseInt( sFont.substring(0,1) );
+       int nstyle = Integer.parseInt( sFont.substring(2,3) );
+       int nsize = Integer.parseInt( sFont.substring(4) );
+
+       if( nface != 0 || nstyle != 0 ) {
+          Typeface tface = null;
+          switch( nface ) {
+              case 0: 
+                 tface = Typeface.DEFAULT;
+                 break;
+              case 1: 
+                 tface = Typeface.SANS_SERIF;
+                 break;
+              case 2: 
+                 tface = Typeface.SERIF;
+                 break;
+              case 3: 
+                 tface = Typeface.MONOSPACE;
+                 break;
+          }
+          mView.setTypeface( tface, nstyle );          
+       }
+       if( nsize != 0 )
+           mView.setTextSize( TypedValue.COMPLEX_UNIT_DIP,nsize );
+    }
+
+    private static void SetSize( View mView, String [][] aParams ) {      
 
        int iArr = 0;
        int iHeight = -10, iWidth = -10;

@@ -7,6 +7,16 @@
 
 MEMVAR hrbHandle
 
+FUNCTION event_Menu( cName )
+
+   LOCAL oWnd := Atail( HDWindow():aWindows ), id := Val(Substr(cName,2))
+
+   IF Valtype( oWnd:aMenu ) == "A" .AND. id > 0 .AND. id <= Len( oWnd:aMenu )
+      Eval( oWnd:aMenu[id,3] )
+   ENDIF
+
+   RETURN Nil
+
 FUNCTION event_BtnClick( cName )
 
    LOCAL oWnd := Atail( HDWindow():aWindows ), oItem

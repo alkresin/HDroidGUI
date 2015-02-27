@@ -139,6 +139,7 @@ METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDWidget
    ::nHeight := nHeight
    ::tColor := tColor
    ::bColor := bColor
+   ::oFont := oFont
 
    RETURN Self
 
@@ -178,6 +179,10 @@ METHOD ToString() CLASS HDWidget
    ENDIF
    IF ::bColor != Nil
       sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
+   ENDIF
+   IF !Empty( ::oFont )
+      sRet += ",,f:" + Ltrim(Str(::oFont:typeface)) + "/" + ;
+            Ltrim(Str(::oFont:style)) + "/" + Ltrim(Str(::oFont:height))
    ENDIF
 
    RETURN sRet
