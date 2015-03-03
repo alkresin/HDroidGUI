@@ -72,7 +72,7 @@ FUNCTION hd_MsgInfo( cMessage )
 
    BUTTON oBtn TEXT "Ok"
 
-   hd_calljava_s_v( oDlg:ToString() )
+   hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 
@@ -88,7 +88,7 @@ FUNCTION hd_MsgYesNo( cMessage, bContinue )
    oDlg:bContinue := bContinue
    oDlg:aButtons := { "OBTNYES", "OBTNNO" }
 
-   hd_calljava_s_v( oDlg:ToString() )
+   hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import android.content.Context;
 import android.app.Activity;
 import android.view.Menu;
+import android.content.Intent;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,6 +41,7 @@ public class Harbour {
     private static View mainView;
     private static Harbour hbobj;
     public static Context context;
+    public static Class dopClass = null;
     public static String cHomePath;
     public static String sMenu = null;
 
@@ -62,6 +64,10 @@ public class Harbour {
        vmInit();
        if( bHrb )
           CopyFromAsset( MAINHRB );
+    }
+
+    public static void setDopClass( Class dclass ) {
+       dopClass = dclass;
     }
 
     public View hrbMain( Context cont ) {
@@ -533,10 +539,7 @@ public class Harbour {
           return;
 
        scmd = message.substring( 0,nPos );
-       if( scmd.equals( "ad" ) ) {
-
-          adlg( message.substring( nPos+1 ) );
-       } else if( scmd.equals( "exit" ) ) {
+       if( scmd.equals( "exit" ) ) {
 
           android.os.Process.killProcess(android.os.Process.myPid());
        } else {
@@ -576,6 +579,16 @@ public class Harbour {
              return (String) tview.getText().toString();
        }
        return "ok";
+    }
+
+    public static void activ( String sAct ) {
+
+       if( !sAct.substring(0,5).equals("act,,") )
+          return;
+       if( dopClass != null ) {
+          Intent intent = new Intent( context, dopClass );
+          context.startActivity(intent);
+       }
     }
 
     public static void adlg( String sDlg ) {

@@ -172,7 +172,7 @@ METHOD onBtnClick( cName ) CLASS HDDialog
 
 METHOD ToString() CLASS HDDialog
 
-   LOCAL sRet := "ad:dlg,,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
+   LOCAL sRet := "dlg,,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
 
    FOR i := 1 TO nLen
       sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )

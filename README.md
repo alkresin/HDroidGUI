@@ -14,6 +14,7 @@ Android GUI framework for Harbour
 * _src/include/*_ - header files for Harbour-code.
 * _src/prg/*_ - Harbour and C sources.
 * _src/su/harbour/hDroidGUI/*_ - Java sources.
+* _utils/newproject.prg_ - a source file of an utility for creating a new project.
 
 ###HDroidGUI compiled files (binaries) - (the result of buildall work):
 * _lib/armeabi/libh4droid.so, lib/armeabi/libharbour.so* _ - dynamic libraries of the "native" part of the framework.
