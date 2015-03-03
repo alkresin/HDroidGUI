@@ -44,6 +44,7 @@ public class Harbour {
     public static Class dopClass = null;
     public static String cHomePath;
     public static String sMenu = null;
+    public static String sActivity = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -70,12 +71,24 @@ public class Harbour {
        dopClass = dclass;
     }
 
-    public View hrbMain( Context cont ) {
+    public static void setContext( Context cont ) {
+       context = cont;
+    }
+
+    public View createAct( Context cont ) {
+
+       String sMain;
 
        context = cont;
        if( bHrb )
           hrbOpen( MAINHRB );
-       String sMain = hrbCall( "HD_MAIN", bHrb? "1" : "2" );
+
+       if( dopClass != null && sActivity != null )
+          sMain = sActivity;
+       else
+          sMain = hrbCall( "HD_MAIN", bHrb? "1" : "2" );
+
+       sActivity = null;
 
        //Log.i(TAG, "hrbmain-1");
        mainView = CreateActivity( (Activity)context, sMain);
@@ -94,6 +107,12 @@ public class Harbour {
        }
        else
           return mainView;
+
+    }
+
+    public static void closeAct() {
+
+       String s = hbobj.hrbCall( "HD_CLOSEACT", "1" );
 
     }
 
@@ -585,7 +604,9 @@ public class Harbour {
 
        if( !sAct.substring(0,5).equals("act,,") )
           return;
+
        if( dopClass != null ) {
+          sActivity = sAct;
           Intent intent = new Intent( context, dopClass );
           context.startActivity(intent);
        }

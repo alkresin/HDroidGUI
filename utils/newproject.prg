@@ -156,15 +156,37 @@ STATIC FUNCTION CreateJava( aFullName )
    cBody := cPackage
    cBody += "import android.app.Activity;" + crlf + ;
       "import android.os.Bundle;" + crlf + ;
-      "import android.os.Bundle;" + crlf + ;
       "import android.view.View;" + crlf + ;
+      "import android.view.Menu;" + crlf + ;
+      "import android.view.MenuItem;" + crlf + ;
       "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
       "public class MainActivity extends Activity {" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   public void onCreate(Bundle savedInstanceState) {" + crlf + ;
       "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
-      "      setContentView( MainApp.harb.hrbMain( this ) );" + crlf + ;
-      "   }" + crlf + "}" + crlf
+      "      setContentView( MainApp.harb.createAct( this ) );" + crlf + ;
+      "   }" + ;
+      "   @Override" + crlf + ;
+      "   protected void onResume() {" + crlf + ;
+      "       super.onResume();" + crlf + crlf + ;
+      "      MainApp.harb.setContext( this );" + crlf + ;
+      "   }" + crlf + crlf + ;
+      "   @Override" + crlf + ;
+      "   protected void onDestroy() {" + crlf + ;
+      "       super.onDestroy();" + crlf + crlf + ;
+      "       MainApp.harb.closeAct();" + crlf + ;
+      "   }" + crlf + crlf + ;
+      "    @Override" + crlf + ;
+      "    public boolean onCreateOptionsMenu(Menu menu) {" + crlf + ;
+      "       MainApp.harb.SetMenu( menu );" + crlf + ;
+      "       return true;" + crlf + ;
+      "    }" + crlf + crlf + ;
+      "    @Override" + crlf + ;
+      "    public boolean onOptionsItemSelected(MenuItem item) {" + crlf + ;
+      "       MainApp.harb.onMenuSel( item.getItemId() );" + crlf + ;
+      "       return true;" + crlf + ;
+      "    }" + crlf + crlf + ;
+      crlf + "}" + crlf
 
    FWrite( handle, cBody )
    FClose( handle )

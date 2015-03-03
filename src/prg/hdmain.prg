@@ -152,3 +152,13 @@ FUNCTION hd_Main( cAppType )
 
    //hd_Wrlog(sRet)
    RETURN sRet
+
+FUNCTION hd_CloseAct()
+
+   IF !Empty( HDWindow():aWindows )
+      Atail( HDWindow():aWindows ):Close()
+   ENDIF
+   IF !Empty( HDWindow():aWindows )
+   ENDIF
+
+   RETURN "1"

@@ -1,4 +1,12 @@
 
+2015-03-03 22:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * hrbmain() is renamed to createAct()
+      setContext(), closeAct() functions added
+  * utils/newproject.prg
+
 2015-03-03 16:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
   * src/prg/hdmain.prg

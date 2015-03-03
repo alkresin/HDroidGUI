@@ -46,6 +46,10 @@ METHOD Close() CLASS HDWindow
       ENDIF
    NEXT
 
+   IF Valtype( ::bExit ) == "B"
+      Eval( ::bExit)
+   ENDIF
+
    RETURN Nil
 
 METHOD FindByName( cName ) CLASS HDWindow
@@ -65,7 +69,7 @@ METHOD FindByName( cName ) CLASS HDWindow
 CLASS HDActivity INHERIT HDWindow
 
    DATA oFont
-   DATA bInit, bDestroy
+   DATA bInit, bExit
    DATA aMenu
 
    METHOD New( cTitle, bInit, bExit )
@@ -82,7 +86,7 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
    ::Super:New( cTitle )
    ::bInit := bInit
-   ::bDestroy := bExit
+   ::bExit := bExit
 
    RETURN Self
 
@@ -141,7 +145,7 @@ CLASS HDDialog INHERIT HDWindow
    DATA nRes
 
    DATA bContinue
-   DATA bInit, bDestroy
+   DATA bInit, bExit
 
    METHOD New( cTitle, bInit, bExit )
    METHOD onBtnClick( cName )
@@ -153,7 +157,7 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
 
    ::Super:New( cTitle )
    ::bInit := bInit
-   ::bDestroy := bExit
+   ::bExit := bExit
 
    RETURN Self
 
