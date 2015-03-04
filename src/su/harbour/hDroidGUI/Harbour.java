@@ -71,8 +71,9 @@ public class Harbour {
        dopClass = dclass;
     }
 
-    public static void setContext( Context cont ) {
+    public static void setContext( Context cont, View view ) {
        context = cont;
+       mainView = view;
     }
 
     public View createAct( Context cont ) {

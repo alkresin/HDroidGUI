@@ -13,8 +13,9 @@ ENDCLASS
 
 CLASS HDWindow INHERIT HDGUIObject
 
-   CLASS VAR aWindows SHARED INIT {}
+   CLASS VAR aWindows SHARED
 
+   DATA id
    DATA title
 
    DATA aItems   INIT {}
@@ -31,6 +32,9 @@ METHOD New( cTitle ) CLASS HDWindow
 
    ::title := cTitle
 
+   IF Valtype( ::aWindows ) != "A"
+      ::aWindows := {}
+   ENDIF
    Aadd( ::aWindows, Self )
 
    RETURN Self
@@ -38,16 +42,18 @@ METHOD New( cTitle ) CLASS HDWindow
 METHOD Close() CLASS HDWindow
    LOCAL i
 
-   FOR i := Len( ::aWindows ) TO 1 STEP -1
-      IF ::aWindows[i] == Self
-         ADel( ::aWindows, i )
-         ASize( ::aWindows, Len(::aWindows)-1 )
-         EXIT
-      ENDIF
-   NEXT
+   IF !Empty( ::aWindows )
+      FOR i := Len( ::aWindows ) TO 1 STEP -1
+         IF ::aWindows[i] == Self
+            ADel( ::aWindows, i )
+            ASize( ::aWindows, Len(::aWindows)-1 )
+            EXIT
+         ENDIF
+      NEXT
 
-   IF Valtype( ::bExit ) == "B"
-      Eval( ::bExit)
+      IF Valtype( ::bExit ) == "B"
+         Eval( ::bExit)
+      ENDIF
    ENDIF
 
    RETURN Nil
