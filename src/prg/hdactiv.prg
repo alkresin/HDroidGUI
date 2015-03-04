@@ -13,7 +13,9 @@ ENDCLASS
 
 CLASS HDWindow INHERIT HDGUIObject
 
-   CLASS VAR aWindows SHARED
+   CLASS VAR aWindows SHARED  INIT {}
+   CLASS VAR nIdSch   SHARED  INIT 1
+   CLASS VAR lMain    SHARED  INIT .T.
 
    DATA id
    DATA title
@@ -21,7 +23,7 @@ CLASS HDWindow INHERIT HDGUIObject
    DATA aItems   INIT {}
 
    METHOD New( cTitle )
-   METHOD Close()
+   METHOD Close( cId )
    METHOD FindByName( cName )
 
 ENDCLASS
@@ -31,28 +33,31 @@ METHOD New( cTitle ) CLASS HDWindow
    ::oDefaultParent := Self
 
    ::title := cTitle
-
-   IF Valtype( ::aWindows ) != "A"
-      ::aWindows := {}
+   IF ::lMain
+      ::id := "0"
+      ::lMain := .F.
+   ELSE
+      ::id := Ltrim( Str( ++::nIdSch ) )
    ENDIF
+
    Aadd( ::aWindows, Self )
 
    RETURN Self
 
-METHOD Close() CLASS HDWindow
-   LOCAL i
+METHOD Close( cId ) CLASS HDWindow
+   LOCAL i, o
 
    IF !Empty( ::aWindows )
       FOR i := Len( ::aWindows ) TO 1 STEP -1
-         IF ::aWindows[i] == Self
+         IF ( cId == Nil .AND. ::aWindows[i] == Self ) .OR. ( cId != Nil .AND. ::aWindows[i]:id == cId )
+            o := ::aWindows[i]
             ADel( ::aWindows, i )
             ASize( ::aWindows, Len(::aWindows)-1 )
             EXIT
          ENDIF
       NEXT
-
-      IF Valtype( ::bExit ) == "B"
-         Eval( ::bExit)
+      IF !Empty(o) .AND. Valtype( o:bExit ) == "B"
+         Eval( o:bExit )
       ENDIF
    ENDIF
 
@@ -129,7 +134,7 @@ METHOD AddMenuItem( cTitle, nId, bAction ) CLASS HDActivity
 
 METHOD ToString() CLASS HDActivity
 
-   LOCAL sRet := "act,,t:" + ::title + ",,/", i
+   LOCAL sRet := "act:" + ::id + ",,t:" + ::title + ",,/", i
 
    IF !Empty( ::aMenu )
       sRet += "menu[("
@@ -182,7 +187,7 @@ METHOD onBtnClick( cName ) CLASS HDDialog
 
 METHOD ToString() CLASS HDDialog
 
-   LOCAL sRet := "dlg,,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
+   LOCAL sRet := "dlg:" + ::id + ",,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
 
    FOR i := 1 TO nLen
       sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )

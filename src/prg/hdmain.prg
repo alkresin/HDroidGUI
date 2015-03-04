@@ -120,12 +120,14 @@ FUNCTION hd_Main( cAppType )
 
    LOCAL hf, lRes := .F., oWnd, sRet, sMainFunc := "HDROIDMAIN"
    LOCAL bOldError
+   STATIC lFirst := .T.
 
+   HDWindow():lMain := .T.
    IF cAppType == "1"
       IF !Empty( hf := hb_hrbGetFunsym( hrbHandle, sMainFunc ) )
          bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
-            oWnd := Do( hf )
+            oWnd := Do( hf, lFirst )
             sRet := oWnd:ToString()
             lRes := .T.
          END SEQUENCE
@@ -139,13 +141,15 @@ FUNCTION hd_Main( cAppType )
       ELSE
          bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
-            oWnd := &(sMainFunc+"()")
+            oWnd := &(sMainFunc+"("+Iif(lFirst,".t.",".f.")+")")
             sRet := oWnd:ToString()
             lRes := .T.
          END SEQUENCE
          ErrorBlock( bOldError )
       ENDIF
    ENDIF
+   lFirst := .F.
+   HDWindow():lMain := .F.
    IF !lRes
       RETURN "Error"
    ENDIF
@@ -153,12 +157,10 @@ FUNCTION hd_Main( cAppType )
    //hd_Wrlog(sRet)
    RETURN sRet
 
-FUNCTION hd_CloseAct()
+FUNCTION hd_CloseAct( cId )
 
    IF !Empty( HDWindow():aWindows )
-      Atail( HDWindow():aWindows ):Close()
-   ENDIF
-   IF !Empty( HDWindow():aWindows )
+      HDWindow():Close( cId )
    ENDIF
 
    RETURN "1"

@@ -45,6 +45,7 @@ public class Harbour {
     public static String cHomePath;
     public static String sMenu = null;
     public static String sActivity = null;
+    public static String sActId = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -111,9 +112,9 @@ public class Harbour {
 
     }
 
-    public static void closeAct() {
+    public static void closeAct( String id ) {
 
-       String s = hbobj.hrbCall( "HD_CLOSEACT", "1" );
+       hbobj.hrbCall( "HD_CLOSEACT", id );
 
     }
 
@@ -145,11 +146,13 @@ public class Harbour {
     private View CreateActivity( Activity act, String sContent ) {
 
        View rootView;
-       if( !sContent.substring(0,5).equals("act,,") )
+       if( !sContent.substring(0,4).equals("act:") )
           return null;
-       int nPos = sContent.indexOf(",,/",5);
+       int nPos1 = sContent.indexOf(",,",4), nPosNext;
 
-       String [][] aParams = GetParamsList( sContent.substring(3,nPos) );
+       sActId = sContent.substring(4,nPos1);
+       nPosNext = sContent.indexOf(",,/",5);
+       String [][] aParams = GetParamsList( sContent.substring(nPos1,nPosNext) );
        int iArr = 0;
        while( aParams[iArr][0] != null ) {
 
@@ -159,12 +162,12 @@ public class Harbour {
           iArr ++;
        }
 
-       sContent = sContent.substring(nPos+3);
+       sContent = sContent.substring(nPosNext+3);
 
        if( sContent.substring(0,4).equals("menu") ) {
-          nPos = sContent.indexOf(",,/",5);
-          sMenu = sContent.substring(4,nPos);
-          sContent = sContent.substring(nPos+3);
+          nPosNext = sContent.indexOf(",,/",5);
+          sMenu = sContent.substring(4,nPosNext);
+          sContent = sContent.substring(nPosNext+3);
        }
        if( sContent.substring(0,3).equals("lay") )
           rootView = CreateGroupView(sContent);
@@ -603,7 +606,7 @@ public class Harbour {
 
     public static void activ( String sAct ) {
 
-       if( !sAct.substring(0,5).equals("act,,") )
+       if( !sAct.substring(0,4).equals("act:") )
           return;
 
        if( dopClass != null ) {
@@ -615,18 +618,20 @@ public class Harbour {
 
     public static void adlg( String sDlg ) {
 
-       if( !sDlg.substring(0,5).equals("dlg,,") )
+       if( !sDlg.substring(0,4).equals("dlg:") )
           return;
-       int nPos1, nPos2, nPos3, nPosNext = sDlg.indexOf(",,/",5);
+       int nPosNext, nPos1, nPos2, nPos3 = sDlg.indexOf(",,");
        int iBtns = 0;
        String [][] aParams;
        String sName, sObjName;
        String sText;
+       String sId = sDlg.substring(4,nPos3);
        //DialogInterface.OnClickListener func;
 
+       nPosNext = sDlg.indexOf(",,/",5);
        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-       aParams = GetParamsList( sDlg.substring(3,nPosNext) );
+       aParams = GetParamsList( sDlg.substring(nPos3,nPosNext) );
        int iArr = 0;
        while( aParams[iArr][0] != null ) {
 
