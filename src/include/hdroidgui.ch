@@ -3,8 +3,8 @@
  * Main header file
  */
 
-#define HDROIDGUI_VERSION         "0.1"
-#define HDROIDGUI_BUILD           2
+#define HDROIDGUI_VERSION         "0.2"
+#define HDROIDGUI_BUILD           1
 
 #define MATCH_PARENT   -1
 #define WRAP_CONTENT   -2
@@ -24,16 +24,31 @@
           => ;
    <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 
+#xcommand ACTIVATE WINDOW <oAct> ;
+          => ;
+   hd_calljava_s_v( <oAct>:ToString(), "activ" )
+
+
 #xcommand ACTIVITY <oAct> TITLE <cTitle>    ;
              [ ON INIT <bInit> ]            ;
              [ ON EXIT <bExit> ]            ;
           => ;
    <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 
-
-#xcommand INIT DIALOG <oAct> [TITLE <cTitle>] ;
+#xcommand ACTIVATE ACTIVITY <oAct> ;
           => ;
-   <oAct> := HDDialog():New( <cTitle> )
+   hd_calljava_s_v( <oAct>:ToString(), "activ" )
+
+
+#xcommand INIT DIALOG <oDlg> [TITLE <cTitle>] ;
+             [ ON INIT <bInit> ]            ;
+             [ ON EXIT <bExit> ]            ;
+          => ;
+   <oDlg> := HDDialog():New( <cTitle>,<bInit>,<bExit> )
+
+#xcommand ACTIVATE DIALOG <oDlg> ;
+          => ;
+   hd_calljava_s_v( <oDlg>:ToString(), "adlg" )
 
 
 #xcommand MENU [ ID <nId> ] [ TITLE <cTitle> ] ;

@@ -118,7 +118,7 @@ STATIC FUNCTION CreateJava( aFullName )
 
    LOCAL handle, cPath := Atail(aFullName) + cdiv + "src", i
    LOCAL cPackage := "package "
-   LOCAL cBody
+   LOCAL cBody, s
 
 
    FOR i := 1 TO Len( aFullName )
@@ -127,6 +127,24 @@ STATIC FUNCTION CreateJava( aFullName )
    NEXT
 
    cPackage += ";" + crlf + crlf
+
+   s := "   @Override" + crlf + ;
+      "   protected void onResume() {" + crlf + ;
+      "       super.onResume();" + crlf + crlf + ;
+      "      MainApp.harb.setContext( this,mainView );" + crlf + ;
+      "   }" + crlf + crlf + ;
+      "    @Override" + crlf + ;
+      "    public boolean onCreateOptionsMenu(Menu menu) {" + crlf + ;
+      "       MainApp.harb.SetMenu( menu );" + crlf + ;
+      "       return true;" + crlf + ;
+      "    }" + crlf + crlf + ;
+      "    @Override" + crlf + ;
+      "    public boolean onOptionsItemSelected(MenuItem item) {" + crlf + ;
+      "       MainApp.harb.onMenuSel( item.getItemId() );" + crlf + ;
+      "       return true;" + crlf + ;
+      "    }" + crlf + crlf + ;
+      crlf + "}" + crlf
+
 
    handle := FCreate( cPath + cdiv + "MainApp.java" )
    IF Ferror() != 0
@@ -161,32 +179,54 @@ STATIC FUNCTION CreateJava( aFullName )
       "import android.view.MenuItem;" + crlf + ;
       "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
       "public class MainActivity extends Activity {" + crlf + crlf + ;
+      "   private static View mainView;" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   public void onCreate(Bundle savedInstanceState) {" + crlf + ;
       "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
-      "      setContentView( MainApp.harb.createAct( this ) );" + crlf + ;
-      "   }" + ;
-      "   @Override" + crlf + ;
-      "   protected void onResume() {" + crlf + ;
-      "       super.onResume();" + crlf + crlf + ;
-      "      MainApp.harb.setContext( this );" + crlf + ;
+      "      MainApp.harb.setDopClass( DopActivity.class );" + crlf + ;
+      "      mainView = MainApp.harb.createAct( this, null );" + crlf + ;
+      "      setContentView( mainView );" + crlf + ;
       "   }" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   protected void onDestroy() {" + crlf + ;
-      "       super.onDestroy();" + crlf + crlf + ;
-      "       MainApp.harb.closeAct();" + crlf + ;
+      "      super.onDestroy();" + crlf + crlf + ;
+      '      MainApp.harb.closeAct( "0" );' + crlf + ;
+      "   }" + crlf + s
+
+   FWrite( handle, cBody )
+   FClose( handle )
+
+   handle := FCreate( cPath + cdiv + "DopActivity.java" )
+   IF Ferror() != 0
+      RETURN .F.
+   ENDIF
+
+   cBody := cPackage
+   cBody += "import android.app.Activity;" + crlf + ;
+      "import android.os.Bundle;" + crlf + ;
+      "import android.content.Context;" + crlf + ;
+      "import android.content.Intent;" + crlf + ;
+      "import android.view.View;" + crlf + ;
+      "import android.view.Menu;" + crlf + ;
+      "import android.view.MenuItem;" + crlf + ;
+      "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
+      "public class DopActivity extends Activity {" + crlf + crlf + ;
+      "   private static View mainView;" + crlf + ;
+      '   private static String sId;' + crlf + crlf + ;
+      "   @Override" + crlf + ;
+      "   protected void onCreate(Bundle savedInstanceState) {" + crlf + ;
+      "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
+      "      Intent intent = getIntent();" + crlf + ;
+      '      String sAct = intent.getStringExtra("sact");' + crlf + crlf + ;
+      "      mainView = MainApp.harb.createAct( this, sAct );" + crlf + ;
+      "      sId = MainApp.harb.sActId;" + crlf + ;
+      "      setContentView( mainView );" + crlf + ;
       "   }" + crlf + crlf + ;
-      "    @Override" + crlf + ;
-      "    public boolean onCreateOptionsMenu(Menu menu) {" + crlf + ;
-      "       MainApp.harb.SetMenu( menu );" + crlf + ;
-      "       return true;" + crlf + ;
-      "    }" + crlf + crlf + ;
-      "    @Override" + crlf + ;
-      "    public boolean onOptionsItemSelected(MenuItem item) {" + crlf + ;
-      "       MainApp.harb.onMenuSel( item.getItemId() );" + crlf + ;
-      "       return true;" + crlf + ;
-      "    }" + crlf + crlf + ;
-      crlf + "}" + crlf
+      "   @Override" + crlf + ;
+      "   protected void onDestroy() {" + crlf + ;
+      "      super.onDestroy();" + crlf + crlf + ;
+      "      MainApp.harb.closeAct( sId );" + crlf + ;
+      "   }" + crlf + s
 
    FWrite( handle, cBody )
    FClose( handle )
@@ -222,14 +262,7 @@ STATIC FUNCTION CreateManifest( aFullName )
       '            <category android:name="android.intent.category.LAUNCHER" />' + crlf + ;
       '         </intent-filter>' + crlf + ;
       '      </activity>' + crlf + ;
-      '      <activity' + crlf + ;
-      '         android:name="' + cPackage + '.DopActivity"' + crlf + ;
-      '         android:label="second"' + crlf + ;
-      '         android:parentActivityName="' + cPackage + '.MainActivity" >' + crlf + ;
-      '         <meta-data' + crlf + ;
-      '            android:name="android.support.PARENT_ACTIVITY"' + crlf + ;
-      '            android:value="' + cPackage + '.MainActivity" />' + crlf + ;
-      '      </activity>' + crlf + ;
+      '      <activity android:name="' + cPackage + '.DopActivity" android:label="2" />' + crlf + ;
       '   </application>' + crlf + ;
       '   <uses-permission android:name="android.permission.INTERNET" />' + crlf + ;
       '</manifest>'

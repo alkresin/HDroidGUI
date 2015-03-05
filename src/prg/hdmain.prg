@@ -49,6 +49,9 @@ FUNCTION event_KeyDown( cName )
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 
+FUNCTION hd_Toast( cMessage )
+   RETURN hd_calljava_s_v( cMessage, "toast" )
+
 FUNCTION hd_getSysDir( cType )
    RETURN hd_calljava_s_s( cType, "getSysDir" )
 
@@ -64,6 +67,18 @@ FUNCTION hd_ColorN2C( nColor )
 
    RETURN s
 
+FUNCTION hd_Version( n )
+
+   IF !Empty( n )
+      IF n == 1
+         RETURN HDROIDGUI_VERSION
+      ELSEIF n == 2
+         RETURN HDROIDGUI_BUILD
+      ENDIF
+   ENDIF
+
+   RETURN "HDroidGUI " + HDROIDGUI_VERSION + " Build " + Ltrim(Str(HDROIDGUI_BUILD))
+
 FUNCTION hd_MsgInfo( cMessage )
 
    LOCAL oDlg, oBtn
@@ -72,7 +87,8 @@ FUNCTION hd_MsgInfo( cMessage )
 
    BUTTON oBtn TEXT "Ok"
 
-   hd_calljava_s_v( oDlg:ToString(), "adlg" )
+   ACTIVATE DIALOG oDlg
+   //hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 
@@ -88,7 +104,8 @@ FUNCTION hd_MsgYesNo( cMessage, bContinue )
    oDlg:bContinue := bContinue
    oDlg:aButtons := { "OBTNYES", "OBTNNO" }
 
-   hd_calljava_s_v( oDlg:ToString(), "adlg" )
+   ACTIVATE DIALOG oDlg
+   //hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 
@@ -118,44 +135,39 @@ FUNCTION hd_HrbLoad( cName )
 
 FUNCTION hd_Main( cAppType )
 
-   LOCAL hf, lRes := .F., oWnd, sRet, sMainFunc := "HDROIDMAIN"
+   LOCAL hf, oWnd, sMainFunc := "HDROIDMAIN"
    LOCAL bOldError
    STATIC lFirst := .T.
 
+   IF lFirst
+      ErrorBlock( {|oError|DefError(oError)} )
+   ENDIF
    HDWindow():lMain := .T.
    IF cAppType == "1"
       IF !Empty( hf := hb_hrbGetFunsym( hrbHandle, sMainFunc ) )
          bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
             oWnd := Do( hf, lFirst )
-            sRet := oWnd:ToString()
-            lRes := .T.
          END SEQUENCE
          ErrorBlock( bOldError )
       ELSE
-         RETURN "Error: " + sMainFunc + " is not found"
+         RETURN ""
       ENDIF
    ELSEIF cAppType == "2"
       IF Type( sMainFunc+"()" ) == "U"
-         RETURN "Error: " + sMainFunc + "() is not found"
+         RETURN ""
       ELSE
          bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
             oWnd := &(sMainFunc+"("+Iif(lFirst,".t.",".f.")+")")
-            sRet := oWnd:ToString()
-            lRes := .T.
          END SEQUENCE
          ErrorBlock( bOldError )
       ENDIF
    ENDIF
    lFirst := .F.
    HDWindow():lMain := .F.
-   IF !lRes
-      RETURN "Error"
-   ENDIF
 
-   //hd_Wrlog(sRet)
-   RETURN sRet
+   RETURN ""
 
 FUNCTION hd_CloseAct( cId )
 
@@ -164,3 +176,49 @@ FUNCTION hd_CloseAct( cId )
    ENDIF
 
    RETURN "1"
+
+#include "error.ch"
+STATIC FUNCTION DefError( oError )
+
+   LOCAL cMessage, cDOSError, aOptions, nChoice, n
+
+   // By default, division by zero results in zero
+   IF oError:genCode == EG_ZERODIV .AND. oError:canSubstitute
+      RETURN 0
+   ENDIF
+
+   // By default, retry on RDD lock error failure */
+   IF oError:genCode == EG_LOCK .AND. oError:canRetry
+      RETURN .T.
+   ENDIF
+
+   // Set NetErr() of there was a database open error
+   IF oError:genCode == EG_OPEN .AND. oError:osCode == 32 .AND. oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
+   // Set NetErr() if there was a lock error on dbAppend()
+   IF oError:genCode == EG_APPENDLOCK .AND. oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
+   cMessage := ErrorMessage( oError )
+   IF ! Empty( oError:osCode )
+      cDOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
+   ENDIF
+
+   IF cDOSError != NIL
+      cMessage += " " + cDOSError
+   ENDIF
+
+   n := 1
+   DO WHILE ! Empty( ProcName( ++n ) )
+      cMessage += Chr( 13 ) + Chr( 10 ) + "Called from " + ProcFile( n ) + "->" + ProcName( n ) + "(" + AllTrim( Str( ProcLine( n ++ ) ) ) + ")"
+   ENDDO
+
+   hd_wrlog( cMessage )
+   hd_Toast( "Harbour error" )
+
+   RETURN .F.

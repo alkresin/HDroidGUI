@@ -30,6 +30,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class Harbour {
@@ -44,8 +45,8 @@ public class Harbour {
     public static Class dopClass = null;
     public static String cHomePath;
     public static String sMenu = null;
-    public static String sActivity = null;
     public static String sActId = null;
+    private static String sActivity = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -77,7 +78,7 @@ public class Harbour {
        mainView = view;
     }
 
-    public View createAct( Context cont ) {
+    public View createAct( Context cont, String sAct ) {
 
        String sMain;
 
@@ -85,15 +86,19 @@ public class Harbour {
        if( bHrb )
           hrbOpen( MAINHRB );
 
-       if( dopClass != null && sActivity != null )
+       if( sAct != null )
+          sMain = sAct;
+       else {
+          hrbCall( "HD_MAIN", bHrb? "1" : "2" );
           sMain = sActivity;
-       else
-          sMain = hrbCall( "HD_MAIN", bHrb? "1" : "2" );
-
-       sActivity = null;
-
+       }
        //Log.i(TAG, "hrbmain-1");
-       mainView = CreateActivity( (Activity)context, sMain);
+       if( sMain != null )
+          mainView = CreateActivity( (Activity)context, sMain);
+       else {
+          sMain = "null";
+          mainView = null;
+       }
        //Log.i(TAG, "hrbmain-2");
        
        if( mainView == null ) {
@@ -540,10 +545,15 @@ public class Harbour {
                myInput.close();
 
           } catch (IOException e) {
-               //Toast.makeText( context, "copyDataBase Error : " + e.getMessage(),
-               //    Toast.LENGTH_SHORT ).show();
+               // toast( "copyDataBase Error : " + e.getMessage() );
           }
        }
+    }
+
+    public static void toast( String message ) {
+
+       Toast.makeText( context, message, Toast.LENGTH_SHORT ).show();
+
     }
 
     public static void hlog( String message ) {
@@ -609,9 +619,11 @@ public class Harbour {
        if( !sAct.substring(0,4).equals("act:") )
           return;
 
-       if( dopClass != null ) {
+       if( sAct.substring(4,5).equals("0") )
           sActivity = sAct;
+       else if( dopClass != null ) {
           Intent intent = new Intent( context, dopClass );
+          intent.putExtra( "sact", sAct );
           context.startActivity(intent);
        }
     }
