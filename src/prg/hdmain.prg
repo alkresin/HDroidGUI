@@ -243,5 +243,6 @@ STATIC FUNCTION DefError( oError )
 
    hd_wrlog( cMessage )
    hd_Toast( "Harbour error" )
+   BREAK(oError)
 
    RETURN .F.

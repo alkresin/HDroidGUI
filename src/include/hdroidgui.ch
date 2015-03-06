@@ -4,7 +4,7 @@
  */
 
 #define HDROIDGUI_VERSION         "0.2"
-#define HDROIDGUI_BUILD           2
+#define HDROIDGUI_BUILD           3
 
 #define MATCH_PARENT   -1
 #define WRAP_CONTENT   -2
