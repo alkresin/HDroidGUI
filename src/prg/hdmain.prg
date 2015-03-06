@@ -79,33 +79,30 @@ FUNCTION hd_Version( n )
 
    RETURN "HDroidGUI " + HDROIDGUI_VERSION + " Build " + Ltrim(Str(HDROIDGUI_BUILD))
 
-FUNCTION hd_MsgInfo( cMessage )
+FUNCTION hd_MsgInfo( cMessage, bExit )
 
    LOCAL oDlg, oBtn
 
-   INIT DIALOG oDlg TITLE cMessage
+   INIT DIALOG oDlg TITLE cMessage ON EXIT bExit
 
    BUTTON oBtn TEXT "Ok"
 
    ACTIVATE DIALOG oDlg
-   //hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 
-FUNCTION hd_MsgYesNo( cMessage, bContinue )
+FUNCTION hd_MsgYesNo( cMessage, bExit )
 
    LOCAL oDlg, oBtnYes, oBtnNo
 
-   INIT DIALOG oDlg TITLE cMessage
+   INIT DIALOG oDlg TITLE cMessage ON EXIT bExit
 
    BUTTON oBtnYes TEXT "Yes"
    BUTTON oBtnNo TEXT "No"
 
-   oDlg:bContinue := bContinue
    oDlg:aButtons := { "OBTNYES", "OBTNNO" }
 
    ACTIVATE DIALOG oDlg
-   //hd_calljava_s_v( oDlg:ToString(), "adlg" )
 
    RETURN Nil
 
@@ -168,6 +165,32 @@ FUNCTION hd_Main( cAppType )
    HDWindow():lMain := .F.
 
    RETURN ""
+
+FUNCTION hd_InitWindow( cId )
+
+   LOCAL aWindows := HDWindow():aWindows, i, aBack
+
+   IF !Empty( cId )
+      FOR i := Len( aWindows ) TO 1 STEP -1
+         IF aWindows[i]:id == cId
+            aWindows[i]:Init()
+            EXIT
+         ENDIF
+      NEXT
+      IF i == 0
+         aBack := HDWindow():aBackupW
+         FOR i := Len( aBack ) TO 1 STEP -1
+            IF aBack[i]:id == cId
+               AAdd( aWindows, aBack[i] )
+               ADel( aBack, i )
+               ASize( HDWindow():aBackupW, Len(HDWindow():aBackupW)-1 )
+               Atail( aWindows ):Init()
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN "1"
 
 FUNCTION hd_CloseAct( cId )
 

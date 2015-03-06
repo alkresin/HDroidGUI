@@ -5,6 +5,8 @@
 
 #include "hbclass.ch"
 
+#define MAX_BACKUPW  16
+
 CLASS HDGUIObject
 
    CLASS VAR oDefaultParent SHARED
@@ -14,21 +16,24 @@ ENDCLASS
 CLASS HDWindow INHERIT HDGUIObject
 
    CLASS VAR aWindows SHARED  INIT {}
+   CLASS VAR aBackupW SHARED  INIT {}
    CLASS VAR nIdSch   SHARED  INIT 1
    CLASS VAR lMain    SHARED  INIT .T.
 
    DATA id
    DATA title
+   DATA bInit, bExit
 
    DATA aItems   INIT {}
 
-   METHOD New( cTitle )
+   METHOD New( cTitle, bInit, bExit )
+   METHOD Init()
    METHOD Close( cId )
    METHOD FindByName( cName )
 
 ENDCLASS
 
-METHOD New( cTitle ) CLASS HDWindow
+METHOD New( cTitle, bInit, bExit ) CLASS HDWindow
 
    ::oDefaultParent := Self
 
@@ -40,9 +45,19 @@ METHOD New( cTitle ) CLASS HDWindow
       ::id := Ltrim( Str( ++::nIdSch ) )
    ENDIF
 
+   ::bInit := bInit
+   ::bExit := bExit
+
    Aadd( ::aWindows, Self )
 
    RETURN Self
+
+METHOD Init() CLASS HDWindow
+
+   IF !Empty( ::bInit )
+      Eval( ::bInit )
+   ENDIF
+   RETURN Nil
 
 METHOD Close( cId ) CLASS HDWindow
    LOCAL i, o
@@ -51,13 +66,19 @@ METHOD Close( cId ) CLASS HDWindow
       FOR i := Len( ::aWindows ) TO 1 STEP -1
          IF ( cId == Nil .AND. ::aWindows[i] == Self ) .OR. ( cId != Nil .AND. ::aWindows[i]:id == cId )
             o := ::aWindows[i]
+            IF Len( ::aBackupW ) < MAX_BACKUPW
+               Aadd( ::aBackupW, o )
+            ELSE
+               ADel( ::aBackupW, 1 )
+               ::aBackupW[MAX_BACKUPW] := o
+            ENDIF
             ADel( ::aWindows, i )
             ASize( ::aWindows, Len(::aWindows)-1 )
             EXIT
          ENDIF
       NEXT
       IF !Empty(o) .AND. Valtype( o:bExit ) == "B"
-         Eval( o:bExit )
+         Eval( o:bExit, o )
       ENDIF
    ENDIF
 
@@ -80,7 +101,6 @@ METHOD FindByName( cName ) CLASS HDWindow
 CLASS HDActivity INHERIT HDWindow
 
    DATA oFont
-   DATA bInit, bExit
    DATA aMenu
 
    METHOD New( cTitle, bInit, bExit )
@@ -95,9 +115,7 @@ ENDCLASS
 
 METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
-   ::Super:New( cTitle )
-   ::bInit := bInit
-   ::bExit := bExit
+   ::Super:New( cTitle, bInit, bExit )
 
    RETURN Self
 
@@ -155,9 +173,6 @@ CLASS HDDialog INHERIT HDWindow
    DATA aButtons
    DATA nRes
 
-   DATA bContinue
-   DATA bInit, bExit
-
    METHOD New( cTitle, bInit, bExit )
    METHOD onBtnClick( cName )
    METHOD ToString()
@@ -166,22 +181,17 @@ ENDCLASS
 
 METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
 
-   ::Super:New( cTitle )
-   ::bInit := bInit
-   ::bExit := bExit
+   ::Super:New( cTitle, bInit, bExit )
 
    RETURN Self
 
 METHOD onBtnClick( cName ) CLASS HDDialog
 
-   ::Close()
-
-   IF ::bContinue != Nil
-      IF !Empty( ::aButtons )
-         ::nRes := Ascan( ::aButtons, cName )
-      ENDIF
-      Eval( ::bContinue, Self )
+   IF !Empty( ::aButtons )
+      ::nRes := Ascan( ::aButtons, cName )
    ENDIF
+
+   ::Close()
 
    RETURN "1"
 

@@ -45,7 +45,7 @@ public class Harbour {
     public static Class dopClass = null;
     public static String cHomePath;
     public static String sMenu = null;
-    public static String sActId = null;
+    //public static String sActId = null;
     private static String sActivity = null;
 
     public Harbour( Context cont ) {
@@ -155,7 +155,7 @@ public class Harbour {
           return null;
        int nPos1 = sContent.indexOf(",,",4), nPosNext;
 
-       sActId = sContent.substring(4,nPos1);
+       //sActId = sContent.substring(4,nPos1);
        nPosNext = sContent.indexOf(",,/",5);
        String [][] aParams = GetParamsList( sContent.substring(nPos1,nPosNext) );
        int iArr = 0;
@@ -618,12 +618,16 @@ public class Harbour {
 
        if( !sAct.substring(0,4).equals("act:") )
           return;
+       int nPos1 = sAct.indexOf(",,",4);
+       String sId = sAct.substring(4,nPos1);
 
-       if( sAct.substring(4,5).equals("0") )
+       if( sId.equals("0") )
           sActivity = sAct;
        else if( dopClass != null ) {
           Intent intent = new Intent( context, dopClass );
+
           intent.putExtra( "sact", sAct );
+          intent.putExtra( "sid", sId );
           context.startActivity(intent);
        }
     }

@@ -186,6 +186,7 @@ STATIC FUNCTION CreateJava( aFullName )
       "      MainApp.harb.setDopClass( DopActivity.class );" + crlf + ;
       "      mainView = MainApp.harb.createAct( this, null );" + crlf + ;
       "      setContentView( mainView );" + crlf + ;
+      '      MainApp.harb.hrbCall( "HD_INITWINDOW","0" );' + crlf + ;
       "   }" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   protected void onDestroy() {" + crlf + ;
@@ -217,10 +218,11 @@ STATIC FUNCTION CreateJava( aFullName )
       "   protected void onCreate(Bundle savedInstanceState) {" + crlf + ;
       "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
       "      Intent intent = getIntent();" + crlf + ;
-      '      String sAct = intent.getStringExtra("sact");' + crlf + crlf + ;
+      '      String sAct = intent.getStringExtra("sact");' + crlf + ;
+      '      sId = intent.getStringExtra("sid");' + crlf + crlf + ;
       "      mainView = MainApp.harb.createAct( this, sAct );" + crlf + ;
-      "      sId = MainApp.harb.sActId;" + crlf + ;
       "      setContentView( mainView );" + crlf + ;
+      '      MainApp.harb.hrbCall( "HD_INITWINDOW",sId );' + crlf + ;
       "   }" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   protected void onDestroy() {" + crlf + ;

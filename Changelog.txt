@@ -1,4 +1,13 @@
 
+2015-03-06 15:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * It is possible now to add more activities
+    ! Fixed problems with additional activities
+    * Dialogs stuff cleaned and fixed
+  * utils/newproject.prg
+
 2015-03-05 19:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * version number is changed to 0.2, build 2
