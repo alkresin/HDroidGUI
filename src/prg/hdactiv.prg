@@ -204,3 +204,42 @@ METHOD ToString() CLASS HDDialog
    NEXT
 
    RETURN sRet
+
+
+CLASS HDTimer INHERIT HDGUIObject
+
+   CLASS VAR aTimers       INIT {}
+   CLASS VAR SHARED  nId   INIT 0
+
+   DATA id
+   DATA value
+   DATA bAction
+
+   METHOD New( value, bAction )
+   METHOD End()
+
+ENDCLASS
+
+METHOD New( value, bAction ) CLASS HDTimer
+
+   ::id := LTrim( Str( ++nId ) )
+   ::value   := value
+   ::bAction := bAction
+
+   AAdd( ::aTimers, Self )
+   hd_calljava_s_v( "settimer:" + ::id + ":" + LTrim( Str( ::value ) ) )
+
+   RETURN Self
+
+METHOD End() CLASS HDTimer
+
+   LOCAL i := Ascan( ::aTimers, { |o|o:id == ::id } )
+
+   IF i != 0
+      ADel( ::aTimers, i )
+      ASize( ::aTimers, Len( ::aTimers ) - 1 )
+   ENDIF
+
+   hd_calljava_s_v( "killtimer:" + ::id + ":" )
+
+   RETURN Nil

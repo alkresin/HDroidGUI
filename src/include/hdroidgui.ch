@@ -126,3 +126,8 @@
           => ;
    <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont> );
     [; hd_SetCtrlName( <oChe>,<(oChe)> )]
+
+#xcommand SET TIMER <oTimer>  ;
+             VALUE <value> ACTION <bAction> ;
+          => ;
+    <oTimer> := HDTimer():New( <value>, <bAction> )
