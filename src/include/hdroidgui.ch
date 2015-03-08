@@ -26,7 +26,7 @@
 
 #xcommand ACTIVATE WINDOW <oAct> ;
           => ;
-   hd_calljava_s_v( <oAct>:ToString(), "activ" )
+   <oAct>:Activate()
 
 
 #xcommand ACTIVITY <oAct> TITLE <cTitle>    ;
@@ -37,7 +37,7 @@
 
 #xcommand ACTIVATE ACTIVITY <oAct> ;
           => ;
-   hd_calljava_s_v( <oAct>:ToString(), "activ" )
+   <oAct>:Activate()
 
 
 #xcommand INIT DIALOG <oDlg> [TITLE <cTitle>] ;
@@ -48,7 +48,7 @@
 
 #xcommand ACTIVATE DIALOG <oDlg> ;
           => ;
-   hd_calljava_s_v( <oDlg>:ToString(), "adlg" )
+   <oDlg>:Activate()
 
 
 #xcommand MENU [ ID <nId> ] [ TITLE <cTitle> ] ;

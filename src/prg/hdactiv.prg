@@ -104,6 +104,7 @@ CLASS HDActivity INHERIT HDWindow
    DATA aMenu
 
    METHOD New( cTitle, bInit, bExit )
+   METHOD Activate()
 
    METHOD AddMenu( nId, cTitle )
    METHOD EndMenu()
@@ -118,6 +119,12 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
    ::Super:New( cTitle, bInit, bExit )
 
    RETURN Self
+
+METHOD Activate() CLASS HDActivity
+
+   hd_calljava_s_v( ::ToString(), "activ" )
+
+   RETURN Nil
 
 METHOD AddMenu( nId, cTitle ) CLASS HDActivity
 
@@ -174,6 +181,8 @@ CLASS HDDialog INHERIT HDWindow
    DATA nRes
 
    METHOD New( cTitle, bInit, bExit )
+   METHOD Activate()
+
    METHOD onBtnClick( cName )
    METHOD ToString()
 
@@ -184,6 +193,13 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
    ::Super:New( cTitle, bInit, bExit )
 
    RETURN Self
+
+METHOD Activate() CLASS HDDialog
+
+   hd_calljava_s_v( ::ToString(), "adlg" )
+
+   RETURN Nil
+
 
 METHOD onBtnClick( cName ) CLASS HDDialog
 
@@ -209,7 +225,7 @@ METHOD ToString() CLASS HDDialog
 CLASS HDTimer INHERIT HDGUIObject
 
    CLASS VAR aTimers       INIT {}
-   CLASS VAR SHARED  nId   INIT 0
+   CLASS VAR nId SHARED    INIT 0
 
    DATA id
    DATA value
@@ -222,7 +238,7 @@ ENDCLASS
 
 METHOD New( value, bAction ) CLASS HDTimer
 
-   ::id := LTrim( Str( ++nId ) )
+   ::id := LTrim( Str( ++::nId ) )
    ::value   := value
    ::bAction := bAction
 
