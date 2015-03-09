@@ -1,4 +1,11 @@
 
+2015-03-09 21:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdmain.prg
+    * Some changes fou timer support.
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * timer() method added.
+
 2015-03-08 20:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
   * src/prg/hdactiv.prg

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.app.Activity;
 import android.view.Menu;
 import android.content.Intent;
+import android.os.Handler;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -720,6 +721,76 @@ public class Harbour {
            hbobj.hrbCall( "EVENT_BTNCLICK",sBtnName );
         }
     }
+
+    static Handler tmHandler;
+    static Runnable tmRunnable;
+    static String [] aTimers = new String [12];
+    static long [][] aTimeVal = new long [12][2];
+    static int iTimers = 0;
+
+    public static void timer( String sTimer ) {
+
+       String sId;
+
+       if( sTimer.substring(0,4).equals("set:") ) {
+          int nPos = sTimer.indexOf( ":", 4 );
+          sId = sTimer.substring( 4,nPos );
+
+          aTimers[iTimers] = sId;
+          aTimeVal[iTimers][1] = Integer.parseInt( sTimer.substring( nPos+1 ) );
+          aTimeVal[iTimers][2] = System.currentTimeMillis();
+          iTimers ++;
+
+          if( tmHandler == null ) {
+             tmHandler = new Handler();
+             tmRunnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    long millis = System.currentTimeMillis();
+                    long nVal = 100000;
+                    int i;
+
+                    for( i = 0; i < iTimers; i++ ) {
+                       if( millis >= aTimeVal[i][2] ) {
+                          aTimeVal[i][2] = millis + aTimeVal[i][1];
+
+                          hbobj.hrbCall( "EVENT_TIMER",aTimers[i] );
+
+                          if( nVal < aTimeVal[i][2] - millis )
+                             nVal = aTimeVal[i][2] - millis;
+                       }
+                    }
+
+                    tmHandler.postDelayed(this, nVal);
+                }
+             };
+          }
+
+          tmHandler.postDelayed(tmRunnable, 0);
+
+       } else if( sTimer.substring(0,5).equals("kill:") ) {
+          int i, j;
+          sId = sTimer.substring( 5 );
+
+          for( i = 0; i < iTimers; i++ ) {
+             if( aTimers[i] == sId ) {
+                for( j = i; j < iTimers-1; j++ ) {
+                   aTimers[j] = aTimers[j+1];
+                   aTimeVal[j][1] = aTimeVal[j+1][1];
+                   aTimeVal[j][2] = aTimeVal[j+1][2];
+                }
+                break;
+             }
+          }
+
+          iTimers--;
+          if( iTimers == 0 )
+             tmHandler.removeCallbacks(tmRunnable);
+       }
+
+    }
+
 
     public static String getSysDir( String type ) {
        if( type.equals( "doc" ) )

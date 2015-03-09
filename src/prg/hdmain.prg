@@ -46,6 +46,10 @@ FUNCTION event_KeyDown( cName )
 
    RETURN Eval( oItem:bKeyDown, nKey )
 
+FUNCTION event_Timer( cName )
+
+   RETURN HDTimer():TimerFunc( cName )
+
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 

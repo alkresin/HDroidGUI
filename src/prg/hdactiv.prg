@@ -232,6 +232,7 @@ CLASS HDTimer INHERIT HDGUIObject
    DATA bAction
 
    METHOD New( value, bAction )
+   METHOD TimerFunc( id )
    METHOD End()
 
 ENDCLASS
@@ -243,9 +244,22 @@ METHOD New( value, bAction ) CLASS HDTimer
    ::bAction := bAction
 
    AAdd( ::aTimers, Self )
-   hd_calljava_s_v( "settimer:" + ::id + ":" + LTrim( Str( ::value ) ) )
+   hd_calljava_s_v( "set:" + ::id + ":" + LTrim( Str( ::value ) ), "timer" )
 
    RETURN Self
+
+METHOD TimerFunc( id ) CLASS HDTimer
+
+   LOCAL i
+
+   FOR i := 1 TO Len( ::aTimers )
+      IF ::aTimers[i]:id == id
+         Eval( ::aTimers[i]:bAction )
+         EXIT
+      ENDIF
+   NEXT
+
+   RETURN ""
 
 METHOD End() CLASS HDTimer
 
@@ -256,6 +270,6 @@ METHOD End() CLASS HDTimer
       ASize( ::aTimers, Len( ::aTimers ) - 1 )
    ENDIF
 
-   hd_calljava_s_v( "killtimer:" + ::id + ":" )
+   hd_calljava_s_v( "kill:" + ::id, "timer" )
 
    RETURN Nil
