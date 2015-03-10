@@ -737,8 +737,8 @@ public class Harbour {
           sId = sTimer.substring( 4,nPos );
 
           aTimers[iTimers] = sId;
-          aTimeVal[iTimers][1] = Integer.parseInt( sTimer.substring( nPos+1 ) );
-          aTimeVal[iTimers][2] = System.currentTimeMillis();
+          aTimeVal[iTimers][0] = Integer.parseInt( sTimer.substring( nPos+1 ) );
+          aTimeVal[iTimers][1] = System.currentTimeMillis();
           iTimers ++;
 
           if( tmHandler == null ) {
@@ -752,14 +752,12 @@ public class Harbour {
                     int i;
 
                     for( i = 0; i < iTimers; i++ ) {
-                       if( millis >= aTimeVal[i][2] ) {
-                          aTimeVal[i][2] = millis + aTimeVal[i][1];
-
+                       if( millis >= aTimeVal[i][1] ) {
+                          aTimeVal[i][1] = millis + aTimeVal[i][0];
                           hbobj.hrbCall( "EVENT_TIMER",aTimers[i] );
-
-                          if( nVal < aTimeVal[i][2] - millis )
-                             nVal = aTimeVal[i][2] - millis;
                        }
+                       if( nVal > aTimeVal[i][1] - millis )
+                          nVal = aTimeVal[i][1] - millis;
                     }
 
                     tmHandler.postDelayed(this, nVal);
@@ -777,8 +775,8 @@ public class Harbour {
              if( aTimers[i] == sId ) {
                 for( j = i; j < iTimers-1; j++ ) {
                    aTimers[j] = aTimers[j+1];
+                   aTimeVal[j][0] = aTimeVal[j+1][0];
                    aTimeVal[j][1] = aTimeVal[j+1][1];
-                   aTimeVal[j][2] = aTimeVal[j+1][2];
                 }
                 break;
              }

@@ -1,4 +1,8 @@
 
+2015-03-10 10:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    ! Few fixes in timer(), it works now.
+
 2015-03-09 21:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
   * src/prg/hdmain.prg
