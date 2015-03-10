@@ -36,6 +36,8 @@ import android.widget.Toast;
 import android.app.Notification;
 import android.app.NotificationManager;
 
+import android.content.res.Resources;
+
 
 public class Harbour {
 
@@ -46,10 +48,11 @@ public class Harbour {
     private static View mainView;
     private static Harbour hbobj;
     public static Context context;
+    private static String sPackage = null;
+    private static Resources resources = null;
     public static Class dopClass = null;
     public static String cHomePath;
     public static String sMenu = null;
-    //public static String sActId = null;
     private static String sActivity = null;
 
     public Harbour( Context cont ) {
@@ -57,6 +60,8 @@ public class Harbour {
        cHomePath = context.getFilesDir() + "/";
        setHomePath( cHomePath );
        hbobj = this;
+       sPackage = context.getPackageName();
+       resources = context.getResources();
     }
 
     public native void vmInit();
@@ -855,6 +860,59 @@ public class Harbour {
           return Environment.getExternalStorageDirectory() + "/";
        else
           return "";
+    }
+
+    //private static Class r_string = null;
+    //private static Class r_draw = null;
+
+    public static int resourceID( String sRes ) {
+
+       int id = 0;
+       char c = sRes.charAt(0);
+/*       
+       try {
+          Class res = null;
+          switch( c ) {
+             case 's':
+                if( r_string == null ) {
+                   hlog("str1");
+                   r_string = Class.forName( context.getPackageName()+".R.string" );
+                   hlog("str2");
+                }
+                res = r_string;
+                break;
+             case 'd':
+                if( r_draw == null )
+                   r_draw = Class.forName( "R.drawable" );
+                res = r_draw;
+                break;
+          }
+
+          Field field = res.getField( sRes.substring( 2 ) );
+          id = field.getInt(null);
+       }
+       catch (Exception e) {
+          id = 0;
+       }
+*/       
+       
+       try {
+          String stype = null;
+          switch( c ) {
+             case 's':
+                stype = "string";
+                break;
+             case 'd':
+                stype = "drawable";
+                break;
+          }
+          id = resources.getIdentifier( sRes.substring( 2 ) , stype, sPackage );
+       }
+       catch (Exception e) {
+          id = 0;
+       }
+       
+       return id;
     }
 
     static {

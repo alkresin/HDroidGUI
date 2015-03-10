@@ -1,4 +1,8 @@
 
+2015-03-10 21:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * resourceID() method added to get resource id by name
+
 2015-03-10 15:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * INIT NOTIFICATION command added
