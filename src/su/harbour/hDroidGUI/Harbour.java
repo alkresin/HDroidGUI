@@ -33,6 +33,9 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+
 
 public class Harbour {
 
@@ -785,6 +788,51 @@ public class Harbour {
           iTimers--;
           if( iTimers == 0 )
              tmHandler.removeCallbacks(tmRunnable);
+       }
+
+    }
+
+    public static void notify( String sNotify ) {
+
+       Notification.Builder builder = new Notification.Builder(context);
+
+       int notifyId, nDef = 0;
+       int nPos = sNotify.indexOf( ",," ), nPos2;
+
+       if( nPos > 0 ) {
+          notifyId = Integer.parseInt( sNotify.substring( 0,nPos ) );
+          //nPos2 = nPos + 2;
+          //nPos = sNotify.indexOf( ",,",nPos2 );
+          if( nPos > 0 && sNotify.substring( nPos+5,nPos+7 ).equals( ",," ) ) {
+             if( sNotify.substring( nPos+2,nPos+3 ).equals( "y" ) )
+                nDef |= Notification.DEFAULT_LIGHTS;
+             if( sNotify.substring( nPos+3,nPos+4 ).equals( "y" ) )
+                nDef |= Notification.DEFAULT_SOUND;
+             if( sNotify.substring( nPos+4,nPos+5 ).equals( "y" ) )
+                nDef |= Notification.DEFAULT_VIBRATE;
+             builder.setDefaults( nDef );
+
+             nPos2 = nPos + 7;
+             nPos = sNotify.indexOf( ",,",nPos2 );
+             if( nPos > 0 ) {
+                builder.setContentTitle( sNotify.substring( nPos2,nPos ) );
+
+                nPos2 = nPos + 2;
+                nPos = sNotify.indexOf( ",,",nPos2 );
+                if( nPos > 0 ) {
+                   builder.setContentText( sNotify.substring( nPos2,nPos ) );
+
+                   nPos2 = nPos + 2;
+                   nPos = sNotify.indexOf( ",,",nPos2 );
+                   if( nPos > 0 )
+                      builder.setSubText( sNotify.substring( nPos2,nPos ) );
+                }
+
+                builder.setSmallIcon( android.R.drawable.arrow_down_float );
+                NotificationManager notifMan = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                notifMan.notify( notifyId, builder.build() );
+             }
+          }
        }
 
     }

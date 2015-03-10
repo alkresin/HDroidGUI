@@ -1,4 +1,12 @@
 
+2015-03-10 15:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * INIT NOTIFICATION command added
+  * src/prg/hdactiv.prg
+    * HDNotify() class added
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * notify() method added
+
 2015-03-10 10:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     ! Few fixes in timer(), it works now.

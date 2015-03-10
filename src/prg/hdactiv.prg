@@ -273,3 +273,35 @@ METHOD End() CLASS HDTimer
    hd_calljava_s_v( "kill:" + ::id, "timer" )
 
    RETURN Nil
+
+CLASS HDNotify INHERIT HDGUIObject
+
+   CLASS VAR nId SHARED    INIT 100
+
+   DATA id
+   DATA lLight, lSound, lVibr
+   DATA cTitle    INIT ""
+   DATA cText     INIT ""
+   DATA cSubtext  INIT ""
+
+   METHOD New( lLight, lSound, lVibr, cTitle, cText, cSubtext )
+   METHOD Run()
+
+ENDCLASS
+
+METHOD New( lLight, lSound, lVibr, cTitle, cText, cSubtext ) CLASS HDNotify
+
+   ::id := Ltrim(Str( ++::nId ))
+   ::lLight   := lLight
+   ::lSound   := lSound
+   ::lVibr    := lVibr
+   ::cTitle   := cTitle
+   ::cText    := cText
+   ::cSubtext := cSubtext
+
+   RETURN Self
+
+METHOD Run() CLASS HDNotify
+   RETURN hd_calljava_s_v( ::id + ",," + Iif(Empty(::lLight),"n","y") + ;
+      Iif(Empty(::lSound),"n","y") + Iif(Empty(::lVibr),"n","y") + ",," + ;
+      ::cTitle + ",," + ::cText + ",," + ::cSubtext + ",,", "notify" )

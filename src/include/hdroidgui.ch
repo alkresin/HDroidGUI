@@ -131,3 +131,12 @@
              VALUE <value> ACTION <bAction> ;
           => ;
     <oTimer> := HDTimer():New( <value>, <bAction> )
+
+#xcommand INIT NOTIFICATION <oNotify> TITLE <cTitle> ;
+             [ TEXT <cText> ]             ;
+             [ SUBTEXT <cSubText> ]       ;
+             [<lLight: LIGHT>]            ;
+             [<lSound: SOUND>]            ;
+             [<lVibr:  VIBRATION>]        ;
+          => ;
+    <oNotify> := HDNotify():New( <.lLight.>, <.lSound.>, <.lVibr.>, <cTitle>, <cText>, <cSubText> )
