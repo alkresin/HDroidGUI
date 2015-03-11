@@ -1,4 +1,8 @@
 
+2015-03-11 17:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    ! Small fix
+
 2015-03-11 16:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 4

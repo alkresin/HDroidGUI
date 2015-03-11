@@ -863,7 +863,7 @@ public class Harbour {
     }
 
     private static String getStr( String sRes ) {
-       if( sRes.substring( 0,2 ).equals( "$$" ) ) {
+       if( sRes.length() > 2 && sRes.substring( 0,2 ).equals( "$$" ) ) {
           int id = resID( sRes.substring( 2 ), "string" );
           if( id == 0 )
              return "";
