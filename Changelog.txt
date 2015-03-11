@@ -1,4 +1,13 @@
 
+2015-03-11 16:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed to 4
+  * src/prg/hdactiv.prg
+    ! HDNotify():New() fixed
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * resourceID() is renamed to resID(), getStr() added,
+      possibility to use strings from resources added.
+
 2015-03-10 21:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     * resourceID() method added to get resource id by name

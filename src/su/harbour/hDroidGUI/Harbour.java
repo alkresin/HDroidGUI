@@ -171,7 +171,7 @@ public class Harbour {
        while( aParams[iArr][0] != null ) {
 
           if( aParams[iArr][0].equals("t") ) {
-             act.setTitle( aParams[iArr][1] );
+             act.setTitle( getStr(aParams[iArr][1]) );
           }
           iArr ++;
        }
@@ -312,7 +312,7 @@ public class Harbour {
           while( aParams[iArr][0] != null ) {
 
              if( aParams[iArr][0].equals("t") ) {
-                mtextview.setText(aParams[iArr][1]);
+                mtextview.setText(getStr(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("ct") ) {
                 mtextview.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
@@ -332,7 +332,7 @@ public class Harbour {
           while( aParams[iArr][0] != null ) {
 
              if( aParams[iArr][0].equals("t") ) {
-                mButton.setText(aParams[iArr][1]);
+                mButton.setText(getStr(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("ct") ) {
                 mButton.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
@@ -357,13 +357,13 @@ public class Harbour {
           while( aParams[iArr][0] != null ) {
 
              if( aParams[iArr][0].equals("t") ) {
-                medit.setText(aParams[iArr][1]);
+                medit.setText(getStr(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("ct") ) {
                 medit.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
                 medit.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("hint") ) {
-                medit.setHint(aParams[iArr][1]);
+                medit.setHint(getStr(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("f") ) {
                 setFont( medit, aParams[iArr][1] );
              } else if( aParams[iArr][0].equals("bkey") ) {
@@ -389,7 +389,7 @@ public class Harbour {
           while( aParams[iArr][0] != null ) {
 
              if( aParams[iArr][0].equals("t") ) {
-                mche.setText(aParams[iArr][1]);
+                mche.setText(getStr(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("ct") ) {
                 mche.setTextColor(parseColor(aParams[iArr][1]));
              } else if( aParams[iArr][0].equals("cb") ) {
@@ -594,7 +594,7 @@ public class Harbour {
 
           if( scmd.equals( "settxt" ) ) {
              if( tview != null )
-                tview.setText( message.substring( nPos1+1 ) );
+                tview.setText( getStr( message.substring( nPos1+1 ) ) );
           }
        }
     }
@@ -862,51 +862,24 @@ public class Harbour {
           return "";
     }
 
-    //private static Class r_string = null;
-    //private static Class r_draw = null;
+    private static String getStr( String sRes ) {
+       if( sRes.substring( 0,2 ).equals( "$$" ) ) {
+          int id = resID( sRes.substring( 2 ), "string" );
+          if( id == 0 )
+             return "";
+          else
+             return context.getString( id );
+       }
+       else
+          return sRes;
+    }
 
-    public static int resourceID( String sRes ) {
+    private static int resID( String sRes, String sType ) {
 
        int id = 0;
-       char c = sRes.charAt(0);
-/*       
-       try {
-          Class res = null;
-          switch( c ) {
-             case 's':
-                if( r_string == null ) {
-                   hlog("str1");
-                   r_string = Class.forName( context.getPackageName()+".R.string" );
-                   hlog("str2");
-                }
-                res = r_string;
-                break;
-             case 'd':
-                if( r_draw == null )
-                   r_draw = Class.forName( "R.drawable" );
-                res = r_draw;
-                break;
-          }
 
-          Field field = res.getField( sRes.substring( 2 ) );
-          id = field.getInt(null);
-       }
-       catch (Exception e) {
-          id = 0;
-       }
-*/       
-       
        try {
-          String stype = null;
-          switch( c ) {
-             case 's':
-                stype = "string";
-                break;
-             case 'd':
-                stype = "drawable";
-                break;
-          }
-          id = resources.getIdentifier( sRes.substring( 2 ) , stype, sPackage );
+          id = resources.getIdentifier( sRes, sType, sPackage );
        }
        catch (Exception e) {
           id = 0;

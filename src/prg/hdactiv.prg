@@ -280,9 +280,9 @@ CLASS HDNotify INHERIT HDGUIObject
 
    DATA id
    DATA lLight, lSound, lVibr
-   DATA cTitle    INIT ""
-   DATA cText     INIT ""
-   DATA cSubtext  INIT ""
+   DATA cTitle
+   DATA cText
+   DATA cSubtext
 
    METHOD New( lLight, lSound, lVibr, cTitle, cText, cSubtext )
    METHOD Run()
@@ -295,9 +295,9 @@ METHOD New( lLight, lSound, lVibr, cTitle, cText, cSubtext ) CLASS HDNotify
    ::lLight   := lLight
    ::lSound   := lSound
    ::lVibr    := lVibr
-   ::cTitle   := cTitle
-   ::cText    := cText
-   ::cSubtext := cSubtext
+   ::cTitle   := Iif( Empty( cTitle ), "", cTitle )
+   ::cText    := Iif( Empty( cText ), "", cText )
+   ::cSubtext := Iif( Empty( cSubtext ), "", cSubtext )
 
    RETURN Self
 
