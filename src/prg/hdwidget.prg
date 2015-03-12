@@ -68,6 +68,7 @@ CLASS HDLayout INHERIT HDGroup
 
    DATA lHorz
    DATA nWidth, nHeight
+   DATA nMarginL, nMarginT, nMarginR, nMarginB
    DATA bColor
    DATA oFont
 
@@ -105,6 +106,18 @@ METHOD ToString() CLASS HDLayout
    IF ::bColor != Nil
       sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
    ENDIF
+   IF ::nMarginL != Nil
+      sRet += ",,ml:" + Ltrim(Str(::nMarginL))
+   ENDIF
+   IF ::nMarginT != Nil
+      sRet += ",,mt:" + Ltrim(Str(::nMarginT))
+   ENDIF
+   IF ::nMarginR != Nil
+      sRet += ",,mr:" + Ltrim(Str(::nMarginR))
+   ENDIF
+   IF ::nMarginB != Nil
+      sRet += ",,mb:" + Ltrim(Str(::nMarginB))
+   ENDIF
 
    sRet += ::Super:ToString()
 
@@ -115,6 +128,8 @@ CLASS HDWidget INHERIT HDGUIObject
    DATA oParent
    DATA cText
    DATA nWidth, nHeight
+   DATA nMarginL, nMarginT, nMarginR, nMarginB
+   DATA nPaddL, nPaddT, nPaddR, nPaddB
    DATA tColor, bColor
    DATA oFont
 
@@ -184,6 +199,30 @@ METHOD ToString() CLASS HDWidget
       sRet += ",,f:" + Ltrim(Str(::oFont:typeface)) + "/" + ;
             Ltrim(Str(::oFont:style)) + "/" + Ltrim(Str(::oFont:height))
    ENDIF
+   IF ::nMarginL != Nil
+      sRet += ",,ml:" + Ltrim(Str(::nMarginL))
+   ENDIF
+   IF ::nMarginT != Nil
+      sRet += ",,mt:" + Ltrim(Str(::nMarginT))
+   ENDIF
+   IF ::nMarginR != Nil
+      sRet += ",,mr:" + Ltrim(Str(::nMarginR))
+   ENDIF
+   IF ::nMarginB != Nil
+      sRet += ",,mb:" + Ltrim(Str(::nMarginB))
+   ENDIF
+   IF ::nPaddL != Nil
+      sRet += ",,pl:" + Ltrim(Str(::nPaddL))
+   ENDIF
+   IF ::nPaddT != Nil
+      sRet += ",,pt:" + Ltrim(Str(::nPaddT))
+   ENDIF
+   IF ::nPaddR != Nil
+      sRet += ",,pr:" + Ltrim(Str(::nPaddR))
+   ENDIF
+   IF ::nPaddB != Nil
+      sRet += ",,pb:" + Ltrim(Str(::nPaddB))
+   ENDIF
 
    RETURN sRet
 
@@ -247,6 +286,8 @@ CLASS HDEdit INHERIT HDWidget
    DATA bKeyDown
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown )
+   METHOD getCursorPos( n )
+   METHOD setCursorPos( nPos )
    METHOD ToString()
 
 ENDCLASS
@@ -258,6 +299,18 @@ METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown ) CLA
    ::bKeyDown := bKeyDown
 
    RETURN Self
+
+METHOD getCursorPos( n ) CLASS HDEdit
+
+   LOCAL nPos := Val( hd_calljava_s_s( Iif( Empty(n).OR.n==1,"getsels:","getsele:" ) + ::objname + ":" ) )
+
+   RETURN nPos
+
+METHOD setCursorPos( nPos ) CLASS HDEdit
+
+   hd_calljava_s_v( "setsels:" + ::objname + ":" + Ltrim(Str(nPos)) )
+
+   RETURN Nil
 
 METHOD ToString() CLASS HDEdit
 

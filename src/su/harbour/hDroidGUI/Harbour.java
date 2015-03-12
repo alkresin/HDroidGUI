@@ -456,16 +456,44 @@ public class Harbour {
 
        int iArr = 0;
        int iHeight = -10, iWidth = -10;
+       int iml = 0, imt = 0, imr = 0, imb = 0;
+       int ipl = 0, ipt = 0, ipr = 0, ipb = 0;
+       boolean bm = false, bp = false;
+
        while( aParams[iArr][0] != null ) {
 
           if( aParams[iArr][0].equals("h") ) {
              iHeight = Integer.parseInt(aParams[iArr][1]);
           } else if( aParams[iArr][0].equals("w") ) {
              iWidth = Integer.parseInt(aParams[iArr][1]);
+          } else if( aParams[iArr][0].equals("ml") ) {
+             iml = Integer.parseInt(aParams[iArr][1]);
+             bm = true;
+          } else if( aParams[iArr][0].equals("mt") ) {
+             imt = Integer.parseInt(aParams[iArr][1]);
+             bm = true;
+          } else if( aParams[iArr][0].equals("mr") ) {
+             imr = Integer.parseInt(aParams[iArr][1]);
+             bm = true;
+          } else if( aParams[iArr][0].equals("mb") ) {
+             imb = Integer.parseInt(aParams[iArr][1]);
+             bm = true;
+          } else if( aParams[iArr][0].equals("pl") ) {
+             ipl = Integer.parseInt(aParams[iArr][1]);
+             bp = true;
+          } else if( aParams[iArr][0].equals("pt") ) {
+             ipt = Integer.parseInt(aParams[iArr][1]);
+             bp = true;
+          } else if( aParams[iArr][0].equals("pr") ) {
+             ipr = Integer.parseInt(aParams[iArr][1]);
+             bp = true;
+          } else if( aParams[iArr][0].equals("pb") ) {
+             ipb = Integer.parseInt(aParams[iArr][1]);
+             bp = true;
           }
           iArr ++;
        }
-       if( iHeight != -10 || iWidth != -10 ) {
+       if( iHeight != -10 || iWidth != -10 || bm ) {
           LinearLayout.LayoutParams parms;
           if( iHeight == -10 )
              iHeight = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -475,7 +503,19 @@ public class Harbour {
              parms = new LinearLayout.LayoutParams(iWidth,iHeight,1);
           else
              parms = new LinearLayout.LayoutParams(iWidth,iHeight);
+          if( bm )
+             parms.setMargins( iml, imt, imr, imb );
           mView.setLayoutParams(parms);
+          if( bp )
+             mView.setPadding( ipl, ipt, ipr, ipb );
+
+          /*
+          if( bm ) {
+             MarginLayoutParams params = (MarginLayoutParams) mView.getLayoutParams();
+             params.leftMargin = iml; params.topMargin = imt; params.rightMargin = imr; params.bottomMargin = imb;
+             mView.setLayoutParams(params);
+          }
+          */
        }
 
     }
@@ -496,7 +536,7 @@ public class Harbour {
 
     private static String[][] GetParamsList( String sParam ) {
     
-       String [][] aParams = new String [8][2];
+       String [][] aParams = new String [24][2];
        aParams[0][0] = null;
 
        int nPos;
@@ -595,6 +635,9 @@ public class Harbour {
           if( scmd.equals( "settxt" ) ) {
              if( tview != null )
                 tview.setText( getStr( message.substring( nPos1+1 ) ) );
+          } else if( scmd.equals( "setsels" ) ) {
+             if( tview != null )
+                ((EditText)tview).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
           }
        }
     }
@@ -606,21 +649,27 @@ public class Harbour {
        int nPos = message.indexOf(":");
        int nPos1;
        
-       if( nPos <= 0 )
-          return "err";
+       if( nPos > 0 ) {
 
-       scmd = message.substring( 0,nPos );
-       nPos1 = message.indexOf(":",nPos+1);
-       if( nPos1 > 0 ) {
-          stag = message.substring( nPos+1,nPos1 );
-          tview = (TextView) mainView.findViewWithTag( stag );
-       }
+          scmd = message.substring( 0,nPos );
+          nPos1 = message.indexOf(":",nPos+1);
+          if( nPos1 > 0 ) {
+             stag = message.substring( nPos+1,nPos1 );
+             tview = (TextView) mainView.findViewWithTag( stag );
+          }
 
-       if( scmd.equals( "gettxt" ) ) {
-          if( tview != null )
-             return (String) tview.getText().toString();
+          if( scmd.equals( "gettxt" ) ) {
+             if( tview != null )
+                return (String) tview.getText().toString();
+          } else if( scmd.equals( "getsels" ) ) {
+             if( tview != null )
+                return (String) "" + tview.getSelectionStart();
+          } else if( scmd.equals( "getsele" ) ) {
+             if( tview != null )
+                return (String) "" + tview.getSelectionEnd();
+          }
        }
-       return "ok";
+       return "err";
     }
 
     public static void activ( String sAct ) {

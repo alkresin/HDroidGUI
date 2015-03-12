@@ -1,4 +1,13 @@
 
+2015-03-12 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+    * nMarginL, nMarginT, nMarginR, nMarginB,
+      nPaddL, nPaddT, nPaddR, nPaddB variables has been added to
+      HDWidget and HDLayout classes.
+    * getCursorPos( n ) and setCursorPos( nPos ) methods has been added to HDEdit class
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * added support for margins and get/set cursor position
+
 2015-03-11 17:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     ! Small fix
