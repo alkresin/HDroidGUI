@@ -1,4 +1,13 @@
 
+2015-03-13 14:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  + src/su/harbour/hDroidGUI/CreateUI.java
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Part of a code is moved to a new file CreateUI.java
+    * Screen size is calculated now while Activity's onCreate()
+  * src/prg/hdmain.prg
+    * New function added - hd_getScreenSize(), which returns an array with
+      the width and height of a screen in pixels.
+
 2015-03-12 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
     * nMarginL, nMarginT, nMarginR, nMarginB,

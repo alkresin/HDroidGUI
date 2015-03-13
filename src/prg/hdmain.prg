@@ -83,6 +83,17 @@ FUNCTION hd_Version( n )
 
    RETURN "HDroidGUI " + HDROIDGUI_VERSION + " Build " + Ltrim(Str(HDROIDGUI_BUILD))
 
+FUNCTION hd_getScreenSize()
+
+   LOCAL s := hd_calljava_s_s( "getscrsiz:" )
+   LOCAL nPos := At( "/", s )
+
+   IF nPos > 0
+      RETURN { Val( Left(s,nPos-1) ), Val( Substr(s,nPos+1) ) }
+   ENDIF
+
+   RETURN Nil
+
 FUNCTION hd_MsgInfo( cMessage, bExit )
 
    LOCAL oDlg, oBtn

@@ -154,7 +154,7 @@ STATIC FUNCTION CreateJava( aFullName )
    cBody := cPackage
 
    cBody += "import android.app.Application;" + crlf + ;
-      "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
+      "import su.harbour.hDroidGUI.*;" + crlf + crlf + ;
       "public class MainApp extends Application {" + crlf + crlf + ;
       "   public static Harbour harb;" + crlf + crlf + ;
       "   @Override"  + crlf + ;
@@ -177,7 +177,7 @@ STATIC FUNCTION CreateJava( aFullName )
       "import android.view.View;" + crlf + ;
       "import android.view.Menu;" + crlf + ;
       "import android.view.MenuItem;" + crlf + ;
-      "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
+      "import su.harbour.hDroidGUI.*;" + crlf + crlf + ;
       "public class MainActivity extends Activity {" + crlf + crlf + ;
       "   private static View mainView;" + crlf + crlf + ;
       "   @Override" + crlf + ;
@@ -210,7 +210,7 @@ STATIC FUNCTION CreateJava( aFullName )
       "import android.view.View;" + crlf + ;
       "import android.view.Menu;" + crlf + ;
       "import android.view.MenuItem;" + crlf + ;
-      "import su.harbour.hDroidGUI.Harbour;" + crlf + crlf + ;
+      "import su.harbour.hDroidGUI.*;" + crlf + crlf + ;
       "public class DopActivity extends Activity {" + crlf + crlf + ;
       "   private static View mainView;" + crlf + ;
       '   private static String sId;' + crlf + crlf + ;
