@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.KeyEvent;
 import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.HorizontalScrollView;
 
 import android.widget.LinearLayout.LayoutParams;
 
@@ -159,6 +161,8 @@ public class CreateUI {
        String sObjName = "";
        View mView;
        boolean bScroll = false;
+       String [][] aParams = null;
+       int iArr = 0;
        int nPos2 = sContent.indexOf(")]");
        int nPos = sContent.indexOf(",,/");
 
@@ -171,12 +175,11 @@ public class CreateUI {
 
        nPos = sContent.indexOf(",,");
        if( nPos < 0 )
-          return null;
-
-       String [][] aParams = GetParamsList( sContent.substring(nPos) );
-       int iArr = 0;
-
-       sName = sContent.substring(0,nPos);
+          sName = sContent;
+       else {
+          aParams = GetParamsList( sContent.substring(nPos) );
+          sName = sContent.substring(0,nPos);
+       }
        nPos = sName.indexOf(":");
        if( nPos > 0 ) {
           sObjName = sName.substring(nPos+1);
@@ -185,95 +188,114 @@ public class CreateUI {
        if( sName.equals("txt") ) {
 
           TextView mtextview = new TextView(Harbour.context);
-          while( aParams[iArr][0] != null ) {
+          if( aParams != null )
+             while( aParams[iArr][0] != null ) {
 
-             if( aParams[iArr][0].equals("t") ) {
-                mtextview.setText(getStr(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("ct") ) {
-                mtextview.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("cb") ) {
-                mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("f") ) {
-                setFont( mtextview, aParams[iArr][1] );
-             } else if( aParams[iArr][0].equals("scroll") ) {
-                bScroll = true;
+                if( aParams[iArr][0].equals("t") ) {
+                   mtextview.setText(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("ct") ) {
+                   mtextview.setTextColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("cb") ) {
+                   mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("f") ) {
+                   setFont( mtextview, aParams[iArr][1] );
+                } else if( aParams[iArr][0].equals("scroll") ) {
+                   bScroll = true;
+                }
+                iArr ++;
              }
-             iArr ++;
-          }
           mView = mtextview;
 
        } else if( sName.equals("btn") ) {
 
           Button mButton = new Button(Harbour.context);
-          while( aParams[iArr][0] != null ) {
+          if( aParams != null )
+             while( aParams[iArr][0] != null ) {
 
-             if( aParams[iArr][0].equals("t") ) {
-                mButton.setText(getStr(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("ct") ) {
-                mButton.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("cb") ) {
-                mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("f") ) {
-                setFont( mButton, aParams[iArr][1] );
-             } else if( aParams[iArr][0].equals("bcli") ) {
-                if( !sObjName.isEmpty() )
-                   mButton.setOnClickListener(new View.OnClickListener() {
-                      public void onClick(View v) {
-                         String sRes = Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
-                      }
-                   });
+                if( aParams[iArr][0].equals("t") ) {
+                   mButton.setText(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("ct") ) {
+                   mButton.setTextColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("cb") ) {
+                   mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("f") ) {
+                   setFont( mButton, aParams[iArr][1] );
+                } else if( aParams[iArr][0].equals("bcli") ) {
+                   if( !sObjName.isEmpty() )
+                      mButton.setOnClickListener(new View.OnClickListener() {
+                         public void onClick(View v) {
+                            String sRes = Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
+                         }
+                      });
+                }
+                iArr ++;
              }
-             iArr ++;
-          }
           mView = mButton;
 
        } else if( sName.equals("edi") ) {
 
           EditText medit = new EditText(Harbour.context);
-          while( aParams[iArr][0] != null ) {
+          if( aParams != null )
+             while( aParams[iArr][0] != null ) {
 
-             if( aParams[iArr][0].equals("t") ) {
-                medit.setText(getStr(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("ct") ) {
-                medit.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("cb") ) {
-                medit.setBackgroundColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("hint") ) {
-                medit.setHint(getStr(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("f") ) {
-                setFont( medit, aParams[iArr][1] );
-             } else if( aParams[iArr][0].equals("bkey") ) {
-                if( !sObjName.isEmpty() ) {
-                   medit.setOnKeyListener(new View.OnKeyListener() {
-                      public boolean onKey(View v, int keyCode, KeyEvent event) {
-                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                            String sRes = Harbour.hbobj.hrbCall( "EVENT_KEYDOWN",(String)v.getTag()+":"+keyCode );
-                            return sRes.equals( "1" )? true : false;
+                if( aParams[iArr][0].equals("t") ) {
+                   medit.setText(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("ct") ) {
+                   medit.setTextColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("cb") ) {
+                   medit.setBackgroundColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("hint") ) {
+                   medit.setHint(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("f") ) {
+                   setFont( medit, aParams[iArr][1] );
+                } else if( aParams[iArr][0].equals("bkey") ) {
+                   if( !sObjName.isEmpty() ) {
+                      medit.setOnKeyListener(new View.OnKeyListener() {
+                         public boolean onKey(View v, int keyCode, KeyEvent event) {
+                            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                               String sRes = Harbour.hbobj.hrbCall( "EVENT_KEYDOWN",(String)v.getTag()+":"+keyCode );
+                               return sRes.equals( "1" )? true : false;
+                            }
+                            return false;
                          }
-                         return false;
-                      }
-                   });
+                      });
+                   }
                 }
+                iArr ++;
              }
-             iArr ++;
-          }
           mView = medit;
 
        } else if( sName.equals("che") ) {
 
           CheckBox mche = new CheckBox(Harbour.context);
-          while( aParams[iArr][0] != null ) {
+          if( aParams != null )
+             while( aParams[iArr][0] != null ) {
 
-             if( aParams[iArr][0].equals("t") ) {
-                mche.setText(getStr(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("ct") ) {
-                mche.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( aParams[iArr][0].equals("cb") ) {
-                mche.setBackgroundColor(parseColor(aParams[iArr][1]));
+                if( aParams[iArr][0].equals("t") ) {
+                   mche.setText(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("ct") ) {
+                   mche.setTextColor(parseColor(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("cb") ) {
+                   mche.setBackgroundColor(parseColor(aParams[iArr][1]));
+                }
+                iArr ++;
              }
-             iArr ++;
-          }
           mView = mche;
+
+       } else if( sName.equals("brw") ) {
+
+          HorizontalScrollView hsv = new HorizontalScrollView(Harbour.context);
+          LinearLayout ll = new LinearLayout(Harbour.context);
+          ll.setOrientation(LinearLayout.HORIZONTAL);
+
+          ListView mlv = new ListView(Harbour.context);
+          mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName ) );
+
+          hsv.addView( ll );
+          ll.addView( mlv );
+          mView = hsv;
+          //mView = mlv;
+
        }  else
           return null;
 
@@ -330,6 +352,9 @@ public class CreateUI {
 
     private static void SetSize( View mView, String [][] aParams ) {      
 
+       if( aParams == null )
+          return;
+
        int iArr = 0;
        int iHeight = -10, iWidth = -10;
        int iml = 0, imt = 0, imr = 0, imb = 0;
@@ -384,14 +409,6 @@ public class CreateUI {
           mView.setLayoutParams(parms);
           if( bp )
              mView.setPadding( ipl, ipt, ipr, ipb );
-
-          /*
-          if( bm ) {
-             MarginLayoutParams params = (MarginLayoutParams) mView.getLayoutParams();
-             params.leftMargin = iml; params.topMargin = imt; params.rightMargin = imr; params.bottomMargin = imb;
-             mView.setLayoutParams(params);
-          }
-          */
        }
 
     }

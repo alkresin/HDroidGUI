@@ -8,7 +8,7 @@
 Function hd_SetCtrlName( oCtrl, cName )
    LOCAL nPos
 
-   IF !Empty( cName ) .AND. ValType( cName ) == "C" .AND. oCtrl:oParent != Nil .AND. ! "[" $ cName
+   IF !Empty( cName ) .AND. ValType( cName ) == "C"
       IF ( nPos :=  RAt( ":", cName ) ) > 0 .OR. ( nPos :=  RAt( ">", cName ) ) > 0
          cName := SubStr( cName, nPos + 1 )
       ENDIF

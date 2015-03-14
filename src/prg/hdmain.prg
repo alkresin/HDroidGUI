@@ -50,6 +50,23 @@ FUNCTION event_Timer( cName )
 
    RETURN HDTimer():TimerFunc( cName )
 
+FUNCTION cb_Browse( cCmd )
+   
+   LOCAL nPos := hb_At( ":",cCmd,5 ), sq
+   LOCAL oItem := Atail( HDWindow():aWindows ):FindByName( Substr( cCmd, 5, nPos-5 ) )
+
+   IF !Empty( oItem )
+      IF ( sq := Left( cCmd,3 ) ) == "row"
+         RETURN oItem:GetRow( Val( Substr( cCmd, nPos+1 ) ) )
+      ELSEIF sq == "cou"
+         RETURN LTrim( Str( oItem:RowCount() ) )
+      ELSEIF sq == "str"
+         RETURN oItem:GetStru()
+      ENDIF
+   ENDIF
+
+   RETURN ""
+
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 
@@ -148,7 +165,7 @@ FUNCTION hd_HrbLoad( cName )
 FUNCTION hd_Main( cAppType )
 
    LOCAL hf, oWnd, sMainFunc := "HDROIDMAIN"
-   LOCAL bOldError
+   //LOCAL bOldError
    STATIC lFirst := .T.
 
    IF lFirst
@@ -157,11 +174,11 @@ FUNCTION hd_Main( cAppType )
    HDWindow():lMain := .T.
    IF cAppType == "1"
       IF !Empty( hf := hb_hrbGetFunsym( hrbHandle, sMainFunc ) )
-         bOldError := ErrorBlock( { |e|break( e ) } )
+         //bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
             oWnd := Do( hf, lFirst )
          END SEQUENCE
-         ErrorBlock( bOldError )
+         //ErrorBlock( bOldError )
       ELSE
          RETURN ""
       ENDIF
@@ -169,11 +186,11 @@ FUNCTION hd_Main( cAppType )
       IF Type( sMainFunc+"()" ) == "U"
          RETURN ""
       ELSE
-         bOldError := ErrorBlock( { |e|break( e ) } )
+         //bOldError := ErrorBlock( { |e|break( e ) } )
          BEGIN SEQUENCE
             oWnd := &(sMainFunc+"("+Iif(lFirst,".t.",".f.")+")")
          END SEQUENCE
-         ErrorBlock( bOldError )
+         //ErrorBlock( bOldError )
       ENDIF
    ENDIF
    lFirst := .F.

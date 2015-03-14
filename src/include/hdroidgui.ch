@@ -118,7 +118,7 @@
     [; hd_SetCtrlName( <oEdit>,<(oEdit)> )]
 
 #xcommand CHECKBOX <oChe>                   ;
-             [ TEXT <cText> ]             ;
+             [ TEXT <cText> ]               ;
              [ SIZE <width>, <height> ]     ;
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
@@ -126,6 +126,15 @@
           => ;
    <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont> );
     [; hd_SetCtrlName( <oChe>,<(oChe)> )]
+
+#xcommand BROWSE <oBrw>                     ;
+             [ SIZE <width>, <height> ]     ;
+             [ TEXTCOLOR <tcolor> ]         ;
+             [ BACKCOLOR <bcolor> ]         ;
+             [ FONT <oFont> ]               ;
+          => ;
+   <oBrw> := HDBrowse():New( <width>,<height>,<tcolor>,<bcolor>,<oFont> );
+    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
 
 #xcommand SET TIMER <oTimer>  ;
              VALUE <value> ACTION <bAction> ;

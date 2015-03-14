@@ -1,6 +1,7 @@
 #!/bin/sh
 rm hdroidgui.jar
 rm -f *.out
+rm -f jni/*.out
 rm -f -r lib
 mkdir lib
 chmod a+w+r+x lib

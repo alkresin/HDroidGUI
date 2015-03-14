@@ -1,4 +1,25 @@
 
+2015-03-14 11:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  + src/prg/hdbrowse.prg
+  + src/su/harbour/hDroidGUI/BrowseAdapter.java
+    * files added to implement browse
+  * clear.bat
+  * clear.sh
+  * ndkBuild.bat
+  * ndkbuild.sh
+    * scripts changed for new files
+  * src/include/hdroidgui.ch
+    * BROWSE command added
+  * src/prg/hdmain.prg
+    * Callback function for browse added - cb_browse()
+    * Errors handling changed in hd_Main()
+  * src/prg/hdwidget.prg
+    ! Small fix
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Changes to allow to not have the parameters.
+  * src/su/harbour/hDroidGUI/Harbour.java
+  * utils/newproject.prg
+
 2015-03-13 14:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
   + src/su/harbour/hDroidGUI/CreateUI.java
   * src/su/harbour/hDroidGUI/Harbour.java

@@ -99,7 +99,6 @@ public class Harbour {
        if( sMain != null )
           mainView = createui.CreateActivity( (Activity)context, sMain);
        else {
-          sMain = "null";
           mainView = null;
        }
        //Log.i(TAG, "hrbmain-2");
@@ -110,7 +109,11 @@ public class Harbour {
           ll.setOrientation(LinearLayout.VERTICAL);
 
           TextView textview = new TextView(context);
-          textview.setText(sMain);
+          textview.setText("Error");
+          if( sMain != null )
+             hlog( sMain );
+          else
+             hlog( "sMain == null" );
           ll.addView(textview);
 
           return ll;

@@ -568,7 +568,7 @@ STATIC FUNCTION CreatePrg( aFullName )
       RETURN .F.
    ENDIF
 
-   FWrite( handle, crlf + "FUNCTION HDroidMain" + crlf + crlf + "   RETURN NIL" + crlf )
+   FWrite( handle, crlf + '#include "hdroidgui.ch"' + crlf + crlf + "FUNCTION HDroidMain" + crlf + crlf + "   RETURN NIL" + crlf )
    FClose( handle )
 
    RETURN .T.
