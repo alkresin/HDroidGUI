@@ -52,14 +52,17 @@ FUNCTION event_Timer( cName )
 
 FUNCTION cb_Browse( cCmd )
    
-   LOCAL nPos := hb_At( ":",cCmd,5 ), sq
+   LOCAL nPos := hb_At( ":",cCmd,5 ), sq, nRow
    LOCAL oItem := Atail( HDWindow():aWindows ):FindByName( Substr( cCmd, 5, nPos-5 ) )
 
    IF !Empty( oItem )
       IF ( sq := Left( cCmd,3 ) ) == "row"
-         RETURN oItem:GetRow( Val( Substr( cCmd, nPos+1 ) ) )
+         RETURN oItem:GetRow( Val( Substr( cCmd, nPos+1 ) ) + 1 )
       ELSEIF sq == "cou"
          RETURN LTrim( Str( oItem:RowCount() ) )
+      ELSEIF sq == "cli"
+         oItem:GoTo( nRow := ( Val( Substr( cCmd, nPos+1 ) ) + 1 ) )
+         RETURN Eval( oItem:bClick, oItem, nRow )
       ELSEIF sq == "str"
          RETURN oItem:GetStru()
       ENDIF

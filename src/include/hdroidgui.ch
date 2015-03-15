@@ -89,9 +89,9 @@
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
-             [<lScroll: SCROLL>]            ;
+             [<lVScroll: VSCROLL>]          ;
           => ;
-   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lScroll.> );
+   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lVScroll.> );
     [; hd_SetCtrlName( <oText>,<(oText)> )]
 
 #xcommand BUTTON <oBtn>                     ;
@@ -132,8 +132,32 @@
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
+             [<lHScroll: HSCROLL>]          ;
+             [ ON CLICK <bClick> ]          ;
           => ;
-   <oBrw> := HDBrowse():New( <width>,<height>,<tcolor>,<bcolor>,<oFont> );
+   <oBrw> := HDBrowse():New( <width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
+    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
+
+#xcommand BROWSE <oBrw> ARRAY <aArr>        ;
+             [ SIZE <width>, <height> ]     ;
+             [ TEXTCOLOR <tcolor> ]         ;
+             [ BACKCOLOR <bcolor> ]         ;
+             [ FONT <oFont> ]               ;
+             [<lHScroll: HSCROLL>]          ;
+             [ ON CLICK <bClick> ]          ;
+          => ;
+   <oBrw> := HDBrwArray():New( <aArr>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
+    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
+
+#xcommand BROWSE <oBrw> DBF <cAlias>        ;
+             [ SIZE <width>, <height> ]     ;
+             [ TEXTCOLOR <tcolor> ]         ;
+             [ BACKCOLOR <bcolor> ]         ;
+             [ FONT <oFont> ]               ;
+             [<lHScroll: HSCROLL>]          ;
+             [ ON CLICK <bClick> ]          ;
+          => ;
+   <oBrw> := HDBrwDbf():New( <cAlias>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
     [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
 
 #xcommand SET TIMER <oTimer>  ;

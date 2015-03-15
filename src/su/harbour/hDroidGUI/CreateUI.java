@@ -13,6 +13,8 @@ import android.view.KeyEvent;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.HorizontalScrollView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import android.widget.LinearLayout.LayoutParams;
 
@@ -160,7 +162,7 @@ public class CreateUI {
        String sName;
        String sObjName = "";
        View mView;
-       boolean bScroll = false;
+       boolean bVScroll = false;
        String [][] aParams = null;
        int iArr = 0;
        int nPos2 = sContent.indexOf(")]");
@@ -199,8 +201,8 @@ public class CreateUI {
                    mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
                 } else if( aParams[iArr][0].equals("f") ) {
                    setFont( mtextview, aParams[iArr][1] );
-                } else if( aParams[iArr][0].equals("scroll") ) {
-                   bScroll = true;
+                } else if( aParams[iArr][0].equals("vscroll") ) {
+                   bVScroll = true;
                 }
                 iArr ++;
              }
@@ -224,7 +226,7 @@ public class CreateUI {
                    if( !sObjName.isEmpty() )
                       mButton.setOnClickListener(new View.OnClickListener() {
                          public void onClick(View v) {
-                            String sRes = Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
+                            Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
                          }
                       });
                 }
@@ -284,17 +286,38 @@ public class CreateUI {
 
        } else if( sName.equals("brw") ) {
 
-          HorizontalScrollView hsv = new HorizontalScrollView(Harbour.context);
-          LinearLayout ll = new LinearLayout(Harbour.context);
-          ll.setOrientation(LinearLayout.HORIZONTAL);
-
+          boolean bHScroll = false;
           ListView mlv = new ListView(Harbour.context);
           mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName ) );
 
-          hsv.addView( ll );
-          ll.addView( mlv );
-          mView = hsv;
-          //mView = mlv;
+          if( aParams != null )
+             while( aParams[iArr][0] != null ) {
+
+                if( aParams[iArr][0].equals("hscroll") ) {
+                   bHScroll = true;
+                } else if( aParams[iArr][0].equals("bcli") ) {
+                   if( !sObjName.isEmpty() )
+                      mlv.setOnItemClickListener(new OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> p, View v,
+                                int pos, long id) {
+                               Harbour.hbobj.hrbCall( "CB_BROWSE","cli:"+(String)p.getTag()+":"+pos );
+                            }
+                          });
+                }
+                iArr ++;
+             }
+          mlv.setTag( sObjName );
+          sObjName = "";
+          if( bHScroll ) {
+             HorizontalScrollView hsv = new HorizontalScrollView(Harbour.context);
+             LinearLayout ll = new LinearLayout(Harbour.context);
+             ll.setOrientation(LinearLayout.HORIZONTAL);
+
+             hsv.addView( ll );
+             ll.addView( mlv );
+             mView = hsv;
+          } else
+             mView = mlv;
 
        }  else
           return null;
@@ -303,7 +326,7 @@ public class CreateUI {
           mView.setTag( sObjName );
 
 
-       if( bScroll ) {
+       if( bVScroll ) {
 
           ScrollView sv = new ScrollView(Harbour.context);
 
