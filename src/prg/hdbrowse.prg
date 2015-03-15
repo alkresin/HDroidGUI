@@ -158,9 +158,6 @@ METHOD RowCount() CLASS HDBrwDbf
 
 METHOD GoTo( nRow ) CLASS HDBrwDbf
 
-   LOCAL i
-
-   //hd_wrlog( "goto1 "+str(::nCurrent)+"/"+str(nRow) )
    IF nRow != ::nCurrent
       (::data)->( dbSkip(nRow-::nCurrent) )
       ::nCurrent := nRow
@@ -188,13 +185,12 @@ METHOD GetRow( nRow ) CLASS HDBrwDbf
             ENDIF
          NEXT
       ELSE
-         (::data)->( dbSkip(nRow-::nCurrent) )
+         ::GoTo( nRow )
          IF ::nBufSize < ::nBufMax
             ::nBufSize ++
          ELSE
             ADel( ::aBuffer, 1 )
          ENDIF
-         ::nCurrent := nRow
          ::nBufCurr := ::nBufSize
          ::aBuffer[::nBufCurr,1] := nRow
          ::aBuffer[::nBufCurr,2] := Nil
