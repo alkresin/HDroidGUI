@@ -14,12 +14,47 @@ public class BrowseAdapter extends BaseAdapter {
 
    Context ctx;
    String stag = null;
-   String stru = null;
+   int [] aColumns = null;
+   int iRowHeight = 0;
 
    BrowseAdapter( Context context, String tag ) {
      ctx = context;
      stag = tag;
-     stru = Harbour.hbobj.hrbCall( "CB_BROWSE","str:" + stag + ":" );
+     String stru = Harbour.hbobj.hrbCall( "CB_BROWSE","str:" + stag + ":" );
+     int nPos1 = 0, nPos2, nPos0, nSch = 0;
+
+     while( nPos1 >= 0 && stru.substring(nPos1,nPos1+1).equals(",,") ) {
+        nPos1 += 2;
+        nPos2 = stru.indexOf( ":",nPos1 );
+        if( stru.substring(nPos1,nPos2).equals("h") ) {
+           nPos1 = nPos2 + 1;
+           nPos2 = stru.indexOf( ",,",nPos1 );
+           iRowHeight = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
+
+        } else if( stru.substring(nPos1,nPos2).equals("col") ) {
+           nPos0 = nPos1;
+           nPos1 = nPos2+1;
+           do {
+              nPos2 = stru.indexOf( ":",nPos1 );
+              if( nPos2 > 0 )
+                 nSch ++;
+              nPos1 = nPos2 + 1;
+           } while( nPos2 > 0 );
+           aColumns = new int [nSch];
+           nPos1 = nPos0;
+           nSch = 0;
+           do {
+              nPos2 = stru.indexOf( ":",nPos1 );
+              if( nPos2 > 0 ) {
+                 aColumns[nSch] = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
+                 nSch ++;
+              }
+              nPos1 = nPos2 + 1;
+           } while( nPos2 > 0 );
+           break;
+        }
+        nPos1 = stru.indexOf( ",,",nPos1 );
+     }
    }
 
    @Override
@@ -43,39 +78,38 @@ public class BrowseAdapter extends BaseAdapter {
 
      View view = convertView;
      String sRow = Harbour.hbobj.hrbCall( "CB_BROWSE","row:" + stag + ":" + position );
-     int nPos1, nPos2, nWidth, i = 0;
+     int nPos1, nPos2, nWidth, i, iLength;
      LinearLayout ll;
      TextView tv;
 
-     if (view == null) {    
+     if(view == null) {    
         // Create row as a View
         LinearLayout.LayoutParams parms;
         ll = new LinearLayout(ctx);
         ll.setOrientation(LinearLayout.HORIZONTAL);
 
-        nPos1 = 0;
-        do {
-          nPos2 = stru.indexOf( ":",nPos1 );
-          if( nPos2 > 0 ) {
-             nWidth = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
+        if( iRowHeight > 0 ) {
+           parms = new LinearLayout.LayoutParams(  LinearLayout.LayoutParams.MATCH_PARENT, iRowHeight );
+           ll.setLayoutParams(parms);
+        }
 
-             tv = new TextView(ctx);
-             if( nWidth == 0 )
-                parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT, 1 );
-             else
-                parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT );
-             tv.setLayoutParams(parms);
-
-             ll.addView( tv );
-          }
-          nPos1 = nPos2 + 1;
-        } while( nPos2 > 0 );
+        iLength = aColumns.length;
+        for( i=0; i<iLength; i++ ) {
+           nWidth = aColumns[i];
+           tv = new TextView(ctx);
+           if( nWidth == 0 )
+              parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT, 1 );
+           else
+              parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT );
+           tv.setLayoutParams(parms);
+           ll.addView( tv );
+        }
 
         view = ll;
      }
 
      // Fill the row (View) with values
-     nPos1 = 0;
+     nPos1 = i = 0;
      do {
        nPos2 = sRow.indexOf( ":",nPos1 );
        if( nPos2 > 0 ) {

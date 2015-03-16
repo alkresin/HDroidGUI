@@ -1,4 +1,10 @@
 
+2015-03-16 16:53 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    * :nRowHeight variable added
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    * added possibility to set the row height in browse
+
 2015-03-15 21:48 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
 

@@ -28,6 +28,8 @@ CLASS HDBrowse INHERIT HDWidget
    DATA data
    DATA nCurrent   INIT  1
 
+   DATA nRowHeight INIT 0
+
    DATA bRowcount
    DATA bClick
 
@@ -87,6 +89,10 @@ METHOD GetStru() CLASS HDBrowse
 
    LOCAL i, sRet := ""
 
+   IF ::nRowHeight > 0
+      sRet += ",,h:" + Ltrim(Str(::nRowHeight))
+   ENDIF
+   sRet += ",,col:"
    FOR i := 1 TO Len( ::aColumns )
       sRet += Ltrim( Str( ::aColumns[i]:nWidth ) ) + ":"
    NEXT
