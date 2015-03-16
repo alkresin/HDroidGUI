@@ -1,4 +1,11 @@
 
+2015-03-16 20:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * version number is changed to 0.3, build 1
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    ! Some fixes
+    * Text in the rows is vertically centered using setGravity()
+
 2015-03-16 16:53 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
     * :nRowHeight variable added

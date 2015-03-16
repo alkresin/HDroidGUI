@@ -5,9 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import android.widget.LinearLayout.LayoutParams;
+import android.view.Gravity;
 
 
 public class BrowseAdapter extends BaseAdapter {
@@ -23,7 +25,7 @@ public class BrowseAdapter extends BaseAdapter {
      String stru = Harbour.hbobj.hrbCall( "CB_BROWSE","str:" + stag + ":" );
      int nPos1 = 0, nPos2, nPos0, nSch = 0;
 
-     while( nPos1 >= 0 && stru.substring(nPos1,nPos1+1).equals(",,") ) {
+     while( nPos1 >= 0 && stru.substring(nPos1,nPos1+2).equals(",,") ) {
         nPos1 += 2;
         nPos2 = stru.indexOf( ":",nPos1 );
         if( stru.substring(nPos1,nPos2).equals("h") ) {
@@ -32,8 +34,8 @@ public class BrowseAdapter extends BaseAdapter {
            iRowHeight = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
 
         } else if( stru.substring(nPos1,nPos2).equals("col") ) {
-           nPos0 = nPos1;
            nPos1 = nPos2+1;
+           nPos0 = nPos1;
            do {
               nPos2 = stru.indexOf( ":",nPos1 );
               if( nPos2 > 0 )
@@ -89,8 +91,8 @@ public class BrowseAdapter extends BaseAdapter {
         ll.setOrientation(LinearLayout.HORIZONTAL);
 
         if( iRowHeight > 0 ) {
-           parms = new LinearLayout.LayoutParams(  LinearLayout.LayoutParams.MATCH_PARENT, iRowHeight );
-           ll.setLayoutParams(parms);
+           AbsListView.LayoutParams params = new AbsListView.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, iRowHeight );
+           ll.setLayoutParams(params);
         }
 
         iLength = aColumns.length;
@@ -102,6 +104,7 @@ public class BrowseAdapter extends BaseAdapter {
            else
               parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT );
            tv.setLayoutParams(parms);
+           tv.setGravity( Gravity.CENTER_VERTICAL );
            ll.addView( tv );
         }
 
