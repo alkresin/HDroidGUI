@@ -48,6 +48,7 @@ public class Harbour {
 
     public static String sMenu = null;
     private static String sActivity = null;
+    private static String sActions = null;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -198,6 +199,40 @@ public class Harbour {
        Log.i( "Harbour", message );
     }
 
+    public static void doActions() {
+
+       String message;
+       String scmd;
+       View view = null;
+       int nPos1 = 0, nPos2, nPos, nPos3;
+
+       if( sActions == null )
+          return;
+
+       do {
+          nPos2 = sActions.indexOf( "///", nPos1 );
+          if( nPos2 < 0 )
+             message = sActions.substring( nPos1 );
+          else
+             message = sActions.substring( nPos1,nPos2 );
+
+          nPos = message.indexOf(":");
+          nPos3 = message.indexOf(":",nPos+1);
+          scmd = message.substring( 0,nPos );
+          view = mainView.findViewWithTag( message.substring( nPos+1,nPos3 ) );
+          if( view != null ) {
+             if( scmd.equals( "adachg" ) ) {
+                   ((BrowseAdapter)((ListView)view).getAdapter()).notifyDataSetChanged();
+             } else if( scmd.equals( "listrefr" ) ) {
+                   ((ListView)view).invalidateViews();
+             }
+          }
+          nPos1 += 3;
+       } while( nPos2 > 0 );
+
+       sActions = null;
+    }
+
     public static void jcb_sz_v( String message ) {
 
        String scmd, stag;
@@ -223,16 +258,21 @@ public class Harbour {
              view = mainView.findViewWithTag( stag );
              if( view == null && prevView != null ) {
                 view = prevView.findViewWithTag( stag );
+                if( view != null ) {
+                   if( sActions == null )
+                      sActions = message;
+                   else
+                      sActions = sActions + "///" + message;
+                   view = null;
+                }
              }
           }
 
           if( view != null ) {
              if( scmd.equals( "settxt" ) ) {
-                   ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
+                ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
              } else if( scmd.equals( "setsels" ) ) {
-                   ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
-             } else if( scmd.equals( "adachg" ) ) {
-                   ((BaseAdapter)((ListView)view).getAdapter()).notifyDataSetChanged();
+                ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
              }
           }
        }

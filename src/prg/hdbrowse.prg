@@ -151,6 +151,7 @@ CLASS HDBrwDbf INHERIT HDBrowse
    METHOD GoTo( nRow )
    METHOD GetRow( nRow )
    METHOD Refresh()
+   METHOD RefreshRow( nRow )
 
 ENDCLASS
 
@@ -182,7 +183,7 @@ METHOD GoTo( nRow ) CLASS HDBrwDbf
 
    RETURN nRow
 
-METHOD GetRow( nRow ) CLASS HDBrwDbf
+METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
 
    LOCAL i, sRet := ""
 
@@ -197,9 +198,14 @@ METHOD GetRow( nRow ) CLASS HDBrwDbf
                ::nBufSize ++
             ENDIF
             ::nBufCurr := i
+            lUpd := .T.
             ::aBuffer[i] := { nRow, Nil }
          ENDIF
       NEXT
+      IF !Empty( lUpd )
+         ::GoTo( nRow )
+         ::aBuffer[::nBufCurr,2] := Nil
+      ENDIF
    ELSE
       ::GoTo( nRow )
       IF ::nBufSize < ::nBufMax
@@ -231,3 +237,8 @@ METHOD Refresh() CLASS HDBrwDbf
    ::nRecCount := (::data)->( RecCount() )
 
    RETURN ::Super:Refresh()
+
+METHOD RefreshRow( nRow ) CLASS HDBrwDbf
+
+   ::GetRow( Iif( nRow==Nil, ::nCurrent, nRow ), .T. )
+   RETURN hd_calljava_s_v( "listrefr:" + ::objname + ":" )

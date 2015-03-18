@@ -55,6 +55,9 @@ FUNCTION cb_Browse( cCmd )
    LOCAL nPos := hb_At( ":",cCmd,5 ), sq, nRow
    LOCAL oItem := Atail( HDWindow():aWindows ):FindByName( Substr( cCmd, 5, nPos-5 ) )
 
+   IF Empty( oItem ) .AND. Len(HDWindow():aWindows) > 1
+      oItem := HDWindow():aWindows[Len(HDWindow():aWindows)-1]:FindByName( Substr( cCmd, 5, nPos-5 ) )
+   ENDIF
    IF !Empty( oItem )
       IF ( sq := Left( cCmd,3 ) ) == "row"
          RETURN oItem:GetRow( Val( Substr( cCmd, nPos+1 ) ) + 1 )

@@ -1,4 +1,13 @@
 
+2015-03-18 22:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+  * src/prg/hdbrowse.prg
+    ! Fixes, related to Browse implementation
+    * :RefreshRow(nRow) method added
+  * src/su/harbour/hDroidGUI/Harbour.java
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    ! Fixes, related to Browse implementation    
+
 2015-03-18 16:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
   * src/su/harbour/hDroidGUI/Harbour.java
