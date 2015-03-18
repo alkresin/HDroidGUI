@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,7 +36,8 @@ public class Harbour {
     private static final String MAINHRB = "main.hrb";
 
     private static boolean bHrb;
-    private static View mainView;
+    private static View mainView = null;
+    private static View prevView = null;
     public static Harbour hbobj;
     public static CreateUI createui;
     public static Context context;
@@ -96,8 +100,10 @@ public class Harbour {
           sMain = sActivity;
        }
        //Log.i(TAG, "hrbmain-1");
-       if( sMain != null )
+       if( sMain != null ) {
+          prevView = mainView;
           mainView = createui.CreateActivity( (Activity)context, sMain);
+       }
        else {
           mainView = null;
        }
@@ -195,7 +201,7 @@ public class Harbour {
     public static void jcb_sz_v( String message ) {
 
        String scmd, stag;
-       TextView tview = null;
+       View view = null;
        int nPos = message.indexOf(":");
        int nPos1;
        
@@ -214,15 +220,20 @@ public class Harbour {
           nPos1 = message.indexOf(":",nPos+1);
           if( nPos1 > 0 ) {
              stag = message.substring( nPos+1,nPos1 );
-             tview = (TextView) mainView.findViewWithTag( stag );
+             view = mainView.findViewWithTag( stag );
+             if( view == null && prevView != null ) {
+                view = prevView.findViewWithTag( stag );
+             }
           }
 
-          if( scmd.equals( "settxt" ) ) {
-             if( tview != null )
-                tview.setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
-          } else if( scmd.equals( "setsels" ) ) {
-             if( tview != null )
-                ((EditText)tview).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
+          if( view != null ) {
+             if( scmd.equals( "settxt" ) ) {
+                   ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
+             } else if( scmd.equals( "setsels" ) ) {
+                   ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
+             } else if( scmd.equals( "adachg" ) ) {
+                   ((BaseAdapter)((ListView)view).getAdapter()).notifyDataSetChanged();
+             }
           }
        }
     }

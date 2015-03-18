@@ -79,7 +79,7 @@ public class CreateUI {
 
        LinearLayout ll = new LinearLayout(Harbour.context);
 
-       //Log.i(TAG, "CreateG-1/"+sContent);
+       //Harbour.hlog( "CreateG-1/"+sContent);
        if( nPos1 >= 0 && nPos1 < nPos ) {
           String [][] aParams = GetParamsList( sContent.substring(nPos1,nPos) );
           int iArr = 0;
@@ -134,9 +134,9 @@ public class CreateUI {
                 }
              }
              nPos2 += 2;
-             //Log.i(TAG, "CreateG4b "+nPos+" "+nPos2+" "+nPos1);
+             //Harbour.hlog("CreateG4b "+nPos+" "+nPos2+" "+nPos1);
              mView = CreateGroupView(sContent.substring(nPos1,nPos2));
-             if( sContent.substring(nPos2,nPos2+3).equals(",,/") )
+             if( sContent.length()>=nPos2+3 && sContent.substring(nPos2,nPos2+3).equals(",,/") )
                 nPos2 +=3;
              nPos = nPos1 = nPos2;
           }

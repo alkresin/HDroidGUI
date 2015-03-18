@@ -1,4 +1,10 @@
 
+2015-03-18 16:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    ! Fixes, related to Browse implementation
+
 2015-03-16 20:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * version number is changed to 0.3, build 1

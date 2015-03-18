@@ -39,6 +39,7 @@ CLASS HDBrowse INHERIT HDWidget
    METHOD RowCount()
    METHOD GetRow( nRow )
    METHOD GetStru()
+   METHOD Refresh()
 
    METHOD ToString()
 
@@ -113,6 +114,10 @@ METHOD ToString() CLASS HDBrowse
 
    RETURN "brw" + ::Super:ToString() + sRet
 
+METHOD Refresh() CLASS HDBrowse
+
+   RETURN hd_calljava_s_v( "adachg:" + ::objname + ":" )
+
 
 CLASS HDBrwArray INHERIT HDBrowse
 
@@ -139,11 +144,13 @@ CLASS HDBrwDbf INHERIT HDBrowse
    DATA  nBufSize  INIT  0
    DATA  nBufCurr  INIT  0
    DATA  aBuffer
+   DATA  nRecno, nRecCount
 
    METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
    METHOD RowCount()
    METHOD GoTo( nRow )
    METHOD GetRow( nRow )
+   METHOD Refresh()
 
 ENDCLASS
 
@@ -154,19 +161,23 @@ METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) C
    ::aBuffer := Array( ::nBufMax, 2 )
    ::data := cAlias
    (cAlias)->( dbGoTop() )
+   ::nRecno := (::data)->( Recno() )
+   ::nRecCount := (::data)->( RecCount() )
 
    RETURN Self
 
 METHOD RowCount() CLASS HDBrwDbf
-   local n := (::data)->( RecCount() )
-   //hd_wrlog( "count "+str(n) )
-   RETURN n
+   RETURN ::nRecCount
 
 METHOD GoTo( nRow ) CLASS HDBrwDbf
 
+   IF ::nRecno != (::data)->( Recno() )
+      (::data)->( dbGoTo( ::nRecno ) )
+   ENDIF
    IF nRow != ::nCurrent
       (::data)->( dbSkip(nRow-::nCurrent) )
       ::nCurrent := nRow
+      ::nRecno := (::data)->( Recno() )
    ENDIF
 
    RETURN nRow
@@ -175,43 +186,48 @@ METHOD GetRow( nRow ) CLASS HDBrwDbf
 
    LOCAL i, sRet := ""
 
-   IF nRow != ::nCurrent .OR. ::nBufSize == 0
-      IF ::nBufSize > 0 .AND. ::aBuffer[1,1] <= nRow .AND. ::aBuffer[::nBufSize,1] >= nRow
-         FOR i := 1 TO ::nBufSize
-            IF ::aBuffer[i,1] == nRow
-               ::nBufCurr := i
-               EXIT
-            ELSEIF ::aBuffer[i,1] > nRow
-               AIns( ::aBuffer, i )
-               IF ::nBufSize < ::nBufMax
-                  ::nBufSize ++
-               ENDIF
-               ::nBufCurr := i
-               ::aBuffer[::nBufCurr,1] := nRow
+   IF ::nBufSize > 0 .AND. ::aBuffer[1,1] <= nRow .AND. ::aBuffer[::nBufSize,1] >= nRow
+      FOR i := 1 TO ::nBufSize
+         IF ::aBuffer[i,1] == nRow
+            ::nBufCurr := i
+            EXIT
+         ELSEIF ::aBuffer[i,1] > nRow
+            AIns( ::aBuffer, i )
+            IF ::nBufSize < ::nBufMax
+               ::nBufSize ++
             ENDIF
-         NEXT
-      ELSE
-         ::GoTo( nRow )
-         IF ::nBufSize < ::nBufMax
-            ::nBufSize ++
-         ELSE
-            ADel( ::aBuffer, 1 )
+            ::nBufCurr := i
+            ::aBuffer[i] := { nRow, Nil }
          ENDIF
-         ::nBufCurr := ::nBufSize
-         ::aBuffer[::nBufCurr,1] := nRow
-         ::aBuffer[::nBufCurr,2] := Nil
+      NEXT
+   ELSE
+      ::GoTo( nRow )
+      IF ::nBufSize < ::nBufMax
+         ::nBufSize ++
+      ELSE
+         ADel( ::aBuffer, 1 )
+         ::aBuffer[::nBufMax] := {}
       ENDIF
+      ::nBufCurr := ::nBufSize
+      ::aBuffer[::nBufCurr,1] := nRow
+      ::aBuffer[::nBufCurr,2] := Nil
    ENDIF
 
    IF ::aBuffer[::nBufCurr,2] == Nil
-      //hd_wrlog( "getrow "+str(nRow) )
       FOR i := 1 TO Len( ::aColumns )
          sRet += Eval( ::aColumns[i]:block, Self, nRow, i ) + ":"
-         ::aBuffer[::nBufCurr,2] := sRet
       NEXT
+      ::aBuffer[::nBufCurr,2] := sRet
+      //hd_wrlog( "getrow "+str(nRow)+" "+Str(::nBufCurr,3)+" "+sRet )
    ELSE
-      //hd_wrlog( "getrow buffer "+str(nRow) )
       sRet := ::aBuffer[::nBufCurr,2]
+      //hd_wrlog( "getrow buffer "+str(nRow)+" "+Str(::nBufCurr,3) +" "+sRet )
    ENDIF
 
    RETURN sRet
+
+METHOD Refresh() CLASS HDBrwDbf
+
+   ::nRecCount := (::data)->( RecCount() )
+
+   RETURN ::Super:Refresh()
