@@ -1,4 +1,9 @@
 
+2015-03-19 19:28 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * jni/libharbour.so
+  * src/include/hdext.ch
+    * hbnetio added
+
 2015-03-19 09:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 2
