@@ -1,4 +1,10 @@
 
+2015-03-19 09:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed to 2
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * doActions() is called from setContext() now
+
 2015-03-18 22:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
   * src/prg/hdbrowse.prg

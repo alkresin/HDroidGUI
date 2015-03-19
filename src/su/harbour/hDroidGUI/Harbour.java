@@ -79,6 +79,7 @@ public class Harbour {
     public static void setContext( Context cont, View view ) {
        context = cont;
        mainView = view;
+       doActions();
     }
 
     public View createAct( Context cont, String sAct ) {
