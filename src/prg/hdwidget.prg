@@ -69,6 +69,8 @@ CLASS HDLayout INHERIT HDGroup
    DATA lHorz
    DATA nWidth, nHeight
    DATA nMarginL, nMarginT, nMarginR, nMarginB
+   DATA nPaddL, nPaddT, nPaddR, nPaddB
+   DATA nAlign  INIT 0
    DATA bColor
    DATA oFont
 
@@ -118,6 +120,21 @@ METHOD ToString() CLASS HDLayout
    IF ::nMarginB != Nil
       sRet += ",,mb:" + Ltrim(Str(::nMarginB))
    ENDIF
+   IF ::nPaddL != Nil
+      sRet += ",,pl:" + Ltrim(Str(::nPaddL))
+   ENDIF
+   IF ::nPaddT != Nil
+      sRet += ",,pt:" + Ltrim(Str(::nPaddT))
+   ENDIF
+   IF ::nPaddR != Nil
+      sRet += ",,pr:" + Ltrim(Str(::nPaddR))
+   ENDIF
+   IF ::nPaddB != Nil
+      sRet += ",,pb:" + Ltrim(Str(::nPaddB))
+   ENDIF
+   IF ::nAlign != 0
+      sRet += ",,ali:" + Ltrim(Str(::nAlign))
+   ENDIF
 
    sRet += ::Super:ToString()
 
@@ -130,6 +147,7 @@ CLASS HDWidget INHERIT HDGUIObject
    DATA nWidth, nHeight
    DATA nMarginL, nMarginT, nMarginR, nMarginB
    DATA nPaddL, nPaddT, nPaddR, nPaddB
+   DATA nAlign  INIT 0
    DATA tColor, bColor
    DATA oFont
 
@@ -222,6 +240,9 @@ METHOD ToString() CLASS HDWidget
    ENDIF
    IF ::nPaddB != Nil
       sRet += ",,pb:" + Ltrim(Str(::nPaddB))
+   ENDIF
+   IF ::nAlign != 0
+      sRet += ",,ali:" + Ltrim(Str(::nAlign))
    ENDIF
 
    RETURN sRet

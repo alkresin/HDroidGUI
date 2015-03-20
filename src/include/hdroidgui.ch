@@ -18,6 +18,15 @@
 #define FONT_ITALIC       2
 #define FONT_BOLD_ITALIC  3
 
+#define ALIGN_LEFT      0
+#define ALIGN_CENTER    1
+#define ALIGN_RIGHT     2
+#define ALIGN_TOP       0
+#define ALIGN_LEFT      0
+#define ALIGN_VCENTER   4
+#define ALIGN_BOTTOM    8
+
+
 #xcommand INIT WINDOW <oAct> TITLE <cTitle> ;
              [ ON INIT <bInit> ]            ;
              [ ON EXIT <bExit> ]            ;

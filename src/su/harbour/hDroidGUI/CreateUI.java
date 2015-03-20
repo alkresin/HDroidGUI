@@ -4,6 +4,7 @@ import android.content.Context;
 import android.app.Activity;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import android.widget.LinearLayout.LayoutParams;
+import android.view.Gravity;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -26,6 +28,10 @@ import android.content.res.Resources;
 
 
 public class CreateUI {
+
+    static final int LAYOUT  = 1;
+    static final int TEXT = 2;
+    static final int TEXTINSCROLL = 3;
 
     private static String sPackage = null;
     private static Resources resources = null;
@@ -96,7 +102,7 @@ public class CreateUI {
              }
              iArr ++;
           }
-          SetSize( (View)ll, aParams );
+          SetSize( (View)ll, aParams, LAYOUT );
           sObjName = sContent.substring(4,nPos1);
 
        }  else
@@ -144,7 +150,7 @@ public class CreateUI {
              nPos = sContent.indexOf(",,/",nPos1);
              if( nPos < 0 ) //|| nPos > nPos2 )
                 nPos = nLast;
-             mView = CreateView(sContent.substring(nPos1,nPos));
+             mView = CreateView(sContent.substring(nPos1,nPos) );
              nPos1 = nPos + 3;
           }
           if( mView == null )
@@ -330,17 +336,18 @@ public class CreateUI {
 
           ScrollView sv = new ScrollView(Harbour.context);
 
-          SetSize( sv, aParams );
           LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
           mView.setLayoutParams(parms);
 
           sv.addView(mView);
+
+          SetSize( sv, aParams, TEXTINSCROLL );
           return sv;
 
        } else {
 
-          SetSize( mView, aParams );
+          SetSize( mView, aParams, TEXT );
           return mView;
        }
     }
@@ -373,7 +380,7 @@ public class CreateUI {
            mView.setTextSize( TypedValue.COMPLEX_UNIT_DIP,nsize );
     }
 
-    private static void SetSize( View mView, String [][] aParams ) {      
+    private static void SetSize( View mView, String [][] aParams, int ivType ) {
 
        if( aParams == null )
           return;
@@ -382,6 +389,7 @@ public class CreateUI {
        int iHeight = -10, iWidth = -10;
        int iml = 0, imt = 0, imr = 0, imb = 0;
        int ipl = 0, ipt = 0, ipr = 0, ipb = 0;
+       int iAlign = 0;
        boolean bm = false, bp = false;
 
        while( aParams[iArr][0] != null ) {
@@ -390,6 +398,8 @@ public class CreateUI {
              iHeight = Integer.parseInt(aParams[iArr][1]);
           } else if( aParams[iArr][0].equals("w") ) {
              iWidth = Integer.parseInt(aParams[iArr][1]);
+          } else if( aParams[iArr][0].equals("ali") ) {
+             iAlign = Integer.parseInt(aParams[iArr][1]);
           } else if( aParams[iArr][0].equals("ml") ) {
              iml = Integer.parseInt(aParams[iArr][1]);
              bm = true;
@@ -417,7 +427,7 @@ public class CreateUI {
           }
           iArr ++;
        }
-       if( iHeight != -10 || iWidth != -10 || bm ) {
+       if( iHeight != -10 || iWidth != -10 || bm || iAlign != 0 ) {
           LinearLayout.LayoutParams parms;
           if( iHeight == -10 )
              iHeight = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -430,10 +440,25 @@ public class CreateUI {
           if( bm )
              parms.setMargins( iml, imt, imr, imb );
           mView.setLayoutParams(parms);
-          if( bp )
-             mView.setPadding( ipl, ipt, ipr, ipb );
        }
-
+       if( bp )
+          mView.setPadding( ipl, ipt, ipr, ipb );
+       if( iAlign != 0 ) {
+          int gravity = ( ( (iAlign & 1)>0 )? Gravity.CENTER_HORIZONTAL : 0 ) |
+                ( ( (iAlign & 2)>0 )? Gravity.RIGHT : 0 ) |
+                ( ( (iAlign & 4)>0 )? Gravity.CENTER_VERTICAL : 0 ) |
+                ( ( (iAlign & 8)>0 )? Gravity.BOTTOM : 0 );
+          try {
+             if( ivType == TEXT )
+                ((TextView)mView).setGravity( gravity );
+             else if( ivType == TEXTINSCROLL )
+                ((TextView) ((ViewGroup)mView).getChildAt(0)).setGravity( gravity );
+             else if( ivType == LAYOUT )
+                ((LinearLayout)mView).setGravity( gravity );
+          }
+          catch (Exception e) {
+          }
+       }
     }
 
     private static int parseColor( String sColor ) {

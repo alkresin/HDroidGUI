@@ -1,4 +1,12 @@
 
+2015-03-20 14:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * #define statements added for alignment
+  * src/prg/hdwidget.prg
+    * :nAlign variable added to HDLayout and HDWidget
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * alignment implemented
+
 2015-03-20 09:24 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 3
