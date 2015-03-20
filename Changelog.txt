@@ -1,4 +1,8 @@
 
+2015-03-20 09:24 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed to 3
+
 2015-03-19 19:28 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * jni/libharbour.so
   * src/include/hdext.ch
