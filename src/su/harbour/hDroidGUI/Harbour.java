@@ -24,6 +24,10 @@ import android.widget.BaseAdapter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
+import java.util.Arrays;
+import org.json.JSONArray;
+import android.text.method.PasswordTransformationMethod;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -339,47 +343,62 @@ public class Harbour {
           return;
        int nPosNext, nPos1, nPos2, nPos3 = sDlg.indexOf(",,");
        int iBtns = 0;
+
+       View [] aResults = new View [12];
+       int iResults = 0;
+       aResults[0] = null;
+
        String [][] aParams;
+       int iArr;
        String sName, sObjName;
-       String sText;
+       String sText, sHint;
+       boolean bPass;
        String sId = sDlg.substring(4,nPos3);
        //DialogInterface.OnClickListener func;
 
        nPosNext = sDlg.indexOf(",,/",5);
        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-       aParams = CreateUI.GetParamsList( sDlg.substring(nPos3,nPosNext) );
-       int iArr = 0;
-       while( aParams[iArr][0] != null ) {
+       if( nPos3 < nPosNext ) {
+          aParams = CreateUI.GetParamsList( sDlg.substring(nPos3,nPosNext) );
+          iArr = 0;
+          while( aParams[iArr][0] != null ) {
 
-          if( aParams[iArr][0].equals("t") ) {
-             builder.setTitle(aParams[iArr][1]);
+             if( aParams[iArr][0].equals("t") ) {
+                builder.setTitle(aParams[iArr][1]);
+             }
+             iArr ++;
           }
-          iArr ++;
        }
        if( sDlg.indexOf(",,/btn") > 0 )
           builder.setCancelable(false);
 
        do {
+          sText = "";
+          sHint = "";
+          bPass = false;
           nPos1 = nPosNext + 3;
           nPosNext = sDlg.indexOf(",,/",nPos1);
           nPos2 = sDlg.indexOf(",,",nPos1);
-          if( nPosNext < 0 )
-             aParams = CreateUI.GetParamsList( sDlg.substring(nPos2) );
-          else
-             aParams = CreateUI.GetParamsList( sDlg.substring(nPos2,nPosNext) );
+          if( nPos2 >= 0 && nPos2 != nPosNext && ( nPosNext < 0 || nPos2 < nPosNext ) ) {
+             if( nPosNext < 0 )
+                aParams = CreateUI.GetParamsList( sDlg.substring(nPos2) );
+             else
+                aParams = CreateUI.GetParamsList( sDlg.substring(nPos2,nPosNext) );
 
-          iArr = 0;
-          sText = "";
-          while( aParams[iArr][0] != null ) {
+             iArr = 0;
+             while( aParams[iArr][0] != null ) {
 
-             if( aParams[iArr][0].equals("t") ) {
-                sText = aParams[iArr][1];
-             } else if( aParams[iArr][0].equals("bcli") ) {
+                if( aParams[iArr][0].equals("t") ) {
+                   sText = aParams[iArr][1];
+                } else if( aParams[iArr][0].equals("hint") ) {
+                   sHint = CreateUI.getStr(aParams[iArr][1]);
+                } else if( aParams[iArr][0].equals("pass") ) {
+                   bPass = true;
+                }
+                iArr ++;
              }
-             iArr ++;
           }
-
           nPos3 = sDlg.indexOf(":",nPos1);
           sName = sDlg.substring(nPos1,nPos3);
           sObjName = sDlg.substring(nPos3+1,nPos2);
@@ -387,18 +406,28 @@ public class Harbour {
              iBtns ++;
              switch( iBtns ) {
                 case 1:
-                   builder.setNegativeButton(sText,new BtnClickListener(sObjName));
+                   builder.setNegativeButton(sText,new BtnClickListener(sObjName,aResults));
                    break;
                 case 2:
-                   builder.setNeutralButton(sText,new BtnClickListener(sObjName));
+                   builder.setNeutralButton(sText,new BtnClickListener(sObjName,aResults));
                    break;
                 case 3:
-                   builder.setPositiveButton(sText,new BtnClickListener(sObjName));
+                   builder.setPositiveButton(sText,new BtnClickListener(sObjName,aResults));
                    break;
              }
           } else if( sName.equals("txt") ) {
              builder.setMessage(sText);
-          }            
+          } else if( sName.equals("edi") ) {
+             EditText ev = new EditText(context);
+             if( !sHint.isEmpty() )
+                ev.setHint( sHint );
+             if( bPass )
+                ev.setTransformationMethod(new PasswordTransformationMethod());
+             aResults[iResults] = ev;
+             builder.setView( ev );
+             iResults ++;
+             aResults[iResults] = null;
+          }
        } while( nPosNext > 0 );
     	
         AlertDialog alert = builder.create();
@@ -408,17 +437,34 @@ public class Harbour {
 
     private static class BtnClickListener implements DialogInterface.OnClickListener {
         String sBtnName;
+        View [] aViews;
 
-        public BtnClickListener( String s ){
+        public BtnClickListener( String s, View [] av ){
              super();
              sBtnName = s;
+             aViews = av;
         }
 
         @Override
         public void onClick(DialogInterface dialog, int id) {
+           String s = "";
+           int iArr = 0;
+
+           while ( aViews[iArr] != null )
+              iArr ++;
+           if( iArr > 0 ) {
+              String [] aRes = new String [iArr];
+              iArr = 0;
+              while ( aViews[iArr] != null ) {
+                 //hlog( ( aViews[iArr] instanceof EditText )? "yes" : "no" );
+                 aRes[iArr] = ((EditText)aViews[iArr]).getText().toString();
+                 iArr ++;
+              }
+              JSONArray jsonArr = new JSONArray(Arrays.asList(aRes));
+              s = jsonArr.toString();
+           }
            dialog.cancel();
-           //Log.i(TAG, "Dialog - click "+sBtnName);
-           hbobj.hrbCall( "EVENT_BTNCLICK",sBtnName );
+           hbobj.hrbCall( "EVENT_BTNCLICK", sBtnName + s );
         }
     }
 

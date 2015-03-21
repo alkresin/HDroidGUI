@@ -1,4 +1,18 @@
 
+2015-03-21 18:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * PASSWORD clause added to EDITBOX command
+  * src/prg/hdactiv.prg
+    * :aRes variable added to HDDialog
+    * added support for Editboxes in Dialogs
+  * src/prg/hdmain.prg
+    * hd_msgGet() function added
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * added support for password editboxes
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * added support for Editboxes in Dialogs
+
 2015-03-21 09:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * New commands added: SET oWidget MARGINS  and SET oWidget PADDING

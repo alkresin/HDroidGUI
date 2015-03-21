@@ -178,7 +178,7 @@ METHOD ToString() CLASS HDActivity
 CLASS HDDialog INHERIT HDWindow
 
    DATA aButtons
-   DATA nRes
+   DATA nRes, aRes
 
    METHOD New( cTitle, bInit, bExit )
    METHOD Activate()
@@ -203,8 +203,18 @@ METHOD Activate() CLASS HDDialog
 
 METHOD onBtnClick( cName ) CLASS HDDialog
 
+   LOCAL arr, cBtn, nPos
+
+   IF ( nPos := At( "[", cName ) ) != 0
+      cBtn := Left( cName, nPos-1 )
+      hb_jsonDecode( Substr( cName, nPos ), @arr )
+      ::aRes := arr
+   ELSE
+      cBtn := cName
+   ENDIF
+
    IF !Empty( ::aButtons )
-      ::nRes := Ascan( ::aButtons, cName )
+      ::nRes := Ascan( ::aButtons, cBtn )
    ENDIF
 
    ::Close()

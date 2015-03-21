@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.HorizontalScrollView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.text.method.PasswordTransformationMethod;
 
 import android.widget.LinearLayout.LayoutParams;
 import android.view.Gravity;
@@ -254,6 +255,8 @@ public class CreateUI {
                    medit.setBackgroundColor(parseColor(aParams[iArr][1]));
                 } else if( aParams[iArr][0].equals("hint") ) {
                    medit.setHint(getStr(aParams[iArr][1]));
+                } else if( aParams[iArr][0].equals("pass") ) {
+                   medit.setTransformationMethod(new PasswordTransformationMethod());
                 } else if( aParams[iArr][0].equals("f") ) {
                    setFont( medit, aParams[iArr][1] );
                 } else if( aParams[iArr][0].equals("bkey") ) {

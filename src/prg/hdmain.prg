@@ -176,6 +176,22 @@ FUNCTION hd_MsgYesNo( cMessage, bExit )
 
    RETURN Nil
 
+FUNCTION hd_MsgGet( cMessage, cHint, bExit )
+
+   LOCAL oDlg, oEdit1, oBtn
+
+   INIT DIALOG oDlg TITLE cMessage ON EXIT bExit
+
+   EDITBOX oEdit1
+   IF cHint != Nil
+      oEdit1:cHint := cHint
+   ENDIF
+   BUTTON oBtn TEXT "Ok"
+
+   ACTIVATE DIALOG oDlg
+
+   RETURN Nil
+
 FUNCTION hd_HrbLoad( cName )
 
    LOCAL cVarHandle := "HRBHANDLE"

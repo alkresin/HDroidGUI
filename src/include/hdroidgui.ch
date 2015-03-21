@@ -116,13 +116,14 @@
 #xcommand EDITBOX <oEdit>                   ;
              [ TEXT <cText> ]               ;
              [ HINT <cHint> ]               ;
+             [<lPass: PASSWORD>]            ;
              [ SIZE <width>, <height> ]     ;
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
              [ ON KEYDOWN <bKeyDown>]       ;
           => ;
-   <oEdit> := HDEdit():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint>,<bKeyDown> );
+   <oEdit> := HDEdit():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint>,<.lPass.>,<bKeyDown> );
     [; hd_SetCtrlName( <oEdit>,<(oEdit)> )]
 
 #xcommand CHECKBOX <oChe>                   ;

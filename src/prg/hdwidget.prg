@@ -242,19 +242,23 @@ METHOD ToString() CLASS HDButton
 CLASS HDEdit INHERIT HDWidget
 
    DATA cHint
+   DATA lPass      INIT .F.
    DATA bKeyDown
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown )
+   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown )
    METHOD getCursorPos( n )
    METHOD setCursorPos( nPos )
    METHOD ToString()
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, bKeyDown ) CLASS HDEdit
+METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown ) CLASS HDEdit
 
    ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
    ::cHint := cHint
+   IF Valtype( lPass ) == "L"
+      ::lPass := lPass
+   ENDIF
    ::bKeyDown := bKeyDown
 
    RETURN Self
@@ -277,6 +281,9 @@ METHOD ToString() CLASS HDEdit
 
    IF ::cHint != Nil
       sRet += ",,hint:" + ::cHint
+   ENDIF
+   IF ::lPass
+      sRet += ",,pass:"
    ENDIF
    IF ::bKeyDown != Nil
       sRet += ",,bkey:1"
