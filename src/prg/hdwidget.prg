@@ -17,129 +17,6 @@ Function hd_SetCtrlName( oCtrl, cName )
 
    RETURN Nil
 
-CLASS HDGroup INHERIT HDGUIObject
-
-   DATA oParent
-   DATA aItems   INIT {}
-
-   DATA objName
-
-   METHOD New()
-   METHOD FindByName( cName )
-   METHOD ToString()
-
-ENDCLASS
-
-METHOD New() CLASS HDGroup
-
-   ::oParent := ::oDefaultParent
-   ::oDefaultParent := Self
-   IF !Empty( ::oParent )
-      Aadd( ::oParent:aItems, Self )
-   ENDIF
-
-   RETURN Self
-
-METHOD FindByName( cName ) CLASS HDGroup
- 
-   LOCAL aItems := ::aItems, oItem, o
-
-   FOR EACH oItem IN aItems
-      IF !Empty( oItem:objname ) .AND. oItem:objname == cName
-         RETURN oItem
-      ELSEIF __ObjHasMsg( oItem, "AITEMS" ) .AND. !Empty( o := oItem:FindByName( cName ) )
-         RETURN o
-      ENDIF
-   NEXT
-
-   RETURN Nil
-
-METHOD ToString() CLASS HDGroup
-
-   LOCAL sRet := "[(", i, nLen := Len( ::aItems )
-
-   FOR i := 1 TO nLen
-      sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )
-   NEXT
-
-   RETURN sRet + ")]"
-
-CLASS HDLayout INHERIT HDGroup
-
-   DATA lHorz
-   DATA nWidth, nHeight
-   DATA nMarginL, nMarginT, nMarginR, nMarginB
-   DATA nPaddL, nPaddT, nPaddR, nPaddB
-   DATA nAlign  INIT 0
-   DATA bColor
-   DATA oFont
-
-   METHOD New( lHorz, nWidth, nHeight, bcolor, oFont )
-   METHOD ToString()
-
-ENDCLASS
-
-METHOD New( lHorz, nWidth, nHeight, bcolor, oFont ) CLASS HDLayout
-
-   ::Super:New()
-
-   ::lHorz := !Empty( lHorz )
-   ::nWidth := nWidth
-   ::nHeight := nHeight
-   ::bColor := bColor
-
-   RETURN Self
-
-METHOD ToString() CLASS HDLayout
-
-   LOCAL sRet := "lay:" + ::objName
-
-   IF !Empty( ::lHorz )
-      sRet += ",,o:h"
-   ELSE
-      sRet += ",,o:v"
-   ENDIF
-   IF ::nWidth != Nil
-      sRet += ",,w:" + Ltrim(Str(::nWidth))
-   ENDIF
-   IF ::nHeight != Nil
-      sRet += ",,h:" + Ltrim(Str(::nHeight))
-   ENDIF
-   IF ::bColor != Nil
-      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
-   ENDIF
-   IF ::nMarginL != Nil
-      sRet += ",,ml:" + Ltrim(Str(::nMarginL))
-   ENDIF
-   IF ::nMarginT != Nil
-      sRet += ",,mt:" + Ltrim(Str(::nMarginT))
-   ENDIF
-   IF ::nMarginR != Nil
-      sRet += ",,mr:" + Ltrim(Str(::nMarginR))
-   ENDIF
-   IF ::nMarginB != Nil
-      sRet += ",,mb:" + Ltrim(Str(::nMarginB))
-   ENDIF
-   IF ::nPaddL != Nil
-      sRet += ",,pl:" + Ltrim(Str(::nPaddL))
-   ENDIF
-   IF ::nPaddT != Nil
-      sRet += ",,pt:" + Ltrim(Str(::nPaddT))
-   ENDIF
-   IF ::nPaddR != Nil
-      sRet += ",,pr:" + Ltrim(Str(::nPaddR))
-   ENDIF
-   IF ::nPaddB != Nil
-      sRet += ",,pb:" + Ltrim(Str(::nPaddB))
-   ENDIF
-   IF ::nAlign != 0
-      sRet += ",,ali:" + Ltrim(Str(::nAlign))
-   ENDIF
-
-   sRet += ::Super:ToString()
-
-   RETURN sRet
-
 CLASS HDWidget INHERIT HDGUIObject
 
    DATA oParent
@@ -246,6 +123,62 @@ METHOD ToString() CLASS HDWidget
    ENDIF
 
    RETURN sRet
+
+CLASS HDLayout INHERIT HDWidget
+
+   DATA aItems   INIT {}
+   DATA lHorz
+
+   METHOD New( lHorz, nWidth, nHeight, bcolor, oFont )
+   METHOD FindByName( cName )
+   METHOD ToString()
+
+ENDCLASS
+
+METHOD New( lHorz, nWidth, nHeight, bcolor, oFont ) CLASS HDLayout
+
+   ::Super:New( , nWidth, nHeight,, bcolor, oFont )
+   ::oDefaultParent := Self
+
+   ::lHorz := !Empty( lHorz )
+   ::nWidth := nWidth
+   ::nHeight := nHeight
+   ::bColor := bColor
+
+   RETURN Self
+
+METHOD FindByName( cName ) CLASS HDLayout
+ 
+   LOCAL aItems := ::aItems, oItem, o
+
+   FOR EACH oItem IN aItems
+      IF !Empty( oItem:objname ) .AND. oItem:objname == cName
+         RETURN oItem
+      ELSEIF __ObjHasMsg( oItem, "AITEMS" ) .AND. !Empty( o := oItem:FindByName( cName ) )
+         RETURN o
+      ENDIF
+   NEXT
+
+   RETURN Nil
+
+METHOD ToString() CLASS HDLayout
+
+   LOCAL sRet := "lay" + ::Super:ToString(), i, nLen := Len( ::aItems )
+
+   IF !Empty( ::lHorz )
+      sRet += ",,o:h"
+   ELSE
+      sRet += ",,o:v"
+   ENDIF
+
+   sRet += "[("
+
+   FOR i := 1 TO nLen
+      sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )
+   NEXT
+
+   RETURN sRet + ")]"
+
 
 CLASS HDTextView INHERIT HDWidget
 

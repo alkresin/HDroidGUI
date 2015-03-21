@@ -117,6 +117,38 @@ FUNCTION hd_getScreenSize()
 
    RETURN Nil
 
+FUNCTION hd_setMargins( oWidget, ml, mt, mr, mb )
+
+   IF PCount() == 2
+      mt := mr := mb := ml
+   ENDIF
+   IF PCount() == 3
+      mr := ml
+      mb := mt
+   ENDIF
+   oWidget:nMarginL := ml
+   oWidget:nMarginT := mt
+   oWidget:nMarginR := mr
+   oWidget:nMarginB := mb
+
+   RETURN Nil
+
+FUNCTION hd_setPadding( oWidget, pl, pt, pr, pb )
+
+   IF PCount() == 2
+      pt := pr := pb := pl
+   ENDIF
+   IF PCount() == 3
+      pr := pl
+      pb := pt
+   ENDIF
+   oWidget:nPaddL := pl
+   oWidget:nPaddT := pt
+   oWidget:nPaddR := pr
+   oWidget:nPaddB := pb
+
+   RETURN Nil
+
 FUNCTION hd_MsgInfo( cMessage, bExit )
 
    LOCAL oDlg, oBtn

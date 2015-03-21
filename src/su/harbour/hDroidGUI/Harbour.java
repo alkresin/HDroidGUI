@@ -101,7 +101,7 @@ public class Harbour {
           hrbCall( "HD_MAIN", bHrb? "1" : "2" );
           sMain = sActivity;
        }
-       //Log.i(TAG, "hrbmain-1");
+       //hlog("hrbmain-1 "+sMain );
        if( sMain != null ) {
           prevView = mainView;
           mainView = createui.CreateActivity( (Activity)context, sMain);
@@ -109,7 +109,7 @@ public class Harbour {
        else {
           mainView = null;
        }
-       //Log.i(TAG, "hrbmain-2");
+       //hlog("hrbmain-2");
        
        if( mainView == null ) {
        

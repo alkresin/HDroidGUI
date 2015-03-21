@@ -22,7 +22,6 @@
 #define ALIGN_CENTER    1
 #define ALIGN_RIGHT     2
 #define ALIGN_TOP       0
-#define ALIGN_LEFT      0
 #define ALIGN_VCENTER   4
 #define ALIGN_BOTTOM    8
 
@@ -182,3 +181,11 @@
              [<lVibr:  VIBRATION>]        ;
           => ;
     <oNotify> := HDNotify():New( <.lLight.>, <.lSound.>, <.lVibr.>, <cTitle>, <cText>, <cSubText> )
+
+#xcommand SET <oWidget> MARGINS [ LEFT <ml>] [ TOP <mt>] [ RIGHT <mr>]  [ BOTTOM <mb>] ;
+          => ;
+    hd_setMargins( <oWidget>, <ml>, <mt>, <mr>, <mb> )
+
+#xcommand SET <oWidget> PADDING [ LEFT <pl>] [ TOP <pt>] [ RIGHT <pr>]  [ BOTTOM <pb>] ;
+          => ;
+    hd_setPadding( <oWidget>, <pl>, <pt>, <pr>, <pb> )
