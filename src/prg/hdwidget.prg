@@ -293,17 +293,41 @@ METHOD ToString() CLASS HDEdit
 
 CLASS HDCheckBox INHERIT HDWidget
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   DATA lValue  INIT .F.
+
+   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit )
+   METHOD Value( lValue ) SETGET
    METHOD ToString()
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDCheckBox
+METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit ) CLASS HDCheckBox
 
    ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   IF Valtype( lInit ) == "L"
+      ::lValue := lInit
+   ENDIF
 
    RETURN Self
 
+METHOD Value( lValue ) CLASS HDCheckBox
+
+   IF lValue != Nil
+      IF ValType( lValue ) != "L"
+         lValue := .F.
+      ENDIF
+      hd_calljava_s_v( "setval:" + ::objname + ":" + iif( lValue,"1","0" ) )
+      RETURN ( ::lValue := lValue )
+   ENDIF
+
+   RETURN ( ::lValue := ( hd_calljava_s_s( "getval:" + ::objname + ":" ) == "1" ) )
+
 METHOD ToString() CLASS HDCheckBox
 
-   RETURN "che" + ::Super:ToString()
+   LOCAL sRet := ""
+
+   IF ::lValue
+      sRet += ",,v:1"
+   ENDIF
+
+   RETURN "che" + ::Super:ToString() + sRet

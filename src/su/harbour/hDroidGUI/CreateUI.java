@@ -174,6 +174,7 @@ public class CreateUI {
        int iArr = 0;
        int nPos2 = sContent.indexOf(")]");
        int nPos = sContent.indexOf(",,/");
+       String scmd;
 
        //Log.i(TAG, "CreateT-1 "+sContent);
        if( nPos < 0 || nPos > nPos2 )
@@ -199,16 +200,16 @@ public class CreateUI {
           TextView mtextview = new TextView(Harbour.context);
           if( aParams != null )
              while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("t") ) {
+                scmd = aParams[iArr][0];
+                if( scmd.equals("t") ) {
                    mtextview.setText(getStr(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("ct") ) {
+                } else if( scmd.equals("ct") ) {
                    mtextview.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("cb") ) {
+                } else if( scmd.equals("cb") ) {
                    mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("f") ) {
+                } else if( scmd.equals("f") ) {
                    setFont( mtextview, aParams[iArr][1] );
-                } else if( aParams[iArr][0].equals("vscroll") ) {
+                } else if( scmd.equals("vscroll") ) {
                    bVScroll = true;
                 }
                 iArr ++;
@@ -220,16 +221,16 @@ public class CreateUI {
           Button mButton = new Button(Harbour.context);
           if( aParams != null )
              while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("t") ) {
+                scmd = aParams[iArr][0];
+                if( scmd.equals("t") ) {
                    mButton.setText(getStr(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("ct") ) {
+                } else if( scmd.equals("ct") ) {
                    mButton.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("cb") ) {
+                } else if( scmd.equals("cb") ) {
                    mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("f") ) {
+                } else if( scmd.equals("f") ) {
                    setFont( mButton, aParams[iArr][1] );
-                } else if( aParams[iArr][0].equals("bcli") ) {
+                } else if( scmd.equals("bcli") ) {
                    if( !sObjName.isEmpty() )
                       mButton.setOnClickListener(new View.OnClickListener() {
                          public void onClick(View v) {
@@ -246,20 +247,20 @@ public class CreateUI {
           EditText medit = new EditText(Harbour.context);
           if( aParams != null )
              while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("t") ) {
+                scmd = aParams[iArr][0];
+                if( scmd.equals("t") ) {
                    medit.setText(getStr(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("ct") ) {
+                } else if( scmd.equals("ct") ) {
                    medit.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("cb") ) {
+                } else if( scmd.equals("cb") ) {
                    medit.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("hint") ) {
+                } else if( scmd.equals("hint") ) {
                    medit.setHint(getStr(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("pass") ) {
+                } else if( scmd.equals("pass") ) {
                    medit.setTransformationMethod(new PasswordTransformationMethod());
-                } else if( aParams[iArr][0].equals("f") ) {
+                } else if( scmd.equals("f") ) {
                    setFont( medit, aParams[iArr][1] );
-                } else if( aParams[iArr][0].equals("bkey") ) {
+                } else if( scmd.equals("bkey") ) {
                    if( !sObjName.isEmpty() ) {
                       medit.setOnKeyListener(new View.OnKeyListener() {
                          public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -281,12 +282,14 @@ public class CreateUI {
           CheckBox mche = new CheckBox(Harbour.context);
           if( aParams != null )
              while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("t") ) {
+                scmd = aParams[iArr][0];
+                if( scmd.equals("t") ) {
                    mche.setText(getStr(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("ct") ) {
+                } else if( scmd.equals("v") ) {
+                   mche.setChecked( true );
+                } else if( scmd.equals("ct") ) {
                    mche.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( aParams[iArr][0].equals("cb") ) {
+                } else if( scmd.equals("cb") ) {
                    mche.setBackgroundColor(parseColor(aParams[iArr][1]));
                 }
                 iArr ++;
@@ -301,10 +304,10 @@ public class CreateUI {
 
           if( aParams != null )
              while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("hscroll") ) {
+                scmd = aParams[iArr][0];
+                if( scmd.equals("hscroll") ) {
                    bHScroll = true;
-                } else if( aParams[iArr][0].equals("bcli") ) {
+                } else if( scmd.equals("bcli") ) {
                    if( !sObjName.isEmpty() )
                       mlv.setOnItemClickListener(new OnItemClickListener() {
                             public void onItemClick(AdapterView<?> p, View v,
@@ -394,37 +397,38 @@ public class CreateUI {
        int ipl = 0, ipt = 0, ipr = 0, ipb = 0;
        int iAlign = 0;
        boolean bm = false, bp = false;
+       String scmd;
 
        while( aParams[iArr][0] != null ) {
-
-          if( aParams[iArr][0].equals("h") ) {
+          scmd = aParams[iArr][0];
+          if( scmd.equals("h") ) {
              iHeight = Integer.parseInt(aParams[iArr][1]);
-          } else if( aParams[iArr][0].equals("w") ) {
+          } else if( scmd.equals("w") ) {
              iWidth = Integer.parseInt(aParams[iArr][1]);
-          } else if( aParams[iArr][0].equals("ali") ) {
+          } else if( scmd.equals("ali") ) {
              iAlign = Integer.parseInt(aParams[iArr][1]);
-          } else if( aParams[iArr][0].equals("ml") ) {
+          } else if( scmd.equals("ml") ) {
              iml = Integer.parseInt(aParams[iArr][1]);
              bm = true;
-          } else if( aParams[iArr][0].equals("mt") ) {
+          } else if( scmd.equals("mt") ) {
              imt = Integer.parseInt(aParams[iArr][1]);
              bm = true;
-          } else if( aParams[iArr][0].equals("mr") ) {
+          } else if( scmd.equals("mr") ) {
              imr = Integer.parseInt(aParams[iArr][1]);
              bm = true;
-          } else if( aParams[iArr][0].equals("mb") ) {
+          } else if( scmd.equals("mb") ) {
              imb = Integer.parseInt(aParams[iArr][1]);
              bm = true;
-          } else if( aParams[iArr][0].equals("pl") ) {
+          } else if( scmd.equals("pl") ) {
              ipl = Integer.parseInt(aParams[iArr][1]);
              bp = true;
-          } else if( aParams[iArr][0].equals("pt") ) {
+          } else if( scmd.equals("pt") ) {
              ipt = Integer.parseInt(aParams[iArr][1]);
              bp = true;
-          } else if( aParams[iArr][0].equals("pr") ) {
+          } else if( scmd.equals("pr") ) {
              ipr = Integer.parseInt(aParams[iArr][1]);
              bp = true;
-          } else if( aParams[iArr][0].equals("pb") ) {
+          } else if( scmd.equals("pb") ) {
              ipb = Integer.parseInt(aParams[iArr][1]);
              bp = true;
           }

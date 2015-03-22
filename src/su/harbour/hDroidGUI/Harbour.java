@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -276,6 +277,9 @@ public class Harbour {
           if( view != null ) {
              if( scmd.equals( "settxt" ) ) {
                 ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
+             } else if( scmd.equals( "setval" ) ) {
+                if( view instanceof CheckBox )
+                   ((CheckBox)view).setChecked( message.substring( nPos1+1 ).equals("1") );
              } else if( scmd.equals( "setsels" ) ) {
                 ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
              }
@@ -304,15 +308,17 @@ public class Harbour {
                 tview = (TextView) mainView.findViewWithTag( stag );
              }
 
-             if( scmd.equals( "gettxt" ) ) {
-                if( tview != null )
+             if( tview != null ) {
+                if( scmd.equals( "gettxt" ) ) {
                    return (String) tview.getText().toString();
-             } else if( scmd.equals( "getsels" ) ) {
-                if( tview != null )
+                } else if( scmd.equals( "getval" ) ) {
+                   if( tview instanceof CheckBox )
+                      return ((CheckBox)tview).isChecked()? "1" : "0";
+                } else if( scmd.equals( "getsels" ) ) {
                    return (String) "" + tview.getSelectionStart();
-             } else if( scmd.equals( "getsele" ) ) {
-                if( tview != null )
+                } else if( scmd.equals( "getsele" ) ) {
                    return (String) "" + tview.getSelectionEnd();
+                }
              }
           }
        }

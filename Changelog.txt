@@ -1,4 +1,16 @@
 
+2015-03-22 09:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * INIT clause added to CHECKBOX command
+  * src/prg/hdwidget.prg
+    * :Value() SETGET method added to HDCheckbox
+    * Init value added for HDCheckbox
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * code remastered a bit
+    * added support for initial checkbox values
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * added support for set/get checkbox values
+
 2015-03-21 18:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * PASSWORD clause added to EDITBOX command

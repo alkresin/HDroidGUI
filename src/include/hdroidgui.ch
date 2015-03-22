@@ -132,8 +132,9 @@
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
+             [ INIT <lInit> ]               ;
           => ;
-   <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont> );
+   <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<lInit> );
     [; hd_SetCtrlName( <oChe>,<(oChe)> )]
 
 #xcommand BROWSE <oBrw>                     ;
