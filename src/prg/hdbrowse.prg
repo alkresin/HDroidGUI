@@ -76,15 +76,15 @@ METHOD RowCount() CLASS HDBrowse
 
 METHOD GetRow( nRow ) CLASS HDBrowse
 
-   LOCAL i, sRet := ""
+   LOCAL i, aRet := Array(Len(::aColumns))
 
    ::GoTo( nRow )
 
    FOR i := 1 TO Len( ::aColumns )
-      sRet += Eval( ::aColumns[i]:block, Self, nRow, i ) + ":"
+      aRet[i] := Eval( ::aColumns[i]:block, Self, nRow, i )
    NEXT
 
-   RETURN sRet
+   RETURN hb_jsonEncode(aRet)
 
 METHOD GetStru() CLASS HDBrowse
 
@@ -185,7 +185,7 @@ METHOD GoTo( nRow ) CLASS HDBrwDbf
 
 METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
 
-   LOCAL i, sRet := ""
+   LOCAL i, sRet, aRet := Array(Len(::aColumns))
 
    IF ::nBufSize > 0 .AND. ::aBuffer[1,1] <= nRow .AND. ::aBuffer[::nBufSize,1] >= nRow
       FOR i := 1 TO ::nBufSize
@@ -221,8 +221,9 @@ METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
 
    IF ::aBuffer[::nBufCurr,2] == Nil
       FOR i := 1 TO Len( ::aColumns )
-         sRet += Eval( ::aColumns[i]:block, Self, nRow, i ) + ":"
+         aRet[i] := Eval( ::aColumns[i]:block, Self, nRow, i )
       NEXT
+      sRet := hb_jsonEncode( aRet )
       ::aBuffer[::nBufCurr,2] := sRet
       //hd_wrlog( "getrow "+str(nRow)+" "+Str(::nBufCurr,3)+" "+sRet )
    ELSE

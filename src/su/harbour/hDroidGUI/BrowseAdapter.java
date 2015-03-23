@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.AbsListView;
 import android.widget.TextView;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.widget.LinearLayout.LayoutParams;
 import android.view.Gravity;
@@ -80,7 +82,7 @@ public class BrowseAdapter extends BaseAdapter {
 
      View view = convertView;
      String sRow = Harbour.hbobj.hrbCall( "CB_BROWSE","row:" + stag + ":" + position );
-     int nPos1, nPos2, nWidth, i, iLength;
+     int nWidth, i, iLength = aColumns.length;
      LinearLayout ll;
      TextView tv;
 
@@ -95,7 +97,6 @@ public class BrowseAdapter extends BaseAdapter {
            ll.setLayoutParams(params);
         }
 
-        iLength = aColumns.length;
         for( i=0; i<iLength; i++ ) {
            nWidth = aColumns[i];
            tv = new TextView(ctx);
@@ -112,16 +113,22 @@ public class BrowseAdapter extends BaseAdapter {
      }
 
      // Fill the row (View) with values
-     nPos1 = i = 0;
-     do {
-       nPos2 = sRow.indexOf( ":",nPos1 );
-       if( nPos2 > 0 ) {
-          tv = (TextView) ((ViewGroup)view).getChildAt(i);
-          tv.setText( sRow.substring( nPos1, nPos2 ) );
-          i++;
-       }
-       nPos1 = nPos2 + 1;
-     } while( nPos2 > 0 );
+     JSONArray jArray = null;
+     try {
+        jArray = new JSONArray(sRow);
+     }
+     catch (JSONException e){
+        Harbour.hlog("jArray - error");
+     }
+     for( i=0; i<iLength; i++ ) {
+        tv = (TextView) ((ViewGroup)view).getChildAt(i);
+        try {
+           tv.setText( jArray.getString(i) );
+        }
+        catch (JSONException e){
+           Harbour.hlog("jArray.get - error");
+        }
+     }
 
      return view;
    }

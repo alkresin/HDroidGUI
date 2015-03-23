@@ -1,4 +1,10 @@
 
+2015-03-23 15:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    ! Text fields, containing ':' symbol, caused program crash - fixed now.
+      Json format is used to pass row from Harbour to Java code.
+
 2015-03-22 09:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * INIT clause added to CHECKBOX command
