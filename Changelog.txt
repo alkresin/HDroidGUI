@@ -1,4 +1,8 @@
 
+2015-03-24 10:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed to 4
+
 2015-03-23 15:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
   * src/su/harbour/hDroidGUI/BrowseAdapter.java
