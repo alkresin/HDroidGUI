@@ -41,6 +41,7 @@ CLASS HDBrowse INHERIT HDWidget
    METHOD GetStru()
    METHOD Refresh()
 
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -100,6 +101,22 @@ METHOD GetStru() CLASS HDBrowse
 
    RETURN sRet
 
+
+METHOD ToArray( arr ) CLASS HDBrowse
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "brw:" + ::objname )
+   IF !Empty( ::lHScroll )
+      Aadd( arr, "hscroll:t" )
+   ENDIF
+   IF ::bClick != Nil
+      Aadd( arr, "bcli:1" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )
 
 METHOD ToString() CLASS HDBrowse
 

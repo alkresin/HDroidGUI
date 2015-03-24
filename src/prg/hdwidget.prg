@@ -33,6 +33,7 @@ CLASS HDWidget INHERIT HDGUIObject
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
    METHOD GetText()
    METHOD SetText( cText )
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -70,6 +71,60 @@ METHOD SetText( cText ) CLASS HDWidget
 
    RETURN cText
 
+METHOD ToArray( arr ) CLASS HDWidget
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   IF !Empty( ::cText )
+      Aadd( arr, "t:" + ::cText )
+   ENDIF
+   IF  ::nWidth != Nil
+      Aadd( arr, "w:" + Ltrim(Str(::nWidth)) )
+   ENDIF
+   IF ::nHeight != Nil
+      Aadd( arr, "h:" + Ltrim(Str(::nHeight)) )
+   ENDIF
+   IF ::tColor != Nil
+      Aadd( arr, "ct:" + Iif( Valtype(::tColor)=="C", ::tColor, hd_ColorN2C(::tColor) ) )
+   ENDIF
+   IF ::bColor != Nil
+      Aadd( arr, "cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) ) )
+   ENDIF
+   IF !Empty( ::oFont )
+      Aadd( arr, "f:" + Ltrim(Str(::oFont:typeface)) + "/" + ;
+            Ltrim(Str(::oFont:style)) + "/" + Ltrim(Str(::oFont:height)) )
+   ENDIF
+   IF ::nMarginL != Nil
+      Aadd( arr, "ml:" + Ltrim(Str(::nMarginL)) )
+   ENDIF
+   IF ::nMarginT != Nil
+      Aadd( arr, "mt:" + Ltrim(Str(::nMarginT)) )
+   ENDIF
+   IF ::nMarginR != Nil
+      Aadd( arr, "mr:" + Ltrim(Str(::nMarginR)) )
+   ENDIF
+   IF ::nMarginB != Nil
+      Aadd( arr, "mb:" + Ltrim(Str(::nMarginB)) )
+   ENDIF
+   IF ::nPaddL != Nil
+      Aadd( arr, "pl:" + Ltrim(Str(::nPaddL)) )
+   ENDIF
+   IF ::nPaddT != Nil
+      Aadd( arr, "pt:" + Ltrim(Str(::nPaddT)) )
+   ENDIF
+   IF ::nPaddR != Nil
+      Aadd( arr, "pr:" + Ltrim(Str(::nPaddR)) )
+   ENDIF
+   IF ::nPaddB != Nil
+      Aadd( arr, "pb:" + Ltrim(Str(::nPaddB)) )
+   ENDIF
+   IF ::nAlign != 0
+      Aadd( arr, "ali:" + Ltrim(Str(::nAlign)) )
+   ENDIF
+
+   RETURN arr
 
 METHOD ToString() CLASS HDWidget
 
@@ -131,6 +186,7 @@ CLASS HDLayout INHERIT HDWidget
 
    METHOD New( lHorz, nWidth, nHeight, bcolor, oFont )
    METHOD FindByName( cName )
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -161,6 +217,28 @@ METHOD FindByName( cName ) CLASS HDLayout
 
    RETURN Nil
 
+METHOD ToArray( arr ) CLASS HDLayout
+
+   LOCAL i, nLen := Len( ::aItems ), arr1
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "lay:" + ::objname )
+   IF !Empty( ::lHorz )
+      Aadd( arr, "o:h" )
+   ELSE
+      Aadd( arr, "o:v" )
+   ENDIF
+
+   Aadd( arr, arr1 := {} )
+   FOR i := 1 TO nLen
+      Aadd( arr1, ::aItems[i]:ToArray() )
+   NEXT
+
+   RETURN ::Super:ToArray( arr )
+
 METHOD ToString() CLASS HDLayout
 
    LOCAL sRet := "lay" + ::Super:ToString(), i, nLen := Len( ::aItems )
@@ -186,6 +264,7 @@ CLASS HDTextView INHERIT HDWidget
    DATA lHScroll INIT .F.
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll )
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -197,6 +276,22 @@ METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll ) 
    ::lHScroll := lHScroll
 
    RETURN Self
+
+METHOD ToArray( arr ) CLASS HDTextView
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "txt:" + ::objname )
+   IF !Empty( ::lVScroll )
+      Aadd( arr, "vscroll:t" )
+   ENDIF
+   IF !Empty( ::lHScroll )
+      Aadd( arr, ",,hscroll:t" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )
 
 METHOD ToString() CLASS HDTextView
 
@@ -217,6 +312,7 @@ CLASS HDButton INHERIT HDWidget
    DATA bClick
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick )
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -228,6 +324,19 @@ METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick ) CLASS HDButt
    ::bClick := bClick
 
    RETURN Self
+
+METHOD ToArray( arr ) CLASS HDButton
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "btn:" + ::objname )
+   IF ::bClick != Nil
+      Aadd( arr, "bcli:1" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )
 
 METHOD ToString() CLASS HDButton
 
@@ -248,6 +357,7 @@ CLASS HDEdit INHERIT HDWidget
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown )
    METHOD getCursorPos( n )
    METHOD setCursorPos( nPos )
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -275,6 +385,25 @@ METHOD setCursorPos( nPos ) CLASS HDEdit
 
    RETURN Nil
 
+METHOD ToArray( arr ) CLASS HDEdit
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "edi:" + ::objname )
+   IF ::cHint != Nil
+      Aadd( arr, "hint:" + ::cHint )
+   ENDIF
+   IF ::lPass
+      Aadd( arr, "pass:" )
+   ENDIF
+   IF ::bKeyDown != Nil
+      Aadd( arr, "bkey:1" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )
+
 METHOD ToString() CLASS HDEdit
 
    LOCAL sRet := ""
@@ -297,6 +426,7 @@ CLASS HDCheckBox INHERIT HDWidget
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit )
    METHOD Value( lValue ) SETGET
+   METHOD ToArray( arr )
    METHOD ToString()
 
 ENDCLASS
@@ -321,6 +451,19 @@ METHOD Value( lValue ) CLASS HDCheckBox
    ENDIF
 
    RETURN ( ::lValue := ( hd_calljava_s_s( "getval:" + ::objname + ":" ) == "1" ) )
+
+METHOD ToArray( arr ) CLASS HDCheckBox
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "che:" + ::objname )
+   IF ::lValue
+      Aadd( arr, "v:1" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )
 
 METHOD ToString() CLASS HDCheckBox
 

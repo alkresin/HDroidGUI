@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 
 import java.util.Arrays;
 import org.json.JSONArray;
+import org.json.JSONException;
 import android.text.method.PasswordTransformationMethod;
 
 import android.util.Log;
@@ -345,6 +346,108 @@ public class Harbour {
 
     public static void adlg( String sDlg ) {
 
+       int iBtns = 0;
+
+       View [] aResults = new View [12];
+       int iResults = 0;
+       aResults[0] = null;
+
+       //String sId = sDlg.substring(4,nPos3);
+
+       AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+       try {
+          JSONArray jArray = new JSONArray(sDlg);
+          int nPos, i, ilen = jArray.length();
+          String sItem, sName, sObjName;
+          String sText, sHint;
+          boolean bPass;
+
+          for( i = 0; i<ilen; i++ ) {
+             if( jArray.get(i).getClass().getSimpleName().equals( "String" ) ) {
+
+                sItem = jArray.getString(i);
+                nPos = sItem.indexOf( ":" );
+                sName = sItem.substring( 0,nPos );
+                if( sName.equals("t") )
+                   builder.setTitle(sItem.substring( nPos+1 ));
+
+             } else {
+
+                JSONArray jArr1 = jArray.getJSONArray(i), jArr2;;
+                int j, ilen1 = jArr1.length(), j2, ilen2;
+                for( j = 0; j<ilen1; j++ ) {
+                   jArr2 = jArr1.getJSONArray(j);
+                   ilen2 = jArr2.length();
+
+                   sText = "";
+                   sHint = "";
+                   bPass = false;
+
+                   for( j2 = 1; j2<ilen2; j2++ ) {
+                      sItem = jArr2.getString(j2);
+                      nPos = sItem.indexOf( ":" );
+                      sName = sItem.substring( 0,nPos );
+
+                      if( sName.equals("t") ) {
+                         sText = sItem.substring( nPos+1 );
+                      } else if( sName.equals("hint") ) {
+                         sHint = CreateUI.getStr(sItem.substring( nPos+1 ));
+                      } else if( sName.equals("pass") ) {
+                         bPass = true;
+                      }
+
+                   }
+
+                   sItem = jArr2.getString(0);
+                   nPos = sItem.indexOf( ":" );
+                   sName = sItem.substring( 0,nPos );
+                   sObjName = sItem.substring( nPos+1 );
+                   if( sName.equals("btn") ) {
+                      iBtns ++;
+                      switch( iBtns ) {
+                         case 1:
+                            builder.setNegativeButton(sText,new BtnClickListener(sObjName,aResults));
+                            break;
+                         case 2:
+                            builder.setNeutralButton(sText,new BtnClickListener(sObjName,aResults));
+                            break;
+                         case 3:
+                            builder.setPositiveButton(sText,new BtnClickListener(sObjName,aResults));
+                            break;
+                      }
+                   } else if( sName.equals("txt") ) {
+                      builder.setMessage(sText);
+                   } else if( sName.equals("edi") ) {
+                      EditText ev = new EditText(context);
+                      if( !sHint.isEmpty() )
+                         ev.setHint( sHint );
+                      if( bPass )
+                         ev.setTransformationMethod(new PasswordTransformationMethod());
+                      aResults[iResults] = ev;
+                      builder.setView( ev );
+                      iResults ++;
+                      aResults[iResults] = null;
+                   }
+                }
+             }
+          }
+       }
+       catch (JSONException e) {
+          hlog("dialog: json error");
+          return;
+       }
+       if( iBtns > 0 )
+          builder.setCancelable(false);
+    	
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+/*
+    public static void adlg( String sDlg ) {
+
        if( !sDlg.substring(0,4).equals("dlg:") )
           return;
        int nPosNext, nPos1, nPos2, nPos3 = sDlg.indexOf(",,");
@@ -360,7 +463,6 @@ public class Harbour {
        String sText, sHint;
        boolean bPass;
        String sId = sDlg.substring(4,nPos3);
-       //DialogInterface.OnClickListener func;
 
        nPosNext = sDlg.indexOf(",,/",5);
        AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -440,7 +542,7 @@ public class Harbour {
         alert.show();
 
     }
-
+*/
     private static class BtnClickListener implements DialogInterface.OnClickListener {
         String sBtnName;
         View [] aViews;

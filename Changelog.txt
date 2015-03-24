@@ -1,4 +1,13 @@
 
+2015-03-24 16:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdbrowse.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * I've decided to change the format of window description, which is passed
+      from Harbour to Java, to json. Appropriate Harbour code is ready,
+      Java code for dialogs creation - too.
+
 2015-03-24 10:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 4
