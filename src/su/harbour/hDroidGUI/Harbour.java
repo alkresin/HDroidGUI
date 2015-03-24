@@ -374,7 +374,7 @@ public class Harbour {
 
              } else {
 
-                JSONArray jArr1 = jArray.getJSONArray(i), jArr2;;
+                JSONArray jArr1 = jArray.getJSONArray(i), jArr2;
                 int j, ilen1 = jArr1.length(), j2, ilen2;
                 for( j = 0; j<ilen1; j++ ) {
                    jArr2 = jArr1.getJSONArray(j);
