@@ -1,6 +1,6 @@
 /*
  * HDroidGUI - Harbour for Android GUI framework
- * Fonts
+ * Fonts, styles
  */
 
 #include "hbclass.ch"
@@ -12,13 +12,12 @@ CLASS HDFont INHERIT HDGUIObject
    DATA  typeface, style, height
    DATA nCounter   INIT 1
 
-   METHOD Add( typeface, style, height )
+   METHOD New( typeface, style, height )
    METHOD Release()
 
 ENDCLASS
 
-
-METHOD Add( typeface, style, height ) CLASS HDFont
+METHOD New( typeface, style, height ) CLASS HDFont
 
    LOCAL i, nlen := Len( ::aFonts )
 
@@ -62,3 +61,12 @@ METHOD Release() CLASS HDFont
    ENDIF
 
    RETURN Nil
+
+CLASS HDStyle INHERIT HDGUIObject
+
+   METHOD New()
+ENDCLASS
+
+METHOD New() CLASS HDStyle
+
+   RETURN Self

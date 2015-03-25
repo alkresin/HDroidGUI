@@ -37,6 +37,7 @@ CLASS HDBrowse INHERIT HDWidget
    METHOD AddColumn( oColumn )
    METHOD GoTo( nRow )
    METHOD RowCount()
+   METHOD CalcRow( nRow )
    METHOD GetRow( nRow )
    METHOD GetStru()
    METHOD Refresh()
@@ -75,17 +76,21 @@ METHOD RowCount() CLASS HDBrowse
 
    RETURN 0
 
-METHOD GetRow( nRow ) CLASS HDBrowse
+METHOD CalcRow() CLASS HDBrowse
 
    LOCAL i, aRet := Array(Len(::aColumns))
 
-   ::GoTo( nRow )
-
    FOR i := 1 TO Len( ::aColumns )
-      aRet[i] := Eval( ::aColumns[i]:block, Self, nRow, i )
+      aRet[i] := Eval( ::aColumns[i]:block, Self, i )
    NEXT
 
    RETURN hb_jsonEncode(aRet)
+
+METHOD GetRow( nRow ) CLASS HDBrowse
+
+   ::GoTo( nRow )
+
+   RETURN ::CalcRow( nRow )
 
 METHOD GetStru() CLASS HDBrowse
 
@@ -157,30 +162,30 @@ METHOD RowCount() CLASS HDBrwArray
 
 CLASS HDBrwDbf INHERIT HDBrowse
 
-   DATA  nBufMax   INIT  48
+   DATA  nBufMax
    DATA  nBufSize  INIT  0
    DATA  nBufCurr  INIT  0
    DATA  aBuffer
    DATA  nRecno, nRecCount
+   DATA  lFilter   INIT .F.
 
-   METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
+   METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter )
    METHOD RowCount()
    METHOD GoTo( nRow )
    METHOD GetRow( nRow )
+   METHOD Rebuild( xFilter )
    METHOD Refresh()
    METHOD RefreshRow( nRow )
 
 ENDCLASS
 
-METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) CLASS HDBrwDbf
+METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter ) CLASS HDBrwDbf
 
    ::Super:New( nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
 
-   ::aBuffer := Array( ::nBufMax, 2 )
    ::data := cAlias
-   (cAlias)->( dbGoTop() )
-   ::nRecno := (::data)->( Recno() )
-   ::nRecCount := (::data)->( RecCount() )
+
+   ::Rebuild( xFilter )
 
    RETURN Self
 
@@ -193,7 +198,11 @@ METHOD GoTo( nRow ) CLASS HDBrwDbf
       (::data)->( dbGoTo( ::nRecno ) )
    ENDIF
    IF nRow != ::nCurrent
-      (::data)->( dbSkip(nRow-::nCurrent) )
+      IF ::lFilter
+         (::data)->( dbGoTo( ::aBuffers[nRow,3]) )
+      ELSE
+         (::data)->( dbSkip(nRow-::nCurrent) )
+      ENDIF
       ::nCurrent := nRow
       ::nRecno := (::data)->( Recno() )
    ENDIF
@@ -220,11 +229,11 @@ METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
          ENDIF
       NEXT
       IF !Empty( lUpd )
-         ::GoTo( nRow )
+         //::GoTo( nRow )
          ::aBuffer[::nBufCurr,2] := Nil
       ENDIF
    ELSE
-      ::GoTo( nRow )
+      //::GoTo( nRow )
       IF ::nBufSize < ::nBufMax
          ::nBufSize ++
       ELSE
@@ -237,11 +246,7 @@ METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
    ENDIF
 
    IF ::aBuffer[::nBufCurr,2] == Nil
-      FOR i := 1 TO Len( ::aColumns )
-         aRet[i] := Eval( ::aColumns[i]:block, Self, nRow, i )
-      NEXT
-      sRet := hb_jsonEncode( aRet )
-      ::aBuffer[::nBufCurr,2] := sRet
+      sRet := ::aBuffer[::nBufCurr,2] := ::Super:GetRow( nRow )
       //hd_wrlog( "getrow "+str(nRow)+" "+Str(::nBufCurr,3)+" "+sRet )
    ELSE
       sRet := ::aBuffer[::nBufCurr,2]
@@ -250,9 +255,47 @@ METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
 
    RETURN sRet
 
+METHOD Rebuild( xFilter ) CLASS HDBrwDbf
+
+   LOCAL block, arr, nArr := 0
+
+   ::lFilter := .T.
+   IF Valtype( xFilter ) == "A"
+   ELSEIF Valtype( xFilter ) == "C"
+      dbSelectArea( ::data )
+      block := &( "{||" + xFilter + "}" )
+      arr := Array( 100 )
+      dbGoTop()
+      DO WHILE ! Eof()
+         IF Eval( block )
+            IF nArr == Len( arr )
+               arr := ASize( arr, nArr+100 )
+            ENDIF
+            nArr ++
+            arr[nArr] := { nArr, ::CalcRow( nRow ), Recno() }
+         ENDIF
+         dbSkip(1)
+      ENDDO
+      IF nArr < Len( arr )
+         arr := ASize( arr, nArr )
+      ENDIF
+      ::aBuffer := arr
+      ::nBufSize := ::nBufMax := nArr
+   ELSE
+      ::lFilter := .F.
+      ::nBufMax := 48
+      ::nBufSize := ::nBufCurr := 0
+      ::aBuffer := Array( ::nBufMax, 2 )
+      (::data)->( dbGoTop() )
+      ::nRecno := (::data)->( Recno() )
+      ::nRecCount := (::data)->( RecCount() )
+   ENDIF
+
+   RETURN Nil
+
 METHOD Refresh() CLASS HDBrwDbf
 
-   ::nRecCount := (::data)->( RecCount() )
+   ::nRecCount := Iif( ::lFilter, Len( ::aBuffer ), (::data)->( RecCount() ) )
 
    RETURN ::Super:Refresh()
 

@@ -76,7 +76,7 @@
              [ STYLE <style> ]     ;
              [ HEIGHT <height> ]   ;
           => ;
-    <oFont> := HDFont():Add( <face>, <style>, <height> )
+    <oFont> := HDFont():New( <face>, <style>, <height> )
 
 #xcommand BEGIN LAYOUT <oLay>               ;
              [<lHorz: HORIZONTAL>]          ;
@@ -160,6 +160,7 @@
     [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
 
 #xcommand BROWSE <oBrw> DBF <cAlias>        ;
+             [ FILTER <xFilter> ]           ;
              [ SIZE <width>, <height> ]     ;
              [ TEXTCOLOR <tcolor> ]         ;
              [ BACKCOLOR <bcolor> ]         ;
@@ -167,7 +168,7 @@
              [<lHScroll: HSCROLL>]          ;
              [ ON CLICK <bClick> ]          ;
           => ;
-   <oBrw> := HDBrwDbf():New( <cAlias>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
+   <oBrw> := HDBrwDbf():New( <cAlias>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick>,<xFilter> );
     [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
 
 #xcommand SET TIMER <oTimer>  ;

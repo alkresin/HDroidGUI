@@ -1,4 +1,10 @@
 
+2015-03-25 16:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * FILTER clause added to BROWSE DBF command
+  * src/prg/hdbrowse.prg
+    * support for filters added
+
 2015-03-25 10:06 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
   * src/prg/hdwidget.prg
