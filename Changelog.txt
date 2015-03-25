@@ -1,4 +1,11 @@
 
+2015-03-25 10:06 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Switching to a json format completed.
+
 2015-03-24 16:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
   * src/prg/hdbrowse.prg

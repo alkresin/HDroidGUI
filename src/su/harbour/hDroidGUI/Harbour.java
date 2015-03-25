@@ -52,7 +52,7 @@ public class Harbour {
     public static int iScrWidth = 0;
     public static int iScrHeight = 0;
 
-    public static String sMenu = null;
+    public static JSONArray jaMenu = null;
     private static String sActivity = null;
     private static String sActions = null;
 
@@ -145,23 +145,21 @@ public class Harbour {
 
     public static void SetMenu( Menu menu ) {
 
-       if( sMenu == null )
+       if( jaMenu == null )
           return;
 
-       int nPos1 = 2, nPos2, nPosEnd = sMenu.indexOf( ")]" );
-       int nIndex = 1;
+       int i, ilen = jaMenu.length();
+       try {
+          for( i = 1; i<ilen; i++ ) {
 
-       do {
-          nPos2 = sMenu.indexOf( ",,",nPos1 );
-          if( nPos2 <= 0 || nPos2 > nPosEnd )
-             nPos2 = nPosEnd;
-          menu.add( Menu.NONE, nIndex, Menu.NONE, sMenu.substring( nPos1,nPos2 ) );
-          nIndex ++;
-          nPos1 = nPos2 + 2;
-       } while( nPos1 < nPosEnd );
-
-       sMenu = null;
-
+             menu.add( Menu.NONE, i, Menu.NONE, jaMenu.getString(i) );
+          }
+       }
+       catch (JSONException e) {
+          Harbour.hlog("jaMenu error");
+          return;
+       }
+       jaMenu = null;
     }
 
     public static void onMenuSel( int id ) {
@@ -328,11 +326,10 @@ public class Harbour {
 
     public static void activ( String sAct ) {
 
-       if( !sAct.substring(0,4).equals("act:") )
+       if( !sAct.substring(0,6).equals("[\"act:") )
           return;
-       int nPos1 = sAct.indexOf(",,",4);
-       String sId = sAct.substring(4,nPos1);
-
+       int nPos1 = sAct.indexOf("\"",6);
+       String sId = sAct.substring(6,nPos1);
        if( sId.equals("0") )
           sActivity = sAct;
        else if( dopClass != null ) {
@@ -445,104 +442,6 @@ public class Harbour {
 
     }
 
-/*
-    public static void adlg( String sDlg ) {
-
-       if( !sDlg.substring(0,4).equals("dlg:") )
-          return;
-       int nPosNext, nPos1, nPos2, nPos3 = sDlg.indexOf(",,");
-       int iBtns = 0;
-
-       View [] aResults = new View [12];
-       int iResults = 0;
-       aResults[0] = null;
-
-       String [][] aParams;
-       int iArr;
-       String sName, sObjName;
-       String sText, sHint;
-       boolean bPass;
-       String sId = sDlg.substring(4,nPos3);
-
-       nPosNext = sDlg.indexOf(",,/",5);
-       AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-       if( nPos3 < nPosNext ) {
-          aParams = CreateUI.GetParamsList( sDlg.substring(nPos3,nPosNext) );
-          iArr = 0;
-          while( aParams[iArr][0] != null ) {
-
-             if( aParams[iArr][0].equals("t") ) {
-                builder.setTitle(aParams[iArr][1]);
-             }
-             iArr ++;
-          }
-       }
-       if( sDlg.indexOf(",,/btn") > 0 )
-          builder.setCancelable(false);
-
-       do {
-          sText = "";
-          sHint = "";
-          bPass = false;
-          nPos1 = nPosNext + 3;
-          nPosNext = sDlg.indexOf(",,/",nPos1);
-          nPos2 = sDlg.indexOf(",,",nPos1);
-          if( nPos2 >= 0 && nPos2 != nPosNext && ( nPosNext < 0 || nPos2 < nPosNext ) ) {
-             if( nPosNext < 0 )
-                aParams = CreateUI.GetParamsList( sDlg.substring(nPos2) );
-             else
-                aParams = CreateUI.GetParamsList( sDlg.substring(nPos2,nPosNext) );
-
-             iArr = 0;
-             while( aParams[iArr][0] != null ) {
-
-                if( aParams[iArr][0].equals("t") ) {
-                   sText = aParams[iArr][1];
-                } else if( aParams[iArr][0].equals("hint") ) {
-                   sHint = CreateUI.getStr(aParams[iArr][1]);
-                } else if( aParams[iArr][0].equals("pass") ) {
-                   bPass = true;
-                }
-                iArr ++;
-             }
-          }
-          nPos3 = sDlg.indexOf(":",nPos1);
-          sName = sDlg.substring(nPos1,nPos3);
-          sObjName = sDlg.substring(nPos3+1,nPos2);
-          if( sName.equals("btn") ) {
-             iBtns ++;
-             switch( iBtns ) {
-                case 1:
-                   builder.setNegativeButton(sText,new BtnClickListener(sObjName,aResults));
-                   break;
-                case 2:
-                   builder.setNeutralButton(sText,new BtnClickListener(sObjName,aResults));
-                   break;
-                case 3:
-                   builder.setPositiveButton(sText,new BtnClickListener(sObjName,aResults));
-                   break;
-             }
-          } else if( sName.equals("txt") ) {
-             builder.setMessage(sText);
-          } else if( sName.equals("edi") ) {
-             EditText ev = new EditText(context);
-             if( !sHint.isEmpty() )
-                ev.setHint( sHint );
-             if( bPass )
-                ev.setTransformationMethod(new PasswordTransformationMethod());
-             aResults[iResults] = ev;
-             builder.setView( ev );
-             iResults ++;
-             aResults[iResults] = null;
-          }
-       } while( nPosNext > 0 );
-    	
-        AlertDialog alert = builder.create();
-        alert.show();
-
-    }
-*/
     private static class BtnClickListener implements DialogInterface.OnClickListener {
         String sBtnName;
         View [] aViews;

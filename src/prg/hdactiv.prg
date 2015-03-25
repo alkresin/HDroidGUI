@@ -123,8 +123,10 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
 METHOD Activate() CLASS HDActivity
 
-   hd_wrlog( hb_jsonEncode( ::ToArray() ) )
-   hd_calljava_s_v( ::ToString(), "activ" )
+   local s := hb_jsonEncode( ::ToArray() )
+   //hd_wrlog( s )
+   //hd_calljava_s_v( ::ToString(), "activ" )
+   hd_calljava_s_v( s, "activ" )
 
    RETURN Nil
 

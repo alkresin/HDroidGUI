@@ -231,13 +231,14 @@ METHOD ToArray( arr ) CLASS HDLayout
    ELSE
       Aadd( arr, "o:v" )
    ENDIF
+   ::Super:ToArray( arr )
 
    Aadd( arr, arr1 := {} )
    FOR i := 1 TO nLen
       Aadd( arr1, ::aItems[i]:ToArray() )
    NEXT
 
-   RETURN ::Super:ToArray( arr )
+   RETURN arr
 
 METHOD ToString() CLASS HDLayout
 

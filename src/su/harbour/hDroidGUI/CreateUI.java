@@ -27,6 +27,9 @@ import android.util.TypedValue;
 
 import android.content.res.Resources;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 
 public class CreateUI {
 
@@ -46,53 +49,86 @@ public class CreateUI {
 
     public View CreateActivity( Activity act, String sContent ) {
 
-       View rootView;
-       if( !sContent.substring(0,4).equals("act:") )
+       View rootView = null;
+       if( !sContent.substring(0,6).equals("[\"act:") )
           return null;
-       int nPos1 = sContent.indexOf(",,",4), nPosNext;
 
-       //sActId = sContent.substring(4,nPos1);
-       nPosNext = sContent.indexOf(",,/",5);
-       String [][] aParams = GetParamsList( sContent.substring(nPos1,nPosNext) );
-       int iArr = 0;
-       while( aParams[iArr][0] != null ) {
+       JSONArray jArray = null;
+       try {
+          jArray = new JSONArray(sContent);
+       }
+       catch (JSONException e) {
+          Harbour.hlog("jArray error");
+          return null;
+       }
 
-          if( aParams[iArr][0].equals("t") ) {
-             act.setTitle( getStr(aParams[iArr][1]) );
+       int nPos, i, ilen = jArray.length();
+       String sItem, sName;
+
+       try {
+          for( i = 0; i<ilen; i++ ) {
+             if( jArray.get(i).getClass().getSimpleName().equals( "String" ) ) {
+
+                sItem = jArray.getString(i);
+                nPos = sItem.indexOf( ":" );
+                sName = sItem.substring( 0,nPos );
+                if( sName.equals("t") )
+                   act.setTitle( getStr(sItem.substring( nPos+1 )) );
+
+             } else {               
+                JSONArray jArr1 = jArray.getJSONArray(i);
+                int j, ilen1 = jArr1.length();
+                sItem = jArr1.getString(0);
+                if( sItem.equals( "menu" ) ) {
+                   Harbour.jaMenu = jArr1;
+                } else if( sItem.substring(0,3).equals("lay") )
+                   rootView = CreateGroupView(jArr1);
+                else
+                   rootView = CreateView(jArr1);
+             }
           }
-          iArr ++;
+       }   
+       catch (JSONException e) {
+          Harbour.hlog("jArray.get error");
+          return null;
        }
-
-       sContent = sContent.substring(nPosNext+3);
-
-       if( sContent.substring(0,4).equals("menu") ) {
-          nPosNext = sContent.indexOf(",,/",5);
-          Harbour.sMenu = sContent.substring(4,nPosNext);
-          sContent = sContent.substring(nPosNext+3);
-       }
-       if( sContent.substring(0,3).equals("lay") )
-          rootView = CreateGroupView(sContent);
-       else
-          rootView = CreateView(sContent);
-            
        return rootView;
     }
 
-    private View CreateGroupView( String sContent ) {
+    private View CreateGroupView( JSONArray jArray ) throws JSONException {
 
-       int nPos = sContent.indexOf("[(");
-       int nPos1 = sContent.indexOf(",,");
-       String sObjName;
+       int nPos, i, ilen = jArray.length();
+       String sItem, sName, sObjName;
 
+       String [][] aParams = new String [24][2];
+       aParams[0][0] = null;
+       int iArr = 0;
+
+       View mView;
        LinearLayout ll = new LinearLayout(Harbour.context);
 
-       //Harbour.hlog( "CreateG-1/"+sContent);
-       if( nPos1 >= 0 && nPos1 < nPos ) {
-          String [][] aParams = GetParamsList( sContent.substring(nPos1,nPos) );
-          int iArr = 0;
+       sItem = jArray.getString(0);
+       nPos = sItem.indexOf( ":" );
+       sObjName = sItem.substring( nPos+1 );
+
+       //Harbour.hlog( "CreateG-1/"+jArray.toString());
+       for( i = 1; i<ilen; i++ ) {
+          if( jArray.get(i).getClass().getSimpleName().equals( "String" ) ) {
+
+             sItem = jArray.getString(i);
+             nPos = sItem.indexOf( ":" );
+             aParams[iArr][1] = sItem.substring(nPos+1);
+             aParams[iArr][0] = sItem.substring( 0,nPos );
+             iArr ++;
+             aParams[iArr][0] = null;
+
+          } else
+             break;
+       }
+       if( iArr > 0 ) {
+          iArr = 0;
           while( aParams[iArr][0] != null ) {
 
-             //Log.i(TAG, "CreateG-2 "+aParams[iArr][0]+"/"+aParams[iArr][1]);
              if( aParams[iArr][0].equals("o") ) {
                 if( aParams[iArr][1].equals("v") )
                    ll.setOrientation(LinearLayout.VERTICAL);
@@ -104,196 +140,156 @@ public class CreateUI {
              iArr ++;
           }
           SetSize( (View)ll, aParams, LAYOUT );
-          sObjName = sContent.substring(4,nPos1);
+       }
 
-       }  else
-          sObjName = sContent.substring(4,nPos);
+       JSONArray jArr1 = jArray.getJSONArray(i), jArr2;
+       int j, ilen1 = jArr1.length();
+       for( j = 0; j<ilen1; j++ ) {
 
-       if( !sObjName.isEmpty() )
-          ll.setTag( sObjName );
-          
-       // scan layout items
-       sContent = sContent.substring(nPos+2);
-       //Log.i(TAG, "CreateG-3/"+sContent);
-       nPos1 = 0;
-       View mView;
-       int nPos2;
-       int nLast = sContent.length() - 2;
-       do {
-          nPos2 = sContent.indexOf(")]",nPos1);
-          //Log.i(TAG, "CreateG4a "+nPos+" "+nPos2+" "+nPos1+" "+nLast+" "+sContent.substring(nPos1));
-          if( sContent.substring(nPos1,nPos1+3).equals("lay") ) {
-             nPos = nPos1;
-             int i1 = -1;
-             int i2 = 1;
-             while( true ) {
-                while( nPos < nPos2 && nPos >= 0 ) {
-                   i1 ++;
-                   nPos = sContent.indexOf("[(",nPos+2);
-                }
-                if( i1 <= i2 )
-                   break;
-                else {
-                   nPos2 = sContent.indexOf(")]",nPos2+2);
-                   if( nPos2 < 0 )
-                      return null;
-                   i2 ++;
-                }
-             }
-             nPos2 += 2;
-             //Harbour.hlog("CreateG4b "+nPos+" "+nPos2+" "+nPos1);
-             mView = CreateGroupView(sContent.substring(nPos1,nPos2));
-             if( sContent.length()>=nPos2+3 && sContent.substring(nPos2,nPos2+3).equals(",,/") )
-                nPos2 +=3;
-             nPos = nPos1 = nPos2;
-          }
-          else {
-             nPos = sContent.indexOf(",,/",nPos1);
-             if( nPos < 0 ) //|| nPos > nPos2 )
-                nPos = nLast;
-             mView = CreateView(sContent.substring(nPos1,nPos) );
-             nPos1 = nPos + 3;
-          }
+          jArr2 = jArr1.getJSONArray(j);
+          sItem = jArr2.getString(0);
+          if( sItem.substring(0,3).equals("lay") )
+             mView = CreateGroupView( jArr2 );
+          else
+             mView = CreateView( jArr2 );
           if( mView == null )
              return null;
-
           ll.addView(mView);
-          //Log.i(TAG, "CreateG5 "+(String)ll.getTag()+":"+(String)mView.getTag()+"/"+nPos+" "+nPos2+" "+nPos1);
-       } while( nPos < nLast);
+       }
+
+       if( !sObjName.isEmpty() )
+          ll.setTag( sObjName );        
        
        return ll;
     }
 
-    private View CreateView( String sContent ) {
+    private View CreateView( JSONArray jArray ) throws JSONException {
 
-       String sName;
-       String sObjName = "";
+       int nPos, i, ilen = jArray.length();
+       String sItem, sName, sObjName;
+
        View mView;
+
        boolean bVScroll = false;
-       String [][] aParams = null;
+       String [][] aParams = new String [24][2];
+       aParams[0][0] = null;
        int iArr = 0;
-       int nPos2 = sContent.indexOf(")]");
-       int nPos = sContent.indexOf(",,/");
+
        String scmd;
 
-       //Log.i(TAG, "CreateT-1 "+sContent);
-       if( nPos < 0 || nPos > nPos2 )
-          nPos = nPos2;
-       if( nPos >= 0 )
-          sContent = sContent.substring(0,nPos);
-       //Log.i(TAG, "CreateT-2/"+sContent);
+       //Harbour.hlog( "CreateV-1/"+jArray.toString());
+       sItem = jArray.getString(0);
+       nPos = sItem.indexOf( ":" );
+       sName = sItem.substring( 0,nPos );
+       sObjName = sItem.substring( nPos+1 );
 
-       nPos = sContent.indexOf(",,");
-       if( nPos < 0 )
-          sName = sContent;
-       else {
-          aParams = GetParamsList( sContent.substring(nPos) );
-          sName = sContent.substring(0,nPos);
+       for( i = 1; i<ilen; i++ ) {
+
+          sItem = jArray.getString(i);
+          nPos = sItem.indexOf( ":" );
+          aParams[iArr][1] = sItem.substring(nPos+1);
+          aParams[iArr][0] = sItem.substring( 0,nPos );
+          iArr ++;
+          aParams[iArr][0] = null;
+
        }
-       nPos = sName.indexOf(":");
-       if( nPos > 0 ) {
-          sObjName = sName.substring(nPos+1);
-          sName = sName.substring(0,nPos);
-       }
+
+       iArr = 0;
        if( sName.equals("txt") ) {
 
           TextView mtextview = new TextView(Harbour.context);
-          if( aParams != null )
-             while( aParams[iArr][0] != null ) {
-                scmd = aParams[iArr][0];
-                if( scmd.equals("t") ) {
-                   mtextview.setText(getStr(aParams[iArr][1]));
-                } else if( scmd.equals("ct") ) {
-                   mtextview.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("cb") ) {
-                   mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("f") ) {
-                   setFont( mtextview, aParams[iArr][1] );
-                } else if( scmd.equals("vscroll") ) {
-                   bVScroll = true;
-                }
-                iArr ++;
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("t") ) {
+                mtextview.setText(getStr(aParams[iArr][1]));
+             } else if( scmd.equals("ct") ) {
+                mtextview.setTextColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("cb") ) {
+                mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("f") ) {
+                setFont( mtextview, aParams[iArr][1] );
+             } else if( scmd.equals("vscroll") ) {
+                bVScroll = true;
              }
+             iArr ++;
+          }
           mView = mtextview;
 
        } else if( sName.equals("btn") ) {
 
           Button mButton = new Button(Harbour.context);
-          if( aParams != null )
-             while( aParams[iArr][0] != null ) {
-                scmd = aParams[iArr][0];
-                if( scmd.equals("t") ) {
-                   mButton.setText(getStr(aParams[iArr][1]));
-                } else if( scmd.equals("ct") ) {
-                   mButton.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("cb") ) {
-                   mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("f") ) {
-                   setFont( mButton, aParams[iArr][1] );
-                } else if( scmd.equals("bcli") ) {
-                   if( !sObjName.isEmpty() )
-                      mButton.setOnClickListener(new View.OnClickListener() {
-                         public void onClick(View v) {
-                            Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
-                         }
-                      });
-                }
-                iArr ++;
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("t") ) {
+                mButton.setText(getStr(aParams[iArr][1]));
+             } else if( scmd.equals("ct") ) {
+                mButton.setTextColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("cb") ) {
+                mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("f") ) {
+                setFont( mButton, aParams[iArr][1] );
+             } else if( scmd.equals("bcli") ) {
+                if( !sObjName.isEmpty() )
+                   mButton.setOnClickListener(new View.OnClickListener() {
+                      public void onClick(View v) {
+                         Harbour.hbobj.hrbCall( "EVENT_BTNCLICK",(String)v.getTag() );
+                      }
+                   });
              }
+             iArr ++;
+          }
           mView = mButton;
 
        } else if( sName.equals("edi") ) {
 
           EditText medit = new EditText(Harbour.context);
-          if( aParams != null )
-             while( aParams[iArr][0] != null ) {
-                scmd = aParams[iArr][0];
-                if( scmd.equals("t") ) {
-                   medit.setText(getStr(aParams[iArr][1]));
-                } else if( scmd.equals("ct") ) {
-                   medit.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("cb") ) {
-                   medit.setBackgroundColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("hint") ) {
-                   medit.setHint(getStr(aParams[iArr][1]));
-                } else if( scmd.equals("pass") ) {
-                   medit.setTransformationMethod(new PasswordTransformationMethod());
-                } else if( scmd.equals("f") ) {
-                   setFont( medit, aParams[iArr][1] );
-                } else if( scmd.equals("bkey") ) {
-                   if( !sObjName.isEmpty() ) {
-                      medit.setOnKeyListener(new View.OnKeyListener() {
-                         public boolean onKey(View v, int keyCode, KeyEvent event) {
-                            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                               String sRes = Harbour.hbobj.hrbCall( "EVENT_KEYDOWN",(String)v.getTag()+":"+keyCode );
-                               return sRes.equals( "1" )? true : false;
-                            }
-                            return false;
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("t") ) {
+                medit.setText(getStr(aParams[iArr][1]));
+             } else if( scmd.equals("ct") ) {
+                medit.setTextColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("cb") ) {
+                medit.setBackgroundColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("hint") ) {
+                medit.setHint(getStr(aParams[iArr][1]));
+             } else if( scmd.equals("pass") ) {
+                medit.setTransformationMethod(new PasswordTransformationMethod());
+             } else if( scmd.equals("f") ) {
+                setFont( medit, aParams[iArr][1] );
+             } else if( scmd.equals("bkey") ) {
+                if( !sObjName.isEmpty() ) {
+                   medit.setOnKeyListener(new View.OnKeyListener() {
+                      public boolean onKey(View v, int keyCode, KeyEvent event) {
+                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                            String sRes = Harbour.hbobj.hrbCall( "EVENT_KEYDOWN",(String)v.getTag()+":"+keyCode );
+                            return sRes.equals( "1" )? true : false;
                          }
-                      });
-                   }
+                         return false;
+                      }
+                   });
                 }
-                iArr ++;
              }
+             iArr ++;
+          }
           mView = medit;
 
        } else if( sName.equals("che") ) {
 
           CheckBox mche = new CheckBox(Harbour.context);
-          if( aParams != null )
-             while( aParams[iArr][0] != null ) {
-                scmd = aParams[iArr][0];
-                if( scmd.equals("t") ) {
-                   mche.setText(getStr(aParams[iArr][1]));
-                } else if( scmd.equals("v") ) {
-                   mche.setChecked( true );
-                } else if( scmd.equals("ct") ) {
-                   mche.setTextColor(parseColor(aParams[iArr][1]));
-                } else if( scmd.equals("cb") ) {
-                   mche.setBackgroundColor(parseColor(aParams[iArr][1]));
-                }
-                iArr ++;
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("t") ) {
+                mche.setText(getStr(aParams[iArr][1]));
+             } else if( scmd.equals("v") ) {
+                mche.setChecked( true );
+             } else if( scmd.equals("ct") ) {
+                mche.setTextColor(parseColor(aParams[iArr][1]));
+             } else if( scmd.equals("cb") ) {
+                mche.setBackgroundColor(parseColor(aParams[iArr][1]));
              }
+             iArr ++;
+          }
           mView = mche;
 
        } else if( sName.equals("brw") ) {
@@ -302,22 +298,21 @@ public class CreateUI {
           ListView mlv = new ListView(Harbour.context);
           mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName ) );
 
-          if( aParams != null )
-             while( aParams[iArr][0] != null ) {
-                scmd = aParams[iArr][0];
-                if( scmd.equals("hscroll") ) {
-                   bHScroll = true;
-                } else if( scmd.equals("bcli") ) {
-                   if( !sObjName.isEmpty() )
-                      mlv.setOnItemClickListener(new OnItemClickListener() {
-                            public void onItemClick(AdapterView<?> p, View v,
-                                int pos, long id) {
-                               Harbour.hbobj.hrbCall( "CB_BROWSE","cli:"+(String)p.getTag()+":"+pos );
-                            }
-                          });
-                }
-                iArr ++;
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("hscroll") ) {
+                bHScroll = true;
+             } else if( scmd.equals("bcli") ) {
+                if( !sObjName.isEmpty() )
+                   mlv.setOnItemClickListener(new OnItemClickListener() {
+                         public void onItemClick(AdapterView<?> p, View v,
+                             int pos, long id) {
+                            Harbour.hbobj.hrbCall( "CB_BROWSE","cli:"+(String)p.getTag()+":"+pos );
+                         }
+                       });
              }
+             iArr ++;
+          }
           mlv.setTag( sObjName );
           sObjName = "";
           if( bHScroll ) {
@@ -336,7 +331,6 @@ public class CreateUI {
 
        if( !sObjName.isEmpty() )
           mView.setTag( sObjName );
-
 
        if( bVScroll ) {
 
@@ -506,44 +500,6 @@ public class CreateUI {
        }
        
        return id;
-    }
-
-    public static String[][] GetParamsList( String sParam ) {
-    
-       String [][] aParams = new String [24][2];
-       aParams[0][0] = null;
-
-       int nPos;
-       int nPos1;
-       int iArr = 0;
-       String sP;
-       if( sParam.substring(0,2).equals(",,") )
-          nPos1 = 2;
-       else
-          nPos1 = 0;
-       //Log.i(TAG, "getp-0/"+sParam);
-       do {
-          nPos = sParam.indexOf(",,", nPos1);
-          if( nPos < 0 )
-             sP = sParam.substring(nPos1);
-          else
-             sP = sParam.substring(nPos1,nPos);
-
-          //Log.i(TAG, "getp-1 "+nPos+" "+sP);
-          nPos1 = sP.indexOf(":");
-          if( nPos1 > 0 ) {
-             aParams[iArr][1] = sP.substring(nPos1+1);
-             aParams[iArr][0] = sP.substring(0,nPos1);
-             iArr ++;
-             aParams[iArr][0] = null;
-          } else
-             break;
-
-          nPos1 = nPos + 2;
-
-       } while( nPos > 0 );
-
-       return aParams;
     }
 
 }
