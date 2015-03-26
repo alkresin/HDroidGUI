@@ -1,4 +1,10 @@
 
+2015-03-26 21:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * version number is changed to 0.4, build 1
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Small padding added for headers and footers
+
 2015-03-26 16:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
   * src/prg/hdwidget.prg

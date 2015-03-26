@@ -410,6 +410,7 @@ public class CreateUI {
                       LinearLayout.LayoutParams.MATCH_PARENT );
                    prms.setMargins( 0, 0, 2, 0 );
                    tv.setLayoutParams(prms);
+                   tv.setPadding( 2, 2, 2, 2 );
                    tv.setText( aColHead[i] );
                    llh.addView( tv );
                 }
@@ -425,6 +426,7 @@ public class CreateUI {
                       LinearLayout.LayoutParams.MATCH_PARENT );
                    prms.setMargins( 0, 0, 2, 0 );
                    tv.setLayoutParams(prms);
+                   tv.setPadding( 2, 2, 2, 2 );
                    tv.setText( aColFoot[i] );
                    llf.addView( tv );
                 }

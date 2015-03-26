@@ -3,8 +3,8 @@
  * Main header file
  */
 
-#define HDROIDGUI_VERSION         "0.3"
-#define HDROIDGUI_BUILD           4
+#define HDROIDGUI_VERSION         "0.4"
+#define HDROIDGUI_BUILD           1
 
 #define MATCH_PARENT   -1
 #define WRAP_CONTENT   -2
