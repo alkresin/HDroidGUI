@@ -9,15 +9,19 @@ CLASS HDColumn INHERIT HDGUIObject
 
    DATA nWidth INIT 0
    DATA block
+   DATA cHead, cFoot
+   DATA nAlign, nHeadAlign
 
-   METHOD New( block, nWidth )
+   METHOD New( block, nWidth, cHeader, cFooter, nAlign, nHeadAlign )
 
 ENDCLASS
 
-METHOD New( block, nWidth ) CLASS HDColumn
+METHOD New( block, nWidth, cHeader, cFooter, nAlign, nHeadAlign ) CLASS HDColumn
 
    ::block  := block
    ::nWidth := nWidth
+   ::cHead := cHeader
+   ::cFoot := cFooter
 
    RETURN Self
 
@@ -29,6 +33,8 @@ CLASS HDBrowse INHERIT HDWidget
    DATA nCurrent   INIT  1
 
    DATA nRowHeight INIT 0
+   DATA nHeadHeight, HeadBColor, HeadTColor
+   DATA nFootHeight, FootBColor, FootTColor
 
    DATA bRowcount
    DATA bClick
@@ -37,13 +43,11 @@ CLASS HDBrowse INHERIT HDWidget
    METHOD AddColumn( oColumn )
    METHOD GoTo( nRow )
    METHOD RowCount()
-   METHOD CalcRow( nRow )
+   METHOD CalcRow()
    METHOD GetRow( nRow )
-   METHOD GetStru()
    METHOD Refresh()
 
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -92,22 +96,9 @@ METHOD GetRow( nRow ) CLASS HDBrowse
 
    RETURN ::CalcRow( nRow )
 
-METHOD GetStru() CLASS HDBrowse
-
-   LOCAL i, sRet := ""
-
-   IF ::nRowHeight > 0
-      sRet += ",,h:" + Ltrim(Str(::nRowHeight))
-   ENDIF
-   sRet += ",,col:"
-   FOR i := 1 TO Len( ::aColumns )
-      sRet += Ltrim( Str( ::aColumns[i]:nWidth ) ) + ":"
-   NEXT
-
-   RETURN sRet
-
-
 METHOD ToArray( arr ) CLASS HDBrowse
+
+   LOCAL arr1, arr2, i
 
    IF arr == Nil
       arr := {}
@@ -120,21 +111,49 @@ METHOD ToArray( arr ) CLASS HDBrowse
    IF ::bClick != Nil
       Aadd( arr, "bcli:1" )
    ENDIF
+   IF ::nRowHeight > 0
+      arr1 := { "h:" + Ltrim(Str(::nRowHeight)) }
+      Aadd( arr, "row:" + hb_jsonEncode(arr1) )
+   ENDIF
+   IF !Empty( ::nHeadHeight )
+      Aadd( arr, "hdh:"+Ltrim(Str(::nHeadHeight)) )
+   ENDIF
+   IF ::HeadBColor != Nil
+      Aadd( arr, "hdcb:" + Iif( Valtype(::HeadBColor)=="C", ::HeadBColor, hd_ColorN2C(::HeadBColor) ) )
+   ENDIF
+   IF ::HeadTColor != Nil
+      Aadd( arr, "hdct:" + Iif( Valtype(::HeadTColor)=="C", ::HeadTColor, hd_ColorN2C(::HeadTColor) ) )
+   ENDIF
+   IF !Empty( ::nFootHeight )
+      Aadd( arr, "fth:"+Ltrim(Str(::nFootHeight)) )
+   ENDIF
+   IF ::FootBColor != Nil
+      Aadd( arr, "ftcb:" + Iif( Valtype(::FootBColor)=="C", ::FootBColor, hd_ColorN2C(::FootBColor) ) )
+   ENDIF
+   IF ::FootTColor != Nil
+      Aadd( arr, "ftct:" + Iif( Valtype(::FootTColor)=="C", ::FootTColor, hd_ColorN2C(::FootTColor) ) )
+   ENDIF
+
+   arr1 := {}
+   FOR i := 1 TO Len( ::aColumns )
+      arr2 := { "w:" + Ltrim(Str(::aColumns[i]:nWidth)) }
+      IF !Empty( ::aColumns[i]:cHead )
+         Aadd( arr2, "hd:"+::aColumns[i]:cHead )
+      ENDIF
+      IF !Empty( ::aColumns[i]:cFoot )
+         Aadd( arr2, "ft:"+::aColumns[i]:cFoot )
+      ENDIF
+      IF !Empty( ::aColumns[i]:nAlign )
+         Aadd( arr2, "ali:"+Ltrim(Str(::aColumns[i]:nAlign)) )
+      ENDIF
+      IF !Empty( ::aColumns[i]:nHeadAlign )
+         Aadd( arr2, "hali:"+Ltrim(Str(::aColumns[i]:nHeadAlign)) )
+      ENDIF
+      Aadd( arr1, arr2 )
+   NEXT
+   Aadd( arr, "col:" + hb_jsonEncode(arr1) )
 
    RETURN ::Super:ToArray( arr )
-
-METHOD ToString() CLASS HDBrowse
-
-   LOCAL sRet := ""
-
-   IF !Empty( ::lHScroll )
-      sRet += ",,hscroll:t"
-   ENDIF
-   IF ::bClick != Nil
-      sRet += ",,bcli:1"
-   ENDIF
-
-   RETURN "brw" + ::Super:ToString() + sRet
 
 METHOD Refresh() CLASS HDBrowse
 
@@ -272,7 +291,7 @@ METHOD Rebuild( xFilter ) CLASS HDBrwDbf
                arr := ASize( arr, nArr+100 )
             ENDIF
             nArr ++
-            arr[nArr] := { nArr, ::CalcRow( nRow ), Recno() }
+            arr[nArr] := { nArr, ::CalcRow(), Recno() }
          ENDIF
          dbSkip(1)
       ENDDO

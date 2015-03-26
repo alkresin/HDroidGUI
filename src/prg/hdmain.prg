@@ -66,8 +66,6 @@ FUNCTION cb_Browse( cCmd )
       ELSEIF sq == "cli"
          oItem:GoTo( nRow := ( Val( Substr( cCmd, nPos+1 ) ) + 1 ) )
          RETURN Eval( oItem:bClick, oItem, nRow )
-      ELSEIF sq == "str"
-         RETURN oItem:GetStru()
       ENDIF
    ENDIF
 

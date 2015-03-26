@@ -34,7 +34,6 @@ CLASS HDWidget INHERIT HDGUIObject
    METHOD GetText()
    METHOD SetText( cText )
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -126,58 +125,6 @@ METHOD ToArray( arr ) CLASS HDWidget
 
    RETURN arr
 
-METHOD ToString() CLASS HDWidget
-
-   LOCAL sRet := ":" + ::objName
-
-   IF !Empty( ::cText )
-      sRet += ",,t:" + ::cText
-   ENDIF
-   IF  ::nWidth != Nil
-      sRet += ",,w:" + Ltrim(Str(::nWidth))
-   ENDIF
-   IF ::nHeight != Nil
-      sRet += ",,h:" + Ltrim(Str(::nHeight))
-   ENDIF
-   IF ::tColor != Nil
-      sRet += ",,ct:" + Iif( Valtype(::tColor)=="C", ::tColor, hd_ColorN2C(::tColor) )
-   ENDIF
-   IF ::bColor != Nil
-      sRet += ",,cb:" + Iif( Valtype(::bColor)=="C", ::bColor, hd_ColorN2C(::bColor) )
-   ENDIF
-   IF !Empty( ::oFont )
-      sRet += ",,f:" + Ltrim(Str(::oFont:typeface)) + "/" + ;
-            Ltrim(Str(::oFont:style)) + "/" + Ltrim(Str(::oFont:height))
-   ENDIF
-   IF ::nMarginL != Nil
-      sRet += ",,ml:" + Ltrim(Str(::nMarginL))
-   ENDIF
-   IF ::nMarginT != Nil
-      sRet += ",,mt:" + Ltrim(Str(::nMarginT))
-   ENDIF
-   IF ::nMarginR != Nil
-      sRet += ",,mr:" + Ltrim(Str(::nMarginR))
-   ENDIF
-   IF ::nMarginB != Nil
-      sRet += ",,mb:" + Ltrim(Str(::nMarginB))
-   ENDIF
-   IF ::nPaddL != Nil
-      sRet += ",,pl:" + Ltrim(Str(::nPaddL))
-   ENDIF
-   IF ::nPaddT != Nil
-      sRet += ",,pt:" + Ltrim(Str(::nPaddT))
-   ENDIF
-   IF ::nPaddR != Nil
-      sRet += ",,pr:" + Ltrim(Str(::nPaddR))
-   ENDIF
-   IF ::nPaddB != Nil
-      sRet += ",,pb:" + Ltrim(Str(::nPaddB))
-   ENDIF
-   IF ::nAlign != 0
-      sRet += ",,ali:" + Ltrim(Str(::nAlign))
-   ENDIF
-
-   RETURN sRet
 
 CLASS HDLayout INHERIT HDWidget
 
@@ -187,7 +134,6 @@ CLASS HDLayout INHERIT HDWidget
    METHOD New( lHorz, nWidth, nHeight, bcolor, oFont )
    METHOD FindByName( cName )
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -240,24 +186,6 @@ METHOD ToArray( arr ) CLASS HDLayout
 
    RETURN arr
 
-METHOD ToString() CLASS HDLayout
-
-   LOCAL sRet := "lay" + ::Super:ToString(), i, nLen := Len( ::aItems )
-
-   IF !Empty( ::lHorz )
-      sRet += ",,o:h"
-   ELSE
-      sRet += ",,o:v"
-   ENDIF
-
-   sRet += "[("
-
-   FOR i := 1 TO nLen
-      sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )
-   NEXT
-
-   RETURN sRet + ")]"
-
 
 CLASS HDTextView INHERIT HDWidget
 
@@ -266,7 +194,6 @@ CLASS HDTextView INHERIT HDWidget
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll )
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -294,19 +221,6 @@ METHOD ToArray( arr ) CLASS HDTextView
 
    RETURN ::Super:ToArray( arr )
 
-METHOD ToString() CLASS HDTextView
-
-   LOCAL sRet := ""
-
-   IF !Empty( ::lVScroll )
-      sRet += ",,vscroll:t"
-   ENDIF
-   IF !Empty( ::lHScroll )
-      sRet += ",,hscroll:t"
-   ENDIF
-
-   RETURN "txt" + ::Super:ToString() + sRet
-
 
 CLASS HDButton INHERIT HDWidget
 
@@ -314,7 +228,6 @@ CLASS HDButton INHERIT HDWidget
 
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick )
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -339,15 +252,6 @@ METHOD ToArray( arr ) CLASS HDButton
 
    RETURN ::Super:ToArray( arr )
 
-METHOD ToString() CLASS HDButton
-
-   LOCAL sRet := ""
-
-   IF ::bClick != Nil
-      sRet += ",,bcli:1"
-   ENDIF
-
-   RETURN "btn" + ::Super:ToString() + sRet
 
 CLASS HDEdit INHERIT HDWidget
 
@@ -359,7 +263,6 @@ CLASS HDEdit INHERIT HDWidget
    METHOD getCursorPos( n )
    METHOD setCursorPos( nPos )
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -405,21 +308,6 @@ METHOD ToArray( arr ) CLASS HDEdit
 
    RETURN ::Super:ToArray( arr )
 
-METHOD ToString() CLASS HDEdit
-
-   LOCAL sRet := ""
-
-   IF ::cHint != Nil
-      sRet += ",,hint:" + ::cHint
-   ENDIF
-   IF ::lPass
-      sRet += ",,pass:"
-   ENDIF
-   IF ::bKeyDown != Nil
-      sRet += ",,bkey:1"
-   ENDIF
-
-   RETURN "edi" + ::Super:ToString() + sRet
 
 CLASS HDCheckBox INHERIT HDWidget
 
@@ -428,7 +316,6 @@ CLASS HDCheckBox INHERIT HDWidget
    METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit )
    METHOD Value( lValue ) SETGET
    METHOD ToArray( arr )
-   METHOD ToString()
 
 ENDCLASS
 
@@ -466,12 +353,3 @@ METHOD ToArray( arr ) CLASS HDCheckBox
 
    RETURN ::Super:ToArray( arr )
 
-METHOD ToString() CLASS HDCheckBox
-
-   LOCAL sRet := ""
-
-   IF ::lValue
-      sRet += ",,v:1"
-   ENDIF
-
-   RETURN "che" + ::Super:ToString() + sRet

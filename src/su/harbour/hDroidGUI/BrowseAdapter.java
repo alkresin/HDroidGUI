@@ -21,44 +21,51 @@ public class BrowseAdapter extends BaseAdapter {
    int [] aColumns = null;
    int iRowHeight = 0;
 
-   BrowseAdapter( Context context, String tag ) {
+   BrowseAdapter( Context context, String tag, JSONArray jaRow, JSONArray jaCol ) {
      ctx = context;
      stag = tag;
-     String stru = Harbour.hbobj.hrbCall( "CB_BROWSE","str:" + stag + ":" );
-     int nPos1 = 0, nPos2, nPos0, nSch = 0;
 
-     while( nPos1 >= 0 && stru.substring(nPos1,nPos1+2).equals(",,") ) {
-        nPos1 += 2;
-        nPos2 = stru.indexOf( ":",nPos1 );
-        if( stru.substring(nPos1,nPos2).equals("h") ) {
-           nPos1 = nPos2 + 1;
-           nPos2 = stru.indexOf( ",,",nPos1 );
-           iRowHeight = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
+     int i, nPos, ilen;
+     String sItem, sName;
 
-        } else if( stru.substring(nPos1,nPos2).equals("col") ) {
-           nPos1 = nPos2+1;
-           nPos0 = nPos1;
-           do {
-              nPos2 = stru.indexOf( ":",nPos1 );
-              if( nPos2 > 0 )
-                 nSch ++;
-              nPos1 = nPos2 + 1;
-           } while( nPos2 > 0 );
-           aColumns = new int [nSch];
-           nPos1 = nPos0;
-           nSch = 0;
-           do {
-              nPos2 = stru.indexOf( ":",nPos1 );
-              if( nPos2 > 0 ) {
-                 aColumns[nSch] = Integer.parseInt( stru.substring( nPos1, nPos2 ) );
-                 nSch ++;
-              }
-              nPos1 = nPos2 + 1;
-           } while( nPos2 > 0 );
-           break;
+     if( jaRow != null ) {
+        ilen = jaRow.length();
+        try {
+           for( i = 0; i<ilen; i++ ) {
+              sItem = jaRow.getString(i);
+              nPos = sItem.indexOf( ":" );
+              sName = sItem.substring( 0,nPos );
+              if( sName.equals("h") )
+                 iRowHeight = Integer.parseInt( sItem.substring( nPos+1 ) );
+           }
+        }   
+        catch (JSONException e) {
+           Harbour.hlog("jaRow error");
+           return;
         }
-        nPos1 = stru.indexOf( ",,",nPos1 );
      }
+     ilen = jaCol.length();
+     aColumns = new int [ilen];
+     try {
+        JSONArray ja;
+        int j, ilen1;
+        for( i = 0; i<ilen; i++ ) {
+           ja = jaCol.getJSONArray(i);
+           ilen1 = ja.length();
+           for( j = 0; j<ilen1; j++ ) {
+              sItem = ja.getString(j);
+              nPos = sItem.indexOf( ":" );
+              sName = sItem.substring( 0,nPos );
+              if( sName.equals("w") )
+                 aColumns[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
+           }
+        }
+     }   
+     catch (JSONException e) {
+        Harbour.hlog("jaRow error");
+        return;
+     }
+
    }
 
    @Override

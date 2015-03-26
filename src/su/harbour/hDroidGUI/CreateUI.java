@@ -295,13 +295,70 @@ public class CreateUI {
        } else if( sName.equals("brw") ) {
 
           boolean bHScroll = false;
+          boolean bHead = false, bFoot = false;
+          LinearLayout llv = null;
+          JSONArray jaRow = null, jaCol = null, ja;
+          int ihdh = -10, ihdcb = -10, ihdct = -10;
+          int ifth = -10, iftcb = -10, iftct = -10;
+          int j, iCols = 0, ilen1, iBWidth = 0;
+          int [] aColumns = null;
+          String [] aColHead = null;
+          String [] aColFoot = null;
+
           ListView mlv = new ListView(Harbour.context);
-          mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName ) );
 
           while( aParams[iArr][0] != null ) {
              scmd = aParams[iArr][0];
              if( scmd.equals("hscroll") ) {
                 bHScroll = true;
+             } else if( scmd.equals("row") ) {
+                jaRow = new JSONArray(aParams[iArr][1]);
+             } else if( scmd.equals("col") ) {
+                jaCol = new JSONArray(aParams[iArr][1]);
+                iCols = jaCol.length();
+                aColumns = new int [iCols];
+                aColHead = new String [iCols];
+                aColFoot = new String [iCols];
+                for( i = 0; i<iCols; i++ ) {
+                   ja = jaCol.getJSONArray(i);
+                   ilen1 = ja.length();
+                   for( j = 0; j<ilen1; j++ ) {
+                      sItem = ja.getString(j);
+                      nPos = sItem.indexOf( ":" );
+                      sName = sItem.substring( 0,nPos );
+                      if( sName.equals("w") ) {
+                         aColumns[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
+                         if( aColumns[i] == 0 )
+                            iBWidth = -999999;
+                         else
+                            iBWidth += aColumns[i];
+                      } else if( sName.equals("hd") ) {
+                         aColHead[i] = sItem.substring( nPos+1 );
+                         bHead = true;
+                      } else if( sName.equals("ft") ) {
+                         aColFoot[i] = sItem.substring( nPos+1 );
+                         bFoot = true;
+                      }
+                   }
+                }
+             } else if( scmd.equals("hdh") ) {
+                ihdh = Integer.parseInt(aParams[iArr][1]);
+                bHead = true;
+             } else if( scmd.equals("hdcb") ) {
+                ihdcb = parseColor(aParams[iArr][1]);
+                bHead = true;
+             } else if( scmd.equals("hdct") ) {
+                ihdct = parseColor(aParams[iArr][1]);
+                bHead = true;
+             } else if( scmd.equals("fth") ) {
+                ifth = Integer.parseInt(aParams[iArr][1]);
+                bFoot = true;
+             } else if( scmd.equals("ftcb") ) {
+                iftcb = parseColor(aParams[iArr][1]);
+                bFoot = true;
+             } else if( scmd.equals("ftct") ) {
+                iftct = parseColor(aParams[iArr][1]);
+                bFoot = true;
              } else if( scmd.equals("bcli") ) {
                 if( !sObjName.isEmpty() )
                    mlv.setOnItemClickListener(new OnItemClickListener() {
@@ -313,18 +370,81 @@ public class CreateUI {
              }
              iArr ++;
           }
+          if( bHead || bFoot ) {
+             llv = new LinearLayout(Harbour.context);
+             llv.setOrientation(LinearLayout.VERTICAL);
+             LinearLayout llh = null, llf = null;
+             LinearLayout.LayoutParams prms;
+             if( bHead ) {
+                llh = new LinearLayout(Harbour.context);
+                llh.setOrientation(LinearLayout.HORIZONTAL);
+                llv.addView( llh );
+                prms = new LinearLayout.LayoutParams(
+                   (iBWidth<=0)? LinearLayout.LayoutParams.MATCH_PARENT : iBWidth,
+                   (ihdh==-10)? LinearLayout.LayoutParams.WRAP_CONTENT : ihdh );
+                llh.setLayoutParams(prms);
+             }
+             prms = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 );
+             mlv.setLayoutParams(prms);
+             llv.addView( mlv );
+             if( bFoot ) {
+                llf = new LinearLayout(Harbour.context);
+                llf.setOrientation(LinearLayout.HORIZONTAL);
+                llv.addView( llf );
+                prms = new LinearLayout.LayoutParams(
+                   (iBWidth<=0)? LinearLayout.LayoutParams.MATCH_PARENT : iBWidth,
+                   (ifth==-10)? LinearLayout.LayoutParams.WRAP_CONTENT : ifth );
+                llf.setLayoutParams(prms);
+             }
+             for( i = 0; i<iCols; i++ ) {
+                if( bHead ) {
+                   TextView tv = new TextView(Harbour.context);
+                   if( ihdcb != -10 ) {
+                      tv.setBackgroundColor(ihdcb);
+                   }
+                   if( ihdct != -10 )
+                      tv.setTextColor(ihdct);
+                   prms = new LinearLayout.LayoutParams(
+                      (aColumns[i]>0)? aColumns[i]-2 : LinearLayout.LayoutParams.MATCH_PARENT,
+                      LinearLayout.LayoutParams.MATCH_PARENT );
+                   prms.setMargins( 0, 0, 2, 0 );
+                   tv.setLayoutParams(prms);
+                   tv.setText( aColHead[i] );
+                   llh.addView( tv );
+                }
+                if( bFoot ) {
+                   TextView tv = new TextView(Harbour.context);
+                   if( iftcb != -10 ) {
+                      tv.setBackgroundColor(iftcb);
+                   }
+                   if( iftct != -10 )
+                      tv.setTextColor(iftct);
+                   prms = new LinearLayout.LayoutParams(
+                      (aColumns[i]>0)? aColumns[i]-2 : LinearLayout.LayoutParams.MATCH_PARENT,
+                      LinearLayout.LayoutParams.MATCH_PARENT );
+                   prms.setMargins( 0, 0, 2, 0 );
+                   tv.setLayoutParams(prms);
+                   tv.setText( aColFoot[i] );
+                   llf.addView( tv );
+                }
+             }
+          }
+
+          mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName, jaRow, jaCol ) );
           mlv.setTag( sObjName );
           sObjName = "";
+
           if( bHScroll ) {
              HorizontalScrollView hsv = new HorizontalScrollView(Harbour.context);
              LinearLayout ll = new LinearLayout(Harbour.context);
              ll.setOrientation(LinearLayout.HORIZONTAL);
 
              hsv.addView( ll );
-             ll.addView( mlv );
+             ll.addView( (bHead||bFoot)? llv : mlv );
              mView = hsv;
           } else
-             mView = mlv;
+             mView = ((bHead||bFoot)? llv : mlv);
 
        }  else
           return null;

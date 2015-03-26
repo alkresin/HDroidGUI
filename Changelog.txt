@@ -1,4 +1,19 @@
 
+2015-03-26 16:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+  * src/prg/hdwidget.prg
+    * :toString() methods removed
+  * src/prg/hdbrowse.prg
+    * added support for browse headers and footers
+    * new HDBrowse variables added for headers and footers:
+        :nHeadHeight, :HeadBColor, :HeadTColor, :nFootHeight, :FootBColor, :FootTColor
+    * new HDColumn variables added:
+        :cHead, :cFoot
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * added support for browse headers and footers
+  * src/prg/hdmain.prg
+
 2015-03-25 16:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * FILTER clause added to BROWSE DBF command

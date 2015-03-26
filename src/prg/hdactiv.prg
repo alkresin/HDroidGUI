@@ -111,7 +111,6 @@ CLASS HDActivity INHERIT HDWindow
    METHOD AddMenuItem( cTitle, nId, bAction )
 
    METHOD ToArray()
-   METHOD ToString()
 
 ENDCLASS
 
@@ -125,7 +124,6 @@ METHOD Activate() CLASS HDActivity
 
    local s := hb_jsonEncode( ::ToArray() )
    //hd_wrlog( s )
-   //hd_calljava_s_v( ::ToString(), "activ" )
    hd_calljava_s_v( s, "activ" )
 
    RETURN Nil
@@ -177,24 +175,6 @@ METHOD ToArray() CLASS HDActivity
 
    RETURN arr
 
-METHOD ToString() CLASS HDActivity
-
-   LOCAL sRet := "act:" + ::id + ",,t:" + ::title + ",,/", i
-
-   IF !Empty( ::aMenu )
-      sRet += "menu[("
-      FOR i := 1 TO Len( ::aMenu )
-         sRet += Iif( i==1, "", ",," ) + ::aMenu[i,1]
-      NEXT
-      sRet += ")],,/"
-   ENDIF
-
-   IF !Empty( ::aItems )
-      sRet += ::aItems[1]:ToString()
-   ENDIF
-
-   RETURN sRet
-
 CLASS HDDialog INHERIT HDWindow
 
    DATA aButtons
@@ -206,7 +186,6 @@ CLASS HDDialog INHERIT HDWindow
    METHOD onBtnClick( cName )
 
    METHOD ToArray()
-   METHOD ToString()
 
 ENDCLASS
 
@@ -218,7 +197,6 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
 
 METHOD Activate() CLASS HDDialog
 
-   //hd_calljava_s_v( ::ToString(), "adlg" )
    hd_calljava_s_v( hb_jsonEncode( ::ToArray() ), "adlg" )
 
    RETURN Nil
@@ -253,16 +231,6 @@ METHOD ToArray() CLASS HDDialog
    NEXT
 
    RETURN arr
-
-METHOD ToString() CLASS HDDialog
-
-   LOCAL sRet := "dlg:" + ::id + ",,t:" + ::title + ",,/", i, nLen := Len( ::aItems )
-
-   FOR i := 1 TO nLen
-      sRet += ::aItems[i]:ToString() + Iif( i<nLen, ",,/","" )
-   NEXT
-
-   RETURN sRet
 
 
 CLASS HDTimer INHERIT HDGUIObject
