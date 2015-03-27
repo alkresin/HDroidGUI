@@ -71,6 +71,10 @@ FUNCTION cb_Browse( cCmd )
 
    RETURN ""
 
+FUNCTION cb_Style( cId )
+
+   RETURN HDStyle():toString( Val(cId) )
+
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 

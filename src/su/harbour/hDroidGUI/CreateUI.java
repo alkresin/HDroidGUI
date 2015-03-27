@@ -21,6 +21,10 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.LinearLayout.LayoutParams;
 import android.view.Gravity;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
+
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.TypedValue;
@@ -134,8 +138,6 @@ public class CreateUI {
                    ll.setOrientation(LinearLayout.VERTICAL);
                 else
                    ll.setOrientation(LinearLayout.HORIZONTAL);
-             } else if( aParams[iArr][0].equals("cb") ) {
-                ll.setBackgroundColor(parseColor(aParams[iArr][1]));
              }
              iArr ++;
           }
@@ -204,8 +206,6 @@ public class CreateUI {
                 mtextview.setText(getStr(aParams[iArr][1]));
              } else if( scmd.equals("ct") ) {
                 mtextview.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( scmd.equals("cb") ) {
-                mtextview.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( scmd.equals("f") ) {
                 setFont( mtextview, aParams[iArr][1] );
              } else if( scmd.equals("vscroll") ) {
@@ -224,8 +224,6 @@ public class CreateUI {
                 mButton.setText(getStr(aParams[iArr][1]));
              } else if( scmd.equals("ct") ) {
                 mButton.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( scmd.equals("cb") ) {
-                mButton.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( scmd.equals("f") ) {
                 setFont( mButton, aParams[iArr][1] );
              } else if( scmd.equals("bcli") ) {
@@ -249,8 +247,6 @@ public class CreateUI {
                 medit.setText(getStr(aParams[iArr][1]));
              } else if( scmd.equals("ct") ) {
                 medit.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( scmd.equals("cb") ) {
-                medit.setBackgroundColor(parseColor(aParams[iArr][1]));
              } else if( scmd.equals("hint") ) {
                 medit.setHint(getStr(aParams[iArr][1]));
              } else if( scmd.equals("pass") ) {
@@ -285,8 +281,6 @@ public class CreateUI {
                 mche.setChecked( true );
              } else if( scmd.equals("ct") ) {
                 mche.setTextColor(parseColor(aParams[iArr][1]));
-             } else if( scmd.equals("cb") ) {
-                mche.setBackgroundColor(parseColor(aParams[iArr][1]));
              }
              iArr ++;
           }
@@ -502,7 +496,7 @@ public class CreateUI {
            mView.setTextSize( TypedValue.COMPLEX_UNIT_DIP,nsize );
     }
 
-    private static void SetSize( View mView, String [][] aParams, int ivType ) {
+    private static void SetSize( View mView, String [][] aParams, int ivType ) throws JSONException {
 
        if( aParams == null )
           return;
@@ -513,6 +507,7 @@ public class CreateUI {
        int ipl = 0, ipt = 0, ipr = 0, ipb = 0;
        int iAlign = 0;
        boolean bm = false, bp = false;
+       UIStyle style;
        String scmd;
 
        while( aParams[iArr][0] != null ) {
@@ -547,6 +542,30 @@ public class CreateUI {
           } else if( scmd.equals("pb") ) {
              ipb = Integer.parseInt(aParams[iArr][1]);
              bp = true;
+          } else if( scmd.equals("cb") ) {
+             mView.setBackgroundColor(parseColor(aParams[iArr][1]));
+          } else if( scmd.equals("stl") ) {
+             style = UIStyle.find( aParams[iArr][1] );
+             if( style == null ) {
+                String sStyle = Harbour.hbobj.hrbCall( "CB_STYLE",aParams[iArr][1] );
+                if( !sStyle.isEmpty() ) {                  
+                   JSONArray jArray = new JSONArray(sStyle);
+                   JSONArray jArr1 = jArray.getJSONArray(0);
+                   int i, ilen = jArr1.length();
+                   int [] acolors = (ilen>0)? new int[ilen] : null;
+                   for( i=0; i<ilen; i++ )
+                      acolors[i] = Integer.parseInt(jArr1.getString(i));
+                   jArr1 = jArray.getJSONArray(1);
+                   ilen = jArr1.length();
+                   int [] acorners = (ilen>0)? new int[ilen] : null;
+                   for( i=0; i<ilen; i++ )
+                      acorners[i] = Integer.parseInt(jArr1.getString(i));
+                   String scolor = jArray.getString(2);
+                   style = new UIStyle( aParams[iArr][1], acolors, acorners, scolor.isEmpty()? -10 : Integer.parseInt(scolor) );
+                   GradientDrawable g = style.getDrawable();
+                   mView.setBackground(g);
+                }
+             }
           }
           iArr ++;
        }
@@ -622,6 +641,43 @@ public class CreateUI {
        }
        
        return id;
+    }
+
+    private static class UIStyle {
+
+       static UIStyle [] aStyles = new UIStyle[24];
+       static int iStyles = -1;
+
+       String id;
+       int [] aColors;
+       int [] aCorners;
+       int tColor;
+
+       public UIStyle( String cid, int [] acolors, int [] acorners, int tcolor ) {
+
+          id = cid;
+          aColors = acolors;
+          aCorners = acorners;
+          tColor = tcolor;
+          iStyles ++;
+          aStyles[iStyles] = this;
+       }
+
+       public static UIStyle find( String cid ) {
+
+          int i;
+          for( i=0; i < iStyles; i++ )
+             if( aStyles[iStyles].id.equals( cid ) )
+                return aStyles[iStyles];
+          return null;
+       }
+
+       public GradientDrawable getDrawable() {
+
+          GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, this.aColors);
+          return g;
+       }
+
     }
 
 }

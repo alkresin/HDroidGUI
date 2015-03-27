@@ -27,6 +27,7 @@ CLASS HDWidget INHERIT HDGUIObject
    DATA nAlign  INIT 0
    DATA tColor, bColor
    DATA oFont
+   DATA oStyle
 
    DATA objName
 
@@ -121,6 +122,9 @@ METHOD ToArray( arr ) CLASS HDWidget
    ENDIF
    IF ::nAlign != 0
       Aadd( arr, "ali:" + Ltrim(Str(::nAlign)) )
+   ENDIF
+   IF ::oStyle != Nil
+      Aadd( arr, "stl:" + Ltrim(Str(::oStyle:id)) )
    ENDIF
 
    RETURN arr

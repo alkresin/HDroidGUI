@@ -1,4 +1,11 @@
 
+2015-03-27 16:46 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/drawwidg.prg
+  * src/prg/hdmain.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Added code ( not ready yet ) to implement styles for widgets.
+
 2015-03-27 11:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
   * src/su/harbour/hDroidGUI/BrowseAdapter.java
