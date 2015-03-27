@@ -4,6 +4,8 @@
   * src/su/harbour/hDroidGUI/BrowseAdapter.java
     ! Fixes, related to filtered browse
 
+----- Version 0.4 build 1 -----
+
 2015-03-26 21:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * version number is changed to 0.4, build 1
@@ -46,6 +48,8 @@
     * I've decided to change the format of window description, which is passed
       from Harbour to Java, to json. Appropriate Harbour code is ready,
       Java code for dialogs creation - too.
+
+    ----- Version 0.3 build 4 -----
 
 2015-03-24 10:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
@@ -99,6 +103,8 @@
   * src/su/harbour/hDroidGUI/CreateUI.java
     * alignment implemented
 
+    ----- Version 0.3 build 3 -----
+
 2015-03-20 09:24 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 3
@@ -107,6 +113,8 @@
   * jni/libharbour.so
   * src/include/hdext.ch
     * hbnetio added
+
+    ----- Version 0.3 build 2 -----
 
 2015-03-19 09:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
@@ -128,6 +136,8 @@
   * src/su/harbour/hDroidGUI/Harbour.java
   * src/su/harbour/hDroidGUI/CreateUI.java
     ! Fixes, related to Browse implementation
+
+----- Version 0.3 build 1 -----
 
 2015-03-16 20:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
@@ -201,6 +211,8 @@
   * src/su/harbour/hDroidGUI/Harbour.java
     ! Small fix
 
+    ----- Version 0.2 build 4 -----
+
 2015-03-11 16:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 4
@@ -245,6 +257,8 @@
   * src/prg/hdactiv.prg
     * Beginning of a timer implementation
 
+    ----- Version 0.2 build 3 -----
+
 2015-03-06 17:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * build number is changed to 3
@@ -259,6 +273,8 @@
     ! Fixed problems with additional activities
     * Dialogs stuff cleaned and fixed
   * utils/newproject.prg
+
+    ----- Version 0.2 build 2 -----
 
 2015-03-05 19:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
