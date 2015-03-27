@@ -187,6 +187,7 @@ CLASS HDBrwDbf INHERIT HDBrowse
    DATA  aBuffer
    DATA  nRecno, nRecCount
    DATA  lFilter   INIT .F.
+   DATA  xFilter
 
    METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter )
    METHOD RowCount()
@@ -195,6 +196,8 @@ CLASS HDBrwDbf INHERIT HDBrowse
    METHOD Rebuild( xFilter )
    METHOD Refresh()
    METHOD RefreshRow( nRow )
+
+   METHOD ToArray( arr )
 
 ENDCLASS
 
@@ -218,7 +221,7 @@ METHOD GoTo( nRow ) CLASS HDBrwDbf
    ENDIF
    IF nRow != ::nCurrent
       IF ::lFilter
-         (::data)->( dbGoTo( ::aBuffers[nRow,3]) )
+         (::data)->( dbGoTo( ::aBuffer[nRow,3]) )
       ELSE
          (::data)->( dbSkip(nRow-::nCurrent) )
       ENDIF
@@ -281,25 +284,36 @@ METHOD Rebuild( xFilter ) CLASS HDBrwDbf
    ::lFilter := .T.
    IF Valtype( xFilter ) == "A"
    ELSEIF Valtype( xFilter ) == "C"
-      dbSelectArea( ::data )
-      block := &( "{||" + xFilter + "}" )
-      arr := Array( 100 )
-      dbGoTop()
-      DO WHILE ! Eof()
-         IF Eval( block )
-            IF nArr == Len( arr )
-               arr := ASize( arr, nArr+100 )
+      IF !Empty( ::aColumns )
+         dbSelectArea( ::data )
+         block := &( "{||" + xFilter + "}" )
+         arr := Array( 100 )
+         dbGoTop()
+         DO WHILE ! Eof()
+            IF Eval( block )
+               IF nArr == Len( arr )
+                  arr := ASize( arr, nArr+100 )
+               ENDIF
+               nArr ++
+               arr[nArr] := { nArr, ::CalcRow(), Recno() }
             ENDIF
-            nArr ++
-            arr[nArr] := { nArr, ::CalcRow(), Recno() }
+            dbSkip(1)
+         ENDDO
+         IF nArr < Len( arr )
+            arr := ASize( arr, nArr )
          ENDIF
-         dbSkip(1)
-      ENDDO
-      IF nArr < Len( arr )
-         arr := ASize( arr, nArr )
+         ::aBuffer := arr
+         ::nBufSize := ::nBufMax := nArr
+
+         IF nArr > 0
+            (::data)->( dbGoTo( arr[1,3] ) )
+         ENDIF
+         ::nRecno := (::data)->( Recno() )
+         ::nRecCount := nArr
+      ELSE
+         ::aBuffer := Nil
+         ::xFilter := xFilter
       ENDIF
-      ::aBuffer := arr
-      ::nBufSize := ::nBufMax := nArr
    ELSE
       ::lFilter := .F.
       ::nBufMax := 48
@@ -322,3 +336,10 @@ METHOD RefreshRow( nRow ) CLASS HDBrwDbf
 
    ::GetRow( Iif( nRow==Nil, ::nCurrent, nRow ), .T. )
    RETURN hd_calljava_s_v( "listrefr:" + ::objname + ":" )
+
+METHOD ToArray( arr ) CLASS HDBrwDbf
+
+   IF ::lFilter .AND. ::aBuffer == Nil
+      ::Rebuild( ::xFilter )
+   ENDIF
+   RETURN ::Super:ToArray( arr )

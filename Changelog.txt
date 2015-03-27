@@ -1,4 +1,9 @@
 
+2015-03-27 11:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    ! Fixes, related to filtered browse
+
 2015-03-26 21:05 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * version number is changed to 0.4, build 1

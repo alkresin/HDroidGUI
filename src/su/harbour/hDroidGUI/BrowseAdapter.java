@@ -125,7 +125,7 @@ public class BrowseAdapter extends BaseAdapter {
         jArray = new JSONArray(sRow);
      }
      catch (JSONException e){
-        Harbour.hlog("jArray - error");
+        Harbour.hlog("getView: jArray - error");
      }
      for( i=0; i<iLength; i++ ) {
         tv = (TextView) ((ViewGroup)view).getChildAt(i);
@@ -133,7 +133,7 @@ public class BrowseAdapter extends BaseAdapter {
            tv.setText( jArray.getString(i) );
         }
         catch (JSONException e){
-           Harbour.hlog("jArray.get - error");
+           Harbour.hlog("getView: jArray.get - error ("+i+"/"+iLength+")");
         }
      }
 
