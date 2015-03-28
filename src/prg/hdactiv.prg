@@ -102,6 +102,7 @@ CLASS HDActivity INHERIT HDWindow
 
    DATA oFont
    DATA aMenu
+   DATA oStyleHead
 
    METHOD New( cTitle, bInit, bExit )
    METHOD Activate()
@@ -162,6 +163,12 @@ METHOD AddMenuItem( cTitle, nId, bAction ) CLASS HDActivity
 METHOD ToArray() CLASS HDActivity
 
    LOCAL arr := { "act:" + ::id, "t:" + ::title }, arr2, i
+
+   IF ::oStyleHead != Nil
+      IF Valtype( ::oStyleHead ) == "O"
+         Aadd( arr, "stlh:" + Ltrim(Str(::oStyleHead:id)) )
+      ENDIF
+   ENDIF
 
    IF !Empty( ::aMenu )
       Aadd( arr, arr2 := { "menu" } )

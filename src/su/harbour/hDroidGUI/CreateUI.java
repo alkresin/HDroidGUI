@@ -77,7 +77,13 @@ public class CreateUI {
                 nPos = sItem.indexOf( ":" );
                 sName = sItem.substring( 0,nPos );
                 if( sName.equals("t") )
-                   act.setTitle( getStr(sItem.substring( nPos+1 )) );
+                   act.setTitle( getStr(sItem.substring(nPos+1)) );
+                else if( sName.equals("stlh") ) {
+                   //UIStyle style = UIStyle.find( sItem.substring(nPos+1), true );
+                   //if( style != null )
+                   //    act.getActionBar().setBackgroundDrawable( style.getDrawable() );
+                   //Harbour.hlog( "ActionBar1:"+((act.getActionBar()==null)? "null" : "Ok") );
+                }
 
              } else {               
                 JSONArray jArr1 = jArray.getJSONArray(i);
