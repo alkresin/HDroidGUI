@@ -507,7 +507,7 @@ public class CreateUI {
        int ipl = 0, ipt = 0, ipr = 0, ipb = 0;
        int iAlign = 0;
        boolean bm = false, bp = false;
-       UIStyle style;
+       String sStyle = null;
        String scmd;
 
        while( aParams[iArr][0] != null ) {
@@ -545,27 +545,7 @@ public class CreateUI {
           } else if( scmd.equals("cb") ) {
              mView.setBackgroundColor(parseColor(aParams[iArr][1]));
           } else if( scmd.equals("stl") ) {
-             style = UIStyle.find( aParams[iArr][1] );
-             if( style == null ) {
-                String sStyle = Harbour.hbobj.hrbCall( "CB_STYLE",aParams[iArr][1] );
-                if( !sStyle.isEmpty() ) {                  
-                   JSONArray jArray = new JSONArray(sStyle);
-                   JSONArray jArr1 = jArray.getJSONArray(0);
-                   int i, ilen = jArr1.length();
-                   int [] acolors = (ilen>0)? new int[ilen] : null;
-                   for( i=0; i<ilen; i++ )
-                      acolors[i] = Integer.parseInt(jArr1.getString(i));
-                   jArr1 = jArray.getJSONArray(1);
-                   ilen = jArr1.length();
-                   int [] acorners = (ilen>0)? new int[ilen] : null;
-                   for( i=0; i<ilen; i++ )
-                      acorners[i] = Integer.parseInt(jArr1.getString(i));
-                   String scolor = jArray.getString(2);
-                   style = new UIStyle( aParams[iArr][1], acolors, acorners, scolor.isEmpty()? -10 : Integer.parseInt(scolor) );
-                   GradientDrawable g = style.getDrawable();
-                   mView.setBackground(g);
-                }
-             }
+             sStyle = aParams[iArr][1];
           }
           iArr ++;
        }
@@ -599,6 +579,34 @@ public class CreateUI {
                 ((LinearLayout)mView).setGravity( gravity );
           }
           catch (Exception e) {
+          }
+       }
+       if( sStyle != null ) {
+          UIStyle style1 = null, style2 = null, style3 = null;
+          int nPos = sStyle.indexOf( "," );
+          if( nPos > 0 ) {
+            style1 = UIStyle.find( sStyle.substring(0,nPos), true );
+            int nPos1 = sStyle.indexOf( ",",nPos+1 );
+            if( nPos1 < 0 ) {
+               style2 = UIStyle.find( sStyle.substring(nPos+1), true );
+            } else {
+               if( nPos1 > nPos+1 )
+                  style2 = UIStyle.find( sStyle.substring(nPos+1,nPos1), true );
+               style3 = UIStyle.find( sStyle.substring(nPos1+1), true );
+            }
+            StateListDrawable states = new StateListDrawable();
+            if( style3 != null )
+               states.addState(new int[] {android.R.attr.state_pressed}, style3.getDrawable());
+            if( style2 != null )
+               states.addState(new int[] {android.R.attr.state_focused}, style2.getDrawable());
+            if( style1 != null )
+               states.addState(new int[] {}, style1.getDrawable());
+            mView.setBackground( states );
+          } else {
+            style1 = UIStyle.find( sStyle, true );
+            if( style1 != null ) {
+                mView.setBackground( style1.getDrawable() );
+            }
           }
        }
     }
@@ -645,36 +653,89 @@ public class CreateUI {
 
     private static class UIStyle {
 
+       private static final GradientDrawable.Orientation [] aOrient = { GradientDrawable.Orientation.BL_TR,
+         GradientDrawable.Orientation.BOTTOM_TOP, GradientDrawable.Orientation.BR_TL,
+         GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.RIGHT_LEFT,
+         GradientDrawable.Orientation.TL_BR , GradientDrawable.Orientation.TOP_BOTTOM,
+         GradientDrawable.Orientation.TR_BL };
        static UIStyle [] aStyles = new UIStyle[24];
-       static int iStyles = -1;
+       static int iStyles = 0;
 
        String id;
+       GradientDrawable.Orientation orient;
        int [] aColors;
-       int [] aCorners;
+       float [] aCorners;
        int tColor;
 
-       public UIStyle( String cid, int [] acolors, int [] acorners, int tcolor ) {
+
+       public UIStyle( String cid ) {
 
           id = cid;
-          aColors = acolors;
-          aCorners = acorners;
-          tColor = tcolor;
-          iStyles ++;
           aStyles[iStyles] = this;
+          iStyles ++;
        }
 
-       public static UIStyle find( String cid ) {
+       public UIStyle( String cid, String sStyle ) throws JSONException {
+
+          this( cid );
+
+          JSONArray jArray = new JSONArray(sStyle);
+          int i = jArray.getInt(0);
+          orient = ( i<8 )? aOrient[i] : aOrient[1];
+
+          JSONArray jArr1 = jArray.getJSONArray(1);
+          int ilen = jArr1.length();
+
+          aColors = (ilen>0)? new int[ilen] : null;
+          for( i=0; i<ilen; i++ )
+             aColors[i] = parseColor(jArr1.getString(i));
+
+          jArr1 = jArray.getJSONArray(2);
+          ilen = jArr1.length();
+
+          if( ilen>0 ) {
+             int iCorners = (ilen==1)? 1:8;
+             aCorners = new float[iCorners];
+             for( i=0; i<iCorners; i++ )
+                aCorners[i] = (i<ilen)? (float)Integer.parseInt(jArr1.getString(i)) : 0;
+          }
+          else
+             aCorners = null;
+          String scolor = jArray.getString(3);
+          tColor = scolor.isEmpty()? -10 : Integer.parseInt(scolor);
+
+       }
+
+       public static UIStyle find( String cid, boolean bNew ) throws JSONException {
 
           int i;
+          UIStyle style = null;
+
           for( i=0; i < iStyles; i++ )
-             if( aStyles[iStyles].id.equals( cid ) )
-                return aStyles[iStyles];
-          return null;
+             if( aStyles[i].id.equals( cid ) ) {
+                style = aStyles[i];
+                break;
+             }
+          if( style == null && bNew ) {
+             String sStyle = Harbour.hbobj.hrbCall( "CB_STYLE",cid );
+             if( !sStyle.isEmpty() ) {                  
+                style = new UIStyle( cid, sStyle );
+             }
+          }
+
+          return style;
        }
 
        public GradientDrawable getDrawable() {
 
-          GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, this.aColors);
+          GradientDrawable g = new GradientDrawable(this.orient, this.aColors);
+          if( aCorners != null ) {
+             if( aCorners.length == 1 )
+                g.setCornerRadius( aCorners[0] );
+             else
+                g.setCornerRadii( aCorners );
+          }
+
           return g;
        }
 

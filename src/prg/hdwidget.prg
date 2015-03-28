@@ -73,6 +73,8 @@ METHOD SetText( cText ) CLASS HDWidget
 
 METHOD ToArray( arr ) CLASS HDWidget
 
+   LOCAL s, i
+
    IF arr == Nil
       arr := {}
    ENDIF
@@ -124,7 +126,15 @@ METHOD ToArray( arr ) CLASS HDWidget
       Aadd( arr, "ali:" + Ltrim(Str(::nAlign)) )
    ENDIF
    IF ::oStyle != Nil
-      Aadd( arr, "stl:" + Ltrim(Str(::oStyle:id)) )
+      IF Valtype( ::oStyle ) == "A"
+         s := ""
+         FOR i := 1 TO Len( ::oStyle )
+            s += Iif( i>1, ",", "" ) + Iif( Empty(::oStyle[i]), "", Ltrim(Str(::oStyle[i]:id)) )
+            Aadd( arr, "stl:" + s )
+         NEXT
+      ELSE
+         Aadd( arr, "stl:" + Ltrim(Str(::oStyle:id)) )
+      ENDIF
    ENDIF
 
    RETURN arr

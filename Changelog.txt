@@ -1,4 +1,12 @@
 
+2015-03-28 13:15 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * INIT STYLE command added
+  * src/prg/drawwidg.prg
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Widgets styling works now.
+
 2015-03-27 16:46 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/drawwidg.prg
   * src/prg/hdmain.prg

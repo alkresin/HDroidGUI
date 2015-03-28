@@ -192,3 +192,11 @@
 #xcommand SET <oWidget> PADDING [ LEFT <pl>] [ TOP <pt>] [ RIGHT <pr>]  [ BOTTOM <pb>] ;
           => ;
     hd_setPadding( <oWidget>, <pl>, <pt>, <pr>, <pb> )
+
+#xcommand  INIT STYLE <ostyle>            ;
+                [COLORS <colors,...>]     ;
+                [ORIENT <norient>]        ;
+                [CORNERS <corners,...>]   ;
+                [TEXTCOLOR <tcolor>]      ;
+          => ;
+    <ostyle> := HDStyle():New( {<colors>}, <norient>, {<corners>}, <tcolor> )

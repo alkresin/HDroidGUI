@@ -67,30 +67,34 @@ CLASS HDStyle INHERIT HDGUIObject
    CLASS VAR aStyles   INIT { }
 
    DATA id
+   DATA nOrient
    DATA aColors
    DATA tColor
    DATA aCorners
 
-   METHOD New( aColors, tColor, aCorners )
+   METHOD New( aColors, nOrient, aCorners, tColor )
    METHOD toString( nId )
 ENDCLASS
 
-METHOD New( aColors, tColor, aCorners ) CLASS HDStyle
+METHOD New( aColors, nOrient, aCorners, tColor ) CLASS HDStyle
 
    LOCAL i, nlen := Len( ::aStyles )
 
    tColor := Iif( tColor == Nil, -1, tColor )
+   nOrient := Iif( nOrient == Nil .OR. nOrient > 7, 1, nOrient )
 
    FOR i := 1 TO nlen
       IF hd_aCompare( ::aStyles[i]:aColors, aColors ) .AND. ;
          hd_aCompare( ::aStyles[i]:aCorners, aCorners ) .AND. ;
-         ::aStyles[i]:tColor == tColor
+         ::aStyles[i]:tColor == tColor .AND. ;
+         ::aStyles[i]:nOrient == nOrient
 
          RETURN ::aStyles[ i ]
       ENDIF
    NEXT
 
    ::aColors  := aColors
+   ::nOrient  := nOrient
    ::tColor   := tColor
    ::aCorners := aCorners
 
@@ -101,11 +105,20 @@ METHOD New( aColors, tColor, aCorners ) CLASS HDStyle
 
 METHOD toString( nId ) CLASS HDStyle
 
-   LOCAL oStyle, aRet := {}
+   LOCAL oStyle, aRet, i, arr1
 
    IF nId > 0 .AND. nId <= Len( ::aStyles )
       oStyle := ::aStyles[nId]
-      Aadd( aRet, Iif( !Empty(oStyle:aColors), oStyle:aColors, {} ) )
+      aRet := { oStyle:nOrient }
+      IF Empty(oStyle:aColors)
+         Aadd( aRet, {} )
+      ELSE
+         arr1 := Array( Len(oStyle:aColors) )
+         FOR i := 1 TO Len( arr1 )
+            arr1[i] := Iif( Valtype(oStyle:aColors[i]) == "N", hd_ColorN2C(oStyle:aColors[i]), oStyle:aColors[i] )
+         NEXT
+         Aadd( aRet, arr1 )
+      ENDIF
       Aadd( aRet, Iif( !Empty(oStyle:aCorners), oStyle:aCorners, {} ) )
       Aadd( aRet, Iif( oStyle:tColor != -1, Ltrim(Str(oStyle:tColor)), "" ) )
       RETURN hb_jsonEncode( aRet )
