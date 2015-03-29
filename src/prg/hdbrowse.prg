@@ -321,14 +321,14 @@ METHOD Rebuild( xFilter ) CLASS HDBrwDbf
       ::aBuffer := Array( ::nBufMax, 2 )
       (::data)->( dbGoTop() )
       ::nRecno := (::data)->( Recno() )
-      ::nRecCount := (::data)->( RecCount() )
+      ::nRecCount := (::data)->( ordKeyCount() )
    ENDIF
 
    RETURN Nil
 
 METHOD Refresh() CLASS HDBrwDbf
 
-   ::nRecCount := Iif( ::lFilter, Len( ::aBuffer ), (::data)->( RecCount() ) )
+   ::nRecCount := Iif( ::lFilter, Len( ::aBuffer ), (::data)->( ordKeyCount() ) )
 
    RETURN ::Super:Refresh()
 

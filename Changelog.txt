@@ -1,4 +1,9 @@
 
+2015-03-29 09:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    ! Problem fixed with scoped data - ordKeyCount() is used now instead of recCount()
+  * src/su/harbour/hDroidGUI/CreateUI.java
+
     ----- Version 0.4 build 2 -----
 
 2015-03-28 14:55 UTC+0300 Alexander Kresin <alex@belacy.ru>

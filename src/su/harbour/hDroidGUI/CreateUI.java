@@ -2,6 +2,7 @@ package su.harbour.hDroidGUI;
 
 import android.content.Context;
 import android.app.Activity;
+import android.app.ActionBar;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,10 @@ public class CreateUI {
 
        int nPos, i, ilen = jArray.length();
        String sItem, sName;
+       ActionBar bar = act.getActionBar();
 
+       if( bar != null )
+          bar.setIcon(android.R.color.transparent);
        try {
           for( i = 0; i<ilen; i++ ) {
              if( jArray.get(i).getClass().getSimpleName().equals( "String" ) ) {
@@ -79,10 +83,12 @@ public class CreateUI {
                 if( sName.equals("t") )
                    act.setTitle( getStr(sItem.substring(nPos+1)) );
                 else if( sName.equals("stlh") ) {
-                   //UIStyle style = UIStyle.find( sItem.substring(nPos+1), true );
-                   //if( style != null )
-                   //    act.getActionBar().setBackgroundDrawable( style.getDrawable() );
-                   //Harbour.hlog( "ActionBar1:"+((act.getActionBar()==null)? "null" : "Ok") );
+                   if( bar != null ) {
+                      UIStyle style = UIStyle.find( sItem.substring(nPos+1), true );
+                      if( style != null )
+                         bar.setBackgroundDrawable( style.getDrawable() );
+                      //Harbour.hlog( "ActionBar1:"+((act.getActionBar()==null)? "null" : "Ok") );
+                   }
                 }
 
              } else {               
