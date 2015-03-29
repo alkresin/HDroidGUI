@@ -25,6 +25,7 @@ import android.view.Gravity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.content.res.ColorStateList;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -593,34 +594,8 @@ public class CreateUI {
           catch (Exception e) {
           }
        }
-       if( sStyle != null ) {
-          UIStyle style1 = null, style2 = null, style3 = null;
-          int nPos = sStyle.indexOf( "," );
-          if( nPos > 0 ) {
-            style1 = UIStyle.find( sStyle.substring(0,nPos), true );
-            int nPos1 = sStyle.indexOf( ",",nPos+1 );
-            if( nPos1 < 0 ) {
-               style2 = UIStyle.find( sStyle.substring(nPos+1), true );
-            } else {
-               if( nPos1 > nPos+1 )
-                  style2 = UIStyle.find( sStyle.substring(nPos+1,nPos1), true );
-               style3 = UIStyle.find( sStyle.substring(nPos1+1), true );
-            }
-            StateListDrawable states = new StateListDrawable();
-            if( style3 != null )
-               states.addState(new int[] {android.R.attr.state_pressed}, style3.getDrawable());
-            if( style2 != null )
-               states.addState(new int[] {android.R.attr.state_focused}, style2.getDrawable());
-            if( style1 != null )
-               states.addState(new int[] {}, style1.getDrawable());
-            mView.setBackground( states );
-          } else {
-            style1 = UIStyle.find( sStyle, true );
-            if( style1 != null ) {
-                mView.setBackground( style1.getDrawable() );
-            }
-          }
-       }
+       if( sStyle != null )
+          UIStyle.setDrawable( mView, sStyle );
     }
 
     private static int parseColor( String sColor ) {
@@ -672,6 +647,9 @@ public class CreateUI {
          GradientDrawable.Orientation.TR_BL };
        static UIStyle [] aStyles = new UIStyle[24];
        static int iStyles = 0;
+       static int [] [] aStates =  { {android.R.attr.state_pressed},
+                     {android.R.attr.state_focused},
+                     {} };
 
        String id;
        GradientDrawable.Orientation orient;
@@ -714,7 +692,7 @@ public class CreateUI {
           else
              aCorners = null;
           String scolor = jArray.getString(3);
-          tColor = scolor.isEmpty()? -10 : Integer.parseInt(scolor);
+          tColor = scolor.isEmpty()? -10 : parseColor(scolor);
 
        }
 
@@ -738,9 +716,64 @@ public class CreateUI {
           return style;
        }
 
+       public static void setDrawable( View mView, String sStyle ) throws JSONException {
+
+          UIStyle style1 = null, style2 = null, style3 = null;
+          int tColor1 = -10, tColor2 = -10, tColor3 = -10;
+          if( mView == null )
+             return;
+
+          int nPos = sStyle.indexOf( "," );
+          if( nPos > 0 ) {
+            style1 = find( sStyle.substring(0,nPos), true );
+            int nPos1 = sStyle.indexOf( ",",nPos+1 );
+            if( nPos1 < 0 ) {
+               style2 = find( sStyle.substring(nPos+1), true );
+            } else {
+               if( nPos1 > nPos+1 )
+                  style2 = find( sStyle.substring(nPos+1,nPos1), true );
+               style3 = find( sStyle.substring(nPos1+1), true );
+            }
+            StateListDrawable states = new StateListDrawable();
+            if( style1 != null && style1.tColor != -10 )
+               tColor1 = tColor2 = tColor3 = style1.tColor;
+
+            if( style3 != null ) {
+               states.addState(new int[] {android.R.attr.state_pressed}, style3.getDrawable());
+               if( style3.tColor != -10 )
+                  tColor3 = style3.tColor;
+            }
+            if( style2 != null ) {
+               states.addState(new int[] {android.R.attr.state_focused}, style2.getDrawable());
+               if( style2.tColor != -10 )
+                  tColor2 = style2.tColor;
+            }
+            if( style1 != null )
+               states.addState(new int[] {}, style1.getDrawable());
+            mView.setBackground( states );
+
+            if( tColor1 != -10 )
+               ((TextView)mView).setTextColor (new ColorStateList ( aStates,
+                      new int [] { tColor3, tColor2, tColor1 } ));
+          } else {
+            style1 = find( sStyle, true );
+            if( style1 != null ) {
+                mView.setBackground( style1.getDrawable() );
+                if( style1.tColor != -10 )
+                   ((TextView)mView).setTextColor( style1.tColor );
+            }
+          }
+       }
+
        public GradientDrawable getDrawable() {
 
-          GradientDrawable g = new GradientDrawable(this.orient, this.aColors);
+          GradientDrawable g;
+          if( aColors.length == 1 ) {
+             g = new GradientDrawable();
+             g.setColor( aColors[0] );
+          }
+          else
+             g = new GradientDrawable(this.orient, this.aColors);
           if( aCorners != null ) {
              if( aCorners.length == 1 )
                 g.setCornerRadius( aCorners[0] );

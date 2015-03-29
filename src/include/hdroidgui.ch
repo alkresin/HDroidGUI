@@ -25,6 +25,15 @@
 #define ALIGN_VCENTER   4
 #define ALIGN_BOTTOM    8
 
+#define BL_TR           0
+#define BOTTOM_TOP      1
+#define BR_TL           2
+#define LEFT_RIGHT      3
+#define RIGHT_LEFT      4
+#define TL_BR           5
+#define TOP_BOTTOM      6
+#define TR_BL           7
+
 
 #xcommand INIT WINDOW <oAct> TITLE <cTitle> ;
              [ ON INIT <bInit> ]            ;

@@ -86,6 +86,7 @@ METHOD New( aColors, nOrient, aCorners, tColor ) CLASS HDStyle
    FOR i := 1 TO nlen
       IF hd_aCompare( ::aStyles[i]:aColors, aColors ) .AND. ;
          hd_aCompare( ::aStyles[i]:aCorners, aCorners ) .AND. ;
+         Valtype(::aStyles[i]:tColor) == Valtype(tColor) .AND. ;
          ::aStyles[i]:tColor == tColor .AND. ;
          ::aStyles[i]:nOrient == nOrient
 
@@ -120,7 +121,7 @@ METHOD toString( nId ) CLASS HDStyle
          Aadd( aRet, arr1 )
       ENDIF
       Aadd( aRet, Iif( !Empty(oStyle:aCorners), oStyle:aCorners, {} ) )
-      Aadd( aRet, Iif( oStyle:tColor != -1, Ltrim(Str(oStyle:tColor)), "" ) )
+      Aadd( aRet, Iif( Valtype(oStyle:tColor) == "C", oStyle:tColor, Iif( oStyle:tColor != -1, hd_ColorN2C(oStyle:tColor), "" ) ) )
       RETURN hb_jsonEncode( aRet )
    ENDIF
 
@@ -135,7 +136,7 @@ FUNCTION hd_aCompare( arr1, arr2 )
    ELSEIF Valtype( arr1 ) == Valtype( arr2 ) .AND. Valtype( arr1 ) == "A" ;
          .AND. ( nLen := Len( arr1 ) ) == Len( arr2 )
       FOR i := 1 TO nLen
-         IF !( arr1[i] == arr2[i] )
+         IF !( Valtype(arr1[i]) == Valtype(arr2[i]) ) .OR. !( arr1[i] == arr2[i] )
             RETURN .F.
          ENDIF
       NEXT

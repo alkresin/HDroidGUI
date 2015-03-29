@@ -172,8 +172,6 @@ FUNCTION hd_MsgYesNo( cMessage, bExit )
    BUTTON oBtnYes TEXT "Yes"
    BUTTON oBtnNo TEXT "No"
 
-   oDlg:aButtons := { "OBTNYES", "OBTNNO" }
-
    ACTIVATE DIALOG oDlg
 
    RETURN Nil

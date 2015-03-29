@@ -204,6 +204,15 @@ METHOD New( cTitle, bInit, bExit ) CLASS HDDialog
 
 METHOD Activate() CLASS HDDialog
 
+   LOCAL i, nlen := Len( ::aItems )
+
+   ::aButtons := {}
+   FOR i := 1 TO nlen
+      IF ::aItems[i]:classname == "HDBUTTON"
+         Aadd( ::aButtons, ::aItems[i]:objName )
+      ENDIF
+   NEXT
+
    hd_calljava_s_v( hb_jsonEncode( ::ToArray() ), "adlg" )
 
    RETURN Nil
