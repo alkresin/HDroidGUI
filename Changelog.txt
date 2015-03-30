@@ -1,4 +1,9 @@
 
+2015-03-30 22:06 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdext.ch
+  * jni/libharbour.so
+    * hbtip and mt added
+
 2015-03-30 16:42 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdext.ch
     * Added EXTERNAl's for mt functions
