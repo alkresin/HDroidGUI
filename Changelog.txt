@@ -1,4 +1,13 @@
 
+2015-03-30 16:42 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdext.ch
+    * Added EXTERNAl's for mt functions
+  * src/prg/hdmain.prg
+    * hd_getScreenSize() receives 7 items array now
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * More screen info for hd_getScreenSize()
+    * Support for progress dialog added
+
 2015-03-29 19:25 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * Added definitions of gradient orientations

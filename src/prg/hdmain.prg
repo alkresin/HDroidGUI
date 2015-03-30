@@ -111,13 +111,20 @@ FUNCTION hd_Version( n )
 FUNCTION hd_getScreenSize()
 
    LOCAL s := hd_calljava_s_s( "getscrsiz:" )
-   LOCAL nPos := At( "/", s )
+   LOCAL nPos1 := 1, nPos2 := At( "/", s ), arr[7], i := 1
 
-   IF nPos > 0
-      RETURN { Val( Left(s,nPos-1) ), Val( Substr(s,nPos+1) ) }
-   ENDIF
+   DO WHILE i <= 7
+      IF nPos2 < 0
+         arr[i] := Val( Substr(s,nPos1) )
+         EXIT
+      ENDIF
+      arr[i] := Val( Substr(s,nPos1,nPos2-nPos1) )
+      nPos1 := nPos2 + 1
+      nPos2 := hb_At( "/", s, nPos1 )
+      i ++
+   ENDDO
 
-   RETURN Nil
+   RETURN arr
 
 FUNCTION hd_setMargins( oWidget, ml, mt, mr, mb )
 

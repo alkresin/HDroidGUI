@@ -24,6 +24,7 @@ import android.widget.BaseAdapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.app.ProgressDialog;
 
 import java.util.Arrays;
 import org.json.JSONArray;
@@ -49,12 +50,13 @@ public class Harbour {
     public static Context context;
     public static Class dopClass = null;
     public static String cHomePath;
-    public static int iScrWidth = 0;
-    public static int iScrHeight = 0;
+    public static float [] aScrSize = { 0,0,0,0,0,0,0 };
 
     public static JSONArray jaMenu = null;
     private static String sActivity = null;
     private static String sActions = null;
+
+    private static ProgressDialog progress;
 
     public Harbour( Context cont ) {
        context = cont;
@@ -95,8 +97,13 @@ public class Harbour {
 
        DisplayMetrics dmetrics = new DisplayMetrics();
        ((Activity)cont).getWindowManager().getDefaultDisplay().getMetrics(dmetrics);
-       iScrHeight = dmetrics.heightPixels;
-       iScrWidth = dmetrics.widthPixels;
+       aScrSize[0] = dmetrics.widthPixels;
+       aScrSize[1] = dmetrics.heightPixels;
+       aScrSize[2] = dmetrics.xdpi;
+       aScrSize[3] = dmetrics.ydpi;
+       aScrSize[4] = dmetrics.density;
+       aScrSize[5] = dmetrics.densityDpi;
+       aScrSize[6] = dmetrics.scaledDensity;
 
        if( bHrb )
           hrbOpen( MAINHRB );
@@ -255,6 +262,19 @@ public class Harbour {
        } else if( scmd.equals( "finish" ) ) {
 
           ((Activity)context).finish();
+       } else if( scmd.equals( "pdstart" ) ) {
+          String sTitle = "", sMess = "";
+          nPos1 = message.indexOf(":",nPos+1);
+          if( nPos1 > 0 ) {
+             sTitle = message.substring( nPos+1,nPos1 );
+             nPos = nPos1 + 1;
+             nPos1 = message.indexOf(":",nPos+1);
+             if( nPos1 > 0 )
+                sMess = message.substring( nPos,nPos1 );
+          }
+          progress = ProgressDialog.show( context, sTitle, sMess );
+       } else if( scmd.equals( "pdend" ) ) {
+          progress.dismiss();
        } else {
 
           nPos1 = message.indexOf(":",nPos+1);
@@ -298,7 +318,7 @@ public class Harbour {
           scmd = message.substring( 0,nPos );
           if( scmd.equals( "getscrsiz" ) ) {
 
-             return "" + iScrWidth + "/" + iScrHeight;
+             return "" + aScrSize[0] + "/" + aScrSize[1] + "/" + aScrSize[2] + "/" + aScrSize[3] + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
           } else {
 
              nPos1 = message.indexOf(":",nPos+1);
