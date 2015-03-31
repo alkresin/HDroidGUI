@@ -1,4 +1,12 @@
 
+2015-03-31 16:38 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * IMAGEVIEW command added
+  * src/prg/hdwidget.prg
+    * HDImageView class added
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Initial support for ImageView added
+
     ----- Version 0.4 build 3 -----
 
 2015-03-31 13:03 UTC+0300 Alexander Kresin <alex@belacy.ru>

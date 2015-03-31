@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.KeyEvent;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.HorizontalScrollView;
 import android.widget.AdapterView;
@@ -328,6 +329,12 @@ public class CreateUI {
           settings.setJavaScriptEnabled( bJS );
 
           mView = web;
+
+       } else if( sName.equals("img") ) {
+
+          ImageView mImg = new ImageView(Harbour.context);
+
+          mView = mImg;
 
        } else if( sName.equals("brw") ) {
 

@@ -145,10 +145,17 @@
 #xcommand WEBVIEW <oWeb>                    ;
              [ TEXT <cText> ]               ;
              [ SIZE <width>, <height> ]     ;
+             [ BACKCOLOR <bcolor> ]         ;
              [<lZoom: ZOOMTOOL>]            ;
              [<lJS: JSCRIPT>]               ;
           => ;
-   <oWeb> := HDWebView():New( <(oWeb)>,<cText>,<width>,<height>,,,,<.lZoom.>,<.lJS.> )
+   <oWeb> := HDWebView():New( <(oWeb)>,<cText>,<width>,<height>,,<bcolor>,,<.lZoom.>,<.lJS.> )
+
+#xcommand IMAGEVIEW <oImg>                  ;
+             [ SIZE <width>, <height> ]     ;
+             [ BACKCOLOR <bcolor> ]         ;
+          => ;
+   <oImg> := HDImageView():New( <(oImg)>,,<width>,<height>,,<bcolor> )
 
 #xcommand BROWSE <oBrw>                     ;
              [ SIZE <width>, <height> ]     ;

@@ -378,7 +378,7 @@ ENDCLASS
 
 METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS ) CLASS HDWebView
 
-   ::Super:New( cName, cText, nWidth, nHeight )
+   ::Super:New( cName, cText, nWidth, nHeight,, bcolor )
    ::lZoom := lZoom
    ::lJS := lJS
 
@@ -397,5 +397,28 @@ METHOD ToArray( arr ) CLASS HDWebView
    IF !Empty( ::lJS )
       Aadd( arr, "js:t" )
    ENDIF
+
+   RETURN ::Super:ToArray( arr )
+
+CLASS HDImageView INHERIT HDWidget
+
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   METHOD ToArray( arr )
+
+ENDCLASS
+
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDImageView
+
+   ::Super:New( cName,, nWidth, nHeight,, bcolor )
+
+   RETURN Self
+
+METHOD ToArray( arr ) CLASS HDImageView
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "img:" + ::objname )
 
    RETURN ::Super:ToArray( arr )
