@@ -1,4 +1,10 @@
 
+    ----- Version 0.4 build 3 -----
+
+2015-03-31 13:03 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed 3
+
 2015-03-31 12:58 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
   * src/prg/hdwidget.prg
