@@ -230,7 +230,7 @@ METHOD ToArray( arr ) CLASS HDTextView
       Aadd( arr, "vscroll:t" )
    ENDIF
    IF !Empty( ::lHScroll )
-      Aadd( arr, ",,hscroll:t" )
+      Aadd( arr, "hscroll:t" )
    ENDIF
 
    RETURN ::Super:ToArray( arr )
@@ -367,3 +367,36 @@ METHOD ToArray( arr ) CLASS HDCheckBox
 
    RETURN ::Super:ToArray( arr )
 
+CLASS HDWebView INHERIT HDWidget
+
+   DATA lZoom INIT .F.
+   DATA lJS INIT .F.
+
+   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS )
+   METHOD ToArray( arr )
+
+ENDCLASS
+
+METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS ) CLASS HDWebView
+
+   ::Super:New( cText, nWidth, nHeight )
+   ::lZoom := lZoom
+   ::lJS := lJS
+
+   RETURN Self
+
+METHOD ToArray( arr ) CLASS HDWebView
+
+   IF arr == Nil
+      arr := {}
+   ENDIF
+
+   Aadd( arr, "web:" + ::objname )
+   IF !Empty( ::lZoom )
+      Aadd( arr, "zoom:t" )
+   ENDIF
+   IF !Empty( ::lJS )
+      Aadd( arr, "js:t" )
+   ENDIF
+
+   RETURN ::Super:ToArray( arr )

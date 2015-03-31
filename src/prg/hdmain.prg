@@ -210,11 +210,13 @@ FUNCTION hd_Progress( symfunc, cTitle, cMess )
       Return Nil
    }
 
-   SET TIMER oTimer VALUE 300 ACTION bTimer
-   oTimer:cargo := .T.
+   IF !Empty( symfunc ) .AND. Valtype( symfunc ) $ "SB"
+      SET TIMER oTimer VALUE 300 ACTION bTimer
+      oTimer:cargo := .T.
 
-   hb_threadDetach( hb_threadStart( symfunc, oTimer ) )
-   hd_calljava_s_v( "pdstart:" + Iif(Empty(cTitle),"Progress",cTitle)+":" + Iif(Empty(cMess),"Wait",cMess) + ":" )
+      hb_threadDetach( hb_threadStart( symfunc, oTimer ) )
+      hd_calljava_s_v( "pdstart:" + Iif(Empty(cTitle),"Progress",cTitle)+":" + Iif(Empty(cMess),"Wait",cMess) + ":" )
+   ENDIF
 
    RETURN Nil
 

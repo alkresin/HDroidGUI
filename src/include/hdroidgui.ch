@@ -107,8 +107,9 @@
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
              [<lVScroll: VSCROLL>]          ;
+             [<lHScroll: HSCROLL>]          ;
           => ;
-   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lVScroll.> );
+   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lVScroll.>,<.lHScroll.> );
     [; hd_SetCtrlName( <oText>,<(oText)> )]
 
 #xcommand BUTTON <oBtn>                     ;
@@ -145,6 +146,15 @@
           => ;
    <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<lInit> );
     [; hd_SetCtrlName( <oChe>,<(oChe)> )]
+
+#xcommand WEBVIEW <oWeb>                    ;
+             [ TEXT <cText> ]               ;
+             [ SIZE <width>, <height> ]     ;
+             [<lZoom: ZOOMTOOL>]            ;
+             [<lJS: JSCRIPT>]               ;
+          => ;
+   <oWeb> := HDWebView():New( <cText>,<width>,<height>,,,,<.lZoom.>,<.lJS.> );
+    [; hd_SetCtrlName( <oWeb>,<(oWeb)> )]
 
 #xcommand BROWSE <oBrw>                     ;
              [ SIZE <width>, <height> ]     ;

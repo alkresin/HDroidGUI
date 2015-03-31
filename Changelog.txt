@@ -1,4 +1,16 @@
 
+2015-03-31 12:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * WEBVIEW command added
+  * src/prg/hdwidget.prg
+    * HDWebView class added
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * WebView support added
+  * src/prg/hdactiv.prg
+    * ERROR HANDLER method added to HDActivity to be possible
+      to get widgets by name ( oWindow:oBtn )
+  * src/prg/hdmain.prg
+
 2015-03-31 11:03 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdactiv.prg
     * :cargo variable added to HDGUIObject

@@ -19,6 +19,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.text.method.PasswordTransformationMethod;
 
+import android.webkit.WebView;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
+import android.webkit.JavascriptInterface;
+
 import android.widget.LinearLayout.LayoutParams;
 import android.view.Gravity;
 
@@ -223,6 +228,8 @@ public class CreateUI {
                 setFont( mtextview, aParams[iArr][1] );
              } else if( scmd.equals("vscroll") ) {
                 bVScroll = true;
+             } else if( scmd.equals("hscroll") ) {
+                mtextview.setHorizontallyScrolling(true);
              }
              iArr ++;
           }
@@ -298,6 +305,29 @@ public class CreateUI {
              iArr ++;
           }
           mView = mche;
+
+       } else if( sName.equals("web") ) {
+
+          WebView web = new WebView(Harbour.context);
+          boolean bZoom = false, bJS = false;
+
+          web.setWebViewClient( new MyWebViewClient() );
+
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("t") )
+                web.loadDataWithBaseURL(null, aParams[iArr][1], "text/html", "utf-8", null);
+             else if( scmd.equals("zoom") )
+                bZoom = true;
+             else if( scmd.equals("js") )
+                bJS = true;
+             iArr ++;
+          }
+          WebSettings settings = web.getSettings();
+          settings.setBuiltInZoomControls( bZoom );
+          settings.setJavaScriptEnabled( bJS );
+
+          mView = web;
 
        } else if( sName.equals("brw") ) {
 
@@ -784,6 +814,13 @@ public class CreateUI {
           return g;
        }
 
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+            return false;
+        }
     }
 
 }

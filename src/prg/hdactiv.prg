@@ -4,6 +4,7 @@
  */
 
 #include "hbclass.ch"
+#include "error.ch"
 
 #define MAX_BACKUPW  16
 
@@ -114,6 +115,7 @@ CLASS HDActivity INHERIT HDWindow
    METHOD AddMenuItem( cTitle, nId, bAction )
 
    METHOD ToArray()
+   ERROR HANDLER OnError()
 
 ENDCLASS
 
@@ -183,6 +185,33 @@ METHOD ToArray() CLASS HDActivity
    ENDIF
 
    RETURN arr
+
+METHOD OnError() CLASS HDActivity
+
+   LOCAL cMsg := __GetMessage()
+   LOCAL oError
+   LOCAL aControls := ::aControls, oItem
+
+   IF ( oItem := ::FindByName( cMsg ) ) != Nil
+      RETURN oItem
+   ENDIF
+
+   oError := ErrorNew()
+   oError:severity    := ES_ERROR
+   oError:genCode     := EG_LIMIT
+   oError:subSystem   := "HCUSTOMWINDOW"
+   oError:subCode     := 0
+   oError:description := "Invalid class member"
+   oError:canRetry    := .F.
+   oError:canDefault  := .F.
+   oError:fileName    := ""
+   oError:osCode      := 0
+
+   Eval( ErrorBlock(), oError )
+   __errInHandler()
+
+   RETURN NIL
+
 
 CLASS HDDialog INHERIT HDWindow
 
