@@ -1,4 +1,10 @@
 
+2015-03-31 20:48 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  + src/su/harbour/hDroidGUI/HDActivity.java
+    + Added a prototype class for activities
+  * src/su/harbour/hDroidGUI/Harbour.java
+  * utils/newproject.prg
+
 2015-03-31 16:38 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * IMAGEVIEW command added

@@ -118,7 +118,7 @@ STATIC FUNCTION CreateJava( aFullName )
 
    LOCAL handle, cPath := Atail(aFullName) + cdiv + "src", i
    LOCAL cPackage := "package "
-   LOCAL cBody, s
+   LOCAL cBody
 
 
    FOR i := 1 TO Len( aFullName )
@@ -127,24 +127,6 @@ STATIC FUNCTION CreateJava( aFullName )
    NEXT
 
    cPackage += ";" + crlf + crlf
-
-   s := "   @Override" + crlf + ;
-      "   protected void onResume() {" + crlf + ;
-      "       super.onResume();" + crlf + crlf + ;
-      "      MainApp.harb.setContext( this,mainView );" + crlf + ;
-      "   }" + crlf + crlf + ;
-      "    @Override" + crlf + ;
-      "    public boolean onCreateOptionsMenu(Menu menu) {" + crlf + ;
-      "       MainApp.harb.SetMenu( menu );" + crlf + ;
-      "       return true;" + crlf + ;
-      "    }" + crlf + crlf + ;
-      "    @Override" + crlf + ;
-      "    public boolean onOptionsItemSelected(MenuItem item) {" + crlf + ;
-      "       MainApp.harb.onMenuSel( item.getItemId() );" + crlf + ;
-      "       return true;" + crlf + ;
-      "    }" + crlf + crlf + ;
-      crlf + "}" + crlf
-
 
    handle := FCreate( cPath + cdiv + "MainApp.java" )
    IF Ferror() != 0
@@ -174,25 +156,15 @@ STATIC FUNCTION CreateJava( aFullName )
    cBody := cPackage
    cBody += "import android.app.Activity;" + crlf + ;
       "import android.os.Bundle;" + crlf + ;
-      "import android.view.View;" + crlf + ;
-      "import android.view.Menu;" + crlf + ;
-      "import android.view.MenuItem;" + crlf + ;
       "import su.harbour.hDroidGUI.*;" + crlf + crlf + ;
-      "public class MainActivity extends Activity {" + crlf + crlf + ;
-      "   private static View mainView;" + crlf + crlf + ;
+      "public class MainActivity extends HDActivity {" + crlf + crlf + ;
       "   @Override" + crlf + ;
-      "   public void onCreate(Bundle savedInstanceState) {" + crlf + ;
-      "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
+      "   public void onCreate(Bundle savedInstanceState) {" + crlf + crlf + ;
+      "      bMain = true;" + crlf + ;
       "      MainApp.harb.setDopClass( DopActivity.class );" + crlf + ;
-      "      mainView = MainApp.harb.createAct( this, null );" + crlf + ;
-      "      setContentView( mainView );" + crlf + ;
-      '      MainApp.harb.hrbCall( "HD_INITWINDOW","0" );' + crlf + ;
+      "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
       "   }" + crlf + crlf + ;
-      "   @Override" + crlf + ;
-      "   protected void onDestroy() {" + crlf + ;
-      "      super.onDestroy();" + crlf + crlf + ;
-      '      MainApp.harb.closeAct( "0" );' + crlf + ;
-      "   }" + crlf + s
+      "}" + crlf
 
    FWrite( handle, cBody )
    FClose( handle )
@@ -205,30 +177,13 @@ STATIC FUNCTION CreateJava( aFullName )
    cBody := cPackage
    cBody += "import android.app.Activity;" + crlf + ;
       "import android.os.Bundle;" + crlf + ;
-      "import android.content.Context;" + crlf + ;
-      "import android.content.Intent;" + crlf + ;
-      "import android.view.View;" + crlf + ;
-      "import android.view.Menu;" + crlf + ;
-      "import android.view.MenuItem;" + crlf + ;
       "import su.harbour.hDroidGUI.*;" + crlf + crlf + ;
-      "public class DopActivity extends Activity {" + crlf + crlf + ;
-      "   private static View mainView;" + crlf + ;
-      '   private static String sId;' + crlf + crlf + ;
+      "public class DopActivity extends HDActivity {" + crlf + crlf + ;
       "   @Override" + crlf + ;
       "   protected void onCreate(Bundle savedInstanceState) {" + crlf + ;
       "      super.onCreate(savedInstanceState);" + crlf + crlf + ;
-      "      Intent intent = getIntent();" + crlf + ;
-      '      String sAct = intent.getStringExtra("sact");' + crlf + ;
-      '      sId = intent.getStringExtra("sid");' + crlf + crlf + ;
-      "      mainView = MainApp.harb.createAct( this, sAct );" + crlf + ;
-      "      setContentView( mainView );" + crlf + ;
-      '      MainApp.harb.hrbCall( "HD_INITWINDOW",sId );' + crlf + ;
       "   }" + crlf + crlf + ;
-      "   @Override" + crlf + ;
-      "   protected void onDestroy() {" + crlf + ;
-      "      super.onDestroy();" + crlf + crlf + ;
-      "      MainApp.harb.closeAct( sId );" + crlf + ;
-      "   }" + crlf + s
+      "}" + crlf
 
    FWrite( handle, cBody )
    FClose( handle )

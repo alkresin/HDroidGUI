@@ -90,7 +90,7 @@ public class Harbour {
        doActions();
     }
 
-    public View createAct( Context cont, String sAct ) {
+    public static View createAct( Context cont, String sAct ) {
 
        String sMain;
        context = cont;
@@ -105,13 +105,14 @@ public class Harbour {
        aScrSize[5] = dmetrics.densityDpi;
        aScrSize[6] = dmetrics.scaledDensity;
 
+       jaMenu = null;
        if( bHrb )
-          hrbOpen( MAINHRB );
+          hbobj.hrbOpen( MAINHRB );
 
        if( sAct != null )
           sMain = sAct;
        else {
-          hrbCall( "HD_MAIN", bHrb? "1" : "2" );
+          hbobj.hrbCall( "HD_MAIN", bHrb? "1" : "2" );
           sMain = sActivity;
        }
        //hlog("hrbmain-1 "+sMain );
@@ -149,7 +150,7 @@ public class Harbour {
        hbobj.hrbCall( "HD_CLOSEACT", id );
 
     }
-
+/*
     public static void SetMenu( Menu menu ) {
 
        if( jaMenu == null )
@@ -172,7 +173,7 @@ public class Harbour {
     public static void onMenuSel( int id ) {
        hbobj.hrbCall( "EVENT_MENU", "/" + id );
     }
-
+*/
     private void CopyFromAsset( String hrbName ) {
 
        String sFile = cHomePath + hrbName;
