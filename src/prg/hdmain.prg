@@ -199,6 +199,32 @@ FUNCTION hd_MsgGet( cMessage, cHint, bExit )
 
    RETURN Nil
 
+FUNCTION hd_Progress( symfunc, cTitle, cMess )
+
+   LOCAL oTimer
+   LOCAL bTimer := {||
+      IF !oTimer:cargo
+         oTimer:End()
+         hd_calljava_s_v( "pdend:" )
+      ENDIF
+      Return Nil
+   }
+
+   SET TIMER oTimer VALUE 300 ACTION bTimer
+   oTimer:cargo := .T.
+
+   hb_threadDetach( hb_threadStart( symfunc, oTimer ) )
+   hd_calljava_s_v( "pdstart:" + Iif(Empty(cTitle),"Progress",cTitle)+":" + Iif(Empty(cMess),"Wait",cMess) + ":" )
+
+   RETURN Nil
+
+FUNCTION hd_ThreadClosed( oTimer )
+
+   oTimer:cargo := .F.
+
+   RETURN Nil
+
+
 FUNCTION hd_HrbLoad( cName )
 
    LOCAL cVarHandle := "HRBHANDLE"

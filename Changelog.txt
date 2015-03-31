@@ -1,4 +1,11 @@
 
+2015-03-31 11:03 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdactiv.prg
+    * :cargo variable added to HDGUIObject
+    * Timer object is passed now to the timer's codeblock
+  * src/prg/hdmain.prg
+    * hd_Progress(symfunc,cTitle,cMess), hd_ThreadClosed(oTimer) functions added
+
 2015-03-30 22:06 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdext.ch
   * jni/libharbour.so

@@ -11,6 +11,8 @@ CLASS HDGUIObject
 
    CLASS VAR oDefaultParent SHARED
 
+   DATA cargo
+
 ENDCLASS
 
 CLASS HDWindow INHERIT HDGUIObject
@@ -281,7 +283,7 @@ METHOD TimerFunc( id ) CLASS HDTimer
 
    FOR i := 1 TO Len( ::aTimers )
       IF ::aTimers[i]:id == id
-         Eval( ::aTimers[i]:bAction )
+         Eval( ::aTimers[i]:bAction, ::aTimers[i] )
          EXIT
       ENDIF
    NEXT
