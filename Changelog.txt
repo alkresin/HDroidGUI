@@ -1,4 +1,13 @@
 
+2015-03-31 12:58 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+  * src/prg/hdwidget.prg
+  * src/prg/hdactiv.prg
+  * src/prg/hdbrowse.prg
+    * hd_setCtrlName() function removed, initializing of :objname is moved
+      to :New() methods. If the passed cName value is empty, the :objname
+      is set automatically
+
 2015-03-31 12:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * WEBVIEW command added

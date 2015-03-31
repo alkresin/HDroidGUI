@@ -93,8 +93,7 @@
              [ BACKCOLOR <bcolor> ]         ;
              [ FONT <oFont> ]               ;
           => ;
-   <oLay> := HDLayout():New( <.lHorz.>,<width>,<height>,<bcolor>,<oFont> );
-    [; hd_SetCtrlName( <oLay>,<(oLay)> )]
+   <oLay> := HDLayout():New( <(oLay)>,<.lHorz.>,<width>,<height>,<bcolor>,<oFont> )
 
 #xcommand END LAYOUT <oLay>   ;
           => ;
@@ -109,8 +108,7 @@
              [<lVScroll: VSCROLL>]          ;
              [<lHScroll: HSCROLL>]          ;
           => ;
-   <oText> := HDTextView():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lVScroll.>,<.lHScroll.> );
-    [; hd_SetCtrlName( <oText>,<(oText)> )]
+   <oText> := HDTextView():New( <(oText)>,<cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lVScroll.>,<.lHScroll.> )
 
 #xcommand BUTTON <oBtn>                     ;
              [ TEXT <cText> ]               ;
@@ -120,8 +118,7 @@
              [ FONT <oFont> ]               ;
              [ ON CLICK <bClick> ]          ;
           => ;
-   <oBtn> := HDButton():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<bClick> );
-   [; hd_SetCtrlName( <oBtn>,<(oBtn)> )]
+   <oBtn> := HDButton():New( <(oBtn)>,<cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<bClick> )
 
 #xcommand EDITBOX <oEdit>                   ;
              [ TEXT <cText> ]               ;
@@ -133,8 +130,7 @@
              [ FONT <oFont> ]               ;
              [ ON KEYDOWN <bKeyDown>]       ;
           => ;
-   <oEdit> := HDEdit():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint>,<.lPass.>,<bKeyDown> );
-    [; hd_SetCtrlName( <oEdit>,<(oEdit)> )]
+   <oEdit> := HDEdit():New( <(oEdit)>,<cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<cHint>,<.lPass.>,<bKeyDown> )
 
 #xcommand CHECKBOX <oChe>                   ;
              [ TEXT <cText> ]               ;
@@ -144,8 +140,7 @@
              [ FONT <oFont> ]               ;
              [ INIT <lInit> ]               ;
           => ;
-   <oChe> := HDCheckBox():New( <cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<lInit> );
-    [; hd_SetCtrlName( <oChe>,<(oChe)> )]
+   <oChe> := HDCheckBox():New( <(oChe)>,<cText>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<lInit> )
 
 #xcommand WEBVIEW <oWeb>                    ;
              [ TEXT <cText> ]               ;
@@ -153,8 +148,7 @@
              [<lZoom: ZOOMTOOL>]            ;
              [<lJS: JSCRIPT>]               ;
           => ;
-   <oWeb> := HDWebView():New( <cText>,<width>,<height>,,,,<.lZoom.>,<.lJS.> );
-    [; hd_SetCtrlName( <oWeb>,<(oWeb)> )]
+   <oWeb> := HDWebView():New( <(oWeb)>,<cText>,<width>,<height>,,,,<.lZoom.>,<.lJS.> )
 
 #xcommand BROWSE <oBrw>                     ;
              [ SIZE <width>, <height> ]     ;
@@ -164,8 +158,7 @@
              [<lHScroll: HSCROLL>]          ;
              [ ON CLICK <bClick> ]          ;
           => ;
-   <oBrw> := HDBrowse():New( <width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
-    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
+   <oBrw> := HDBrowse():New( <(oBrw)>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> )
 
 #xcommand BROWSE <oBrw> ARRAY <aArr>        ;
              [ SIZE <width>, <height> ]     ;
@@ -175,8 +168,7 @@
              [<lHScroll: HSCROLL>]          ;
              [ ON CLICK <bClick> ]          ;
           => ;
-   <oBrw> := HDBrwArray():New( <aArr>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> );
-    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
+   <oBrw> := HDBrwArray():New( <(oBrw)>,<aArr>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick> )
 
 #xcommand BROWSE <oBrw> DBF <cAlias>        ;
              [ FILTER <xFilter> ]           ;
@@ -187,8 +179,7 @@
              [<lHScroll: HSCROLL>]          ;
              [ ON CLICK <bClick> ]          ;
           => ;
-   <oBrw> := HDBrwDbf():New( <cAlias>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick>,<xFilter> );
-    [; hd_SetCtrlName( <oBrw>,<(oBrw)> )]
+   <oBrw> := HDBrwDbf():New( <(oBrw)>,<cAlias>,<width>,<height>,<tcolor>,<bcolor>,<oFont>,<.lHScroll.>,<bClick>,<xFilter> )
 
 #xcommand SET TIMER <oTimer>  ;
              VALUE <value> ACTION <bAction> ;

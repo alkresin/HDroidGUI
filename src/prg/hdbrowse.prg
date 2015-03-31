@@ -39,7 +39,7 @@ CLASS HDBrowse INHERIT HDWidget
    DATA bRowcount
    DATA bClick
 
-   METHOD New( nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
+   METHOD New( cName, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
    METHOD AddColumn( oColumn )
    METHOD GoTo( nRow )
    METHOD RowCount()
@@ -51,9 +51,9 @@ CLASS HDBrowse INHERIT HDWidget
 
 ENDCLASS
 
-METHOD New( nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) CLASS HDBrowse
+METHOD New( cName, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) CLASS HDBrowse
 
-   ::Super:New( , nWidth, nHeight, tcolor, bcolor, oFont )
+   ::Super:New( cName,, nWidth, nHeight, tcolor, bcolor, oFont )
 
    ::lHScroll := lHScroll
    ::bClick   := bClick
@@ -162,14 +162,14 @@ METHOD Refresh() CLASS HDBrowse
 
 CLASS HDBrwArray INHERIT HDBrowse
 
-   METHOD New( aArray, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
+   METHOD New( cName, aArray, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
    METHOD RowCount()
 
 ENDCLASS
 
-METHOD New( aArray, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) CLASS HDBrwArray
+METHOD New( cName, aArray, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick ) CLASS HDBrwArray
 
-   ::Super:New( nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
+   ::Super:New( cName, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
 
    ::data := aArray
 
@@ -189,7 +189,7 @@ CLASS HDBrwDbf INHERIT HDBrowse
    DATA  lFilter   INIT .F.
    DATA  xFilter
 
-   METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter )
+   METHOD New( cName, cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter )
    METHOD RowCount()
    METHOD GoTo( nRow )
    METHOD GetRow( nRow )
@@ -201,9 +201,9 @@ CLASS HDBrwDbf INHERIT HDBrowse
 
 ENDCLASS
 
-METHOD New( cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter ) CLASS HDBrwDbf
+METHOD New( cName, cAlias, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick, xFilter ) CLASS HDBrwDbf
 
-   ::Super:New( nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
+   ::Super:New( cName, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
 
    ::data := cAlias
 

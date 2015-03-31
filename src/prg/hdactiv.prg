@@ -22,6 +22,7 @@ CLASS HDWindow INHERIT HDGUIObject
    CLASS VAR aBackupW SHARED  INIT {}
    CLASS VAR nIdSch   SHARED  INIT 1
    CLASS VAR lMain    SHARED  INIT .T.
+   CLASS VAR nIdWdg   SHARED  INIT 1
 
    DATA id
    DATA title

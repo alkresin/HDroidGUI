@@ -5,18 +5,6 @@
 
 #include "hbclass.ch"
 
-Function hd_SetCtrlName( oCtrl, cName )
-   LOCAL nPos
-
-   IF !Empty( cName ) .AND. ValType( cName ) == "C"
-      IF ( nPos :=  RAt( ":", cName ) ) > 0 .OR. ( nPos :=  RAt( ">", cName ) ) > 0
-         cName := SubStr( cName, nPos + 1 )
-      ENDIF
-      oCtrl:objName := Upper( cName )
-   ENDIF
-
-   RETURN Nil
-
 CLASS HDWidget INHERIT HDGUIObject
 
    DATA oParent
@@ -31,19 +19,30 @@ CLASS HDWidget INHERIT HDGUIObject
 
    DATA objName
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
    METHOD GetText()
    METHOD SetText( cText )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDWidget
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDWidget
+
+   LOCAL nPos
 
    ::oParent := ::oDefaultParent
    IF !Empty( ::oParent )
       Aadd( ::oParent:aItems, Self )
    ENDIF
+
+   IF Empty( cName ) .OR. ValType( cName ) != "C"
+      cName := "_WDG" + Ltrim(Str(HDWindow():nIdWdg++))
+   ENDIF
+
+   IF ( nPos :=  RAt( ":", cName ) ) > 0 .OR. ( nPos :=  RAt( ">", cName ) ) > 0
+      cName := SubStr( cName, nPos + 1 )
+   ENDIF
+   ::objName := Upper( cName )
 
    ::cText := cText
    ::nWidth := nWidth
@@ -145,15 +144,15 @@ CLASS HDLayout INHERIT HDWidget
    DATA aItems   INIT {}
    DATA lHorz
 
-   METHOD New( lHorz, nWidth, nHeight, bcolor, oFont )
+   METHOD New( cName, lHorz, nWidth, nHeight, bcolor, oFont )
    METHOD FindByName( cName )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( lHorz, nWidth, nHeight, bcolor, oFont ) CLASS HDLayout
+METHOD New( cName, lHorz, nWidth, nHeight, bcolor, oFont ) CLASS HDLayout
 
-   ::Super:New( , nWidth, nHeight,, bcolor, oFont )
+   ::Super:New( cName,, nWidth, nHeight,, bcolor, oFont )
    ::oDefaultParent := Self
 
    ::lHorz := !Empty( lHorz )
@@ -206,14 +205,14 @@ CLASS HDTextView INHERIT HDWidget
    DATA lVScroll INIT .F.
    DATA lHScroll INIT .F.
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll ) CLASS HDTextView
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lVScroll, lHScroll ) CLASS HDTextView
 
-   ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   ::Super:New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
    ::lVScroll := lVScroll
    ::lHScroll := lHScroll
 
@@ -240,14 +239,14 @@ CLASS HDButton INHERIT HDWidget
 
    DATA bClick
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick ) CLASS HDButton
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, bClick ) CLASS HDButton
 
-   ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   ::Super:New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
 
    ::bClick := bClick
 
@@ -273,16 +272,16 @@ CLASS HDEdit INHERIT HDWidget
    DATA lPass      INIT .F.
    DATA bKeyDown
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown )
    METHOD getCursorPos( n )
    METHOD setCursorPos( nPos )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown ) CLASS HDEdit
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, cHint, lPass, bKeyDown ) CLASS HDEdit
 
-   ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   ::Super:New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
    ::cHint := cHint
    IF Valtype( lPass ) == "L"
       ::lPass := lPass
@@ -327,15 +326,15 @@ CLASS HDCheckBox INHERIT HDWidget
 
    DATA lValue  INIT .F.
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit )
    METHOD Value( lValue ) SETGET
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit ) CLASS HDCheckBox
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lInit ) CLASS HDCheckBox
 
-   ::Super:New( cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   ::Super:New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
    IF Valtype( lInit ) == "L"
       ::lValue := lInit
    ENDIF
@@ -372,14 +371,14 @@ CLASS HDWebView INHERIT HDWidget
    DATA lZoom INIT .F.
    DATA lJS INIT .F.
 
-   METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS )
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS ) CLASS HDWebView
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, lZoom, lJS ) CLASS HDWebView
 
-   ::Super:New( cText, nWidth, nHeight )
+   ::Super:New( cName, cText, nWidth, nHeight )
    ::lZoom := lZoom
    ::lJS := lJS
 
