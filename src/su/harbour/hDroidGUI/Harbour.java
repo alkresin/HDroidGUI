@@ -413,7 +413,7 @@ public class Harbour {
 
     public static void adlg( String sDlg ) {
 
-       int iBtns = 0;
+       int i, iBtns = 0, iEdis = 0;
 
        View [] aResults = new View [12];
        int iResults = 0;
@@ -425,7 +425,7 @@ public class Harbour {
 
        try {
           JSONArray jArray = new JSONArray(sDlg);
-          int nPos, i, ilen = jArray.length();
+          int nPos, ilen = jArray.length();
           String sItem, sName, sObjName;
           String sText, sHint;
           boolean bPass;
@@ -492,7 +492,8 @@ public class Harbour {
                       if( bPass )
                          ev.setTransformationMethod(new PasswordTransformationMethod());
                       aResults[iResults] = ev;
-                      builder.setView( ev );
+                      //builder.setView( ev );
+                      iEdis ++;
                       iResults ++;
                       aResults[iResults] = null;
                    }
@@ -503,6 +504,26 @@ public class Harbour {
        catch (JSONException e) {
           hlog("dialog: json error");
           return;
+       }
+       if( iEdis > 0 ) {
+          LinearLayout ll = null;
+          if( iEdis > 1 ) {
+             ll = new LinearLayout(context);
+             ll.setOrientation(LinearLayout.VERTICAL);
+          }
+          for( i = 0; i<iResults; i++ ) {
+             if( aResults[i] instanceof EditText ) {
+                if( iEdis == 1 ) {
+                   builder.setView( aResults[i] );
+                   break;
+                } else {
+                   ll.addView( aResults[i] );
+                }
+             }
+          }
+          if( iEdis > 1 ) {
+             builder.setView( ll );
+          }
        }
        if( iBtns > 0 )
           builder.setCancelable(false);

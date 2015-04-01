@@ -1,4 +1,8 @@
 
+2015-04-01 16:32 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Added support for multiply edittext widgets in a dialog
+
 2015-04-01 15:12 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdwidget.prg
     * HDImageView :setImage( cPath ) method added
@@ -12,7 +16,7 @@
     * hd_takePhoto( cDir, cName, block ) function added
   * src/su/harbour/hDroidGUI/Harbour.java
   * src/su/harbour/hDroidGUI/HDActivity.java
-    * Added support for a snapshot with the help of device camera
+    * Added support for a snapshot with the help of a device camera
 
 2015-03-31 20:48 UTC+0300 Alexander Kresin <alex@belacy.ru>
   + src/su/harbour/hDroidGUI/HDActivity.java
