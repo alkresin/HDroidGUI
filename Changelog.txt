@@ -1,4 +1,10 @@
 
+2015-04-01 15:12 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdwidget.prg
+    * HDImageView :setImage( cPath ) method added
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Added support for setImage()
+
 2015-04-01 13:44 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
     ! Small fix

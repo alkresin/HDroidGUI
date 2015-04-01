@@ -403,6 +403,7 @@ METHOD ToArray( arr ) CLASS HDWebView
 CLASS HDImageView INHERIT HDWidget
 
    METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   METHOD SetImage( cPath )
    METHOD ToArray( arr )
 
 ENDCLASS
@@ -412,6 +413,14 @@ METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDImage
    ::Super:New( cName,, nWidth, nHeight,, bcolor )
 
    RETURN Self
+
+METHOD SetImage( cPath ) CLASS HDImageView
+
+   IF Valtype( cPath ) == "C"
+      hd_calljava_s_v( "setimg:" + ::objname + ":" + cPath )
+   ENDIF
+
+   RETURN Nil
 
 METHOD ToArray( arr ) CLASS HDImageView
 

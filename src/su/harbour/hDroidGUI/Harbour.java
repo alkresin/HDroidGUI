@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
@@ -346,6 +347,10 @@ public class Harbour {
                    ((CheckBox)view).setChecked( message.substring( nPos1+1 ).equals("1") );
              } else if( scmd.equals( "setsels" ) ) {
                 ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
+             } else if( scmd.equals( "setimg" ) ) {
+                Uri uri = Uri.fromFile( new File( message.substring(nPos1+1) ) );
+                if( uri != null )
+                   ((ImageView)view).setImageURI( uri );
              }
           }
        }
