@@ -37,17 +37,23 @@ import android.widget.Toast;
 import android.app.Notification;
 import android.app.NotificationManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import android.provider.MediaStore;
+import android.net.Uri;
+
 
 public class Harbour {
 
     private static final String MAINHRB = "main.hrb";
+    public static final int ACTION_TAKE_PHOTO = 1;
 
     private static boolean bHrb;
     private static View mainView = null;
     private static View prevView = null;
     public static Harbour hbobj;
     public static CreateUI createui;
-    public static Context context;
+    public static Activity context;
     public static Class dopClass = null;
     public static String cHomePath;
     public static float [] aScrSize = { 0,0,0,0,0,0,0 };
@@ -58,9 +64,11 @@ public class Harbour {
 
     private static ProgressDialog progress;
 
+    public static String sTemp;
+
     public Harbour( Context cont ) {
-       context = cont;
-       cHomePath = context.getFilesDir() + "/";
+       //context = cont;
+       cHomePath = cont.getFilesDir() + "/";
        setHomePath( cHomePath );
        hbobj = this;
        createui = new CreateUI( cont );
@@ -85,7 +93,7 @@ public class Harbour {
     }
 
     public static void setContext( Context cont, View view ) {
-       context = cont;
+       context = (Activity)cont;
        mainView = view;
        doActions();
     }
@@ -93,7 +101,7 @@ public class Harbour {
     public static View createAct( Context cont, String sAct ) {
 
        String sMain;
-       context = cont;
+       context = (Activity)cont;
 
        DisplayMetrics dmetrics = new DisplayMetrics();
        ((Activity)cont).getWindowManager().getDefaultDisplay().getMetrics(dmetrics);
@@ -276,6 +284,42 @@ public class Harbour {
           progress = ProgressDialog.show( context, sTitle, sMess );
        } else if( scmd.equals( "pdend" ) ) {
           progress.dismiss();
+       } else if( scmd.equals( "photo" ) ) {
+
+          String sDir = "", sName = "";
+          nPos1 = message.indexOf(":",nPos+1);
+          if( nPos1 > 0 ) {
+             sDir = message.substring( nPos+1,nPos1 );
+             nPos = nPos1 + 1;
+             nPos1 = message.indexOf(":",nPos+1);
+             if( nPos1 > 0 )
+                sName = message.substring( nPos,nPos1 );
+          }
+          File f = null;
+          File fDir = sDir.isEmpty()? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) : new File(sDir);
+          if( sName.isEmpty() ) {
+             sName = "img_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+             try {
+                f = File.createTempFile( sName, ".jpg", fDir );
+             } catch (IOException e) {
+                hlog("Err: "+message);
+                return;
+             }
+          }
+          else {
+             f = new File( fDir, sName );
+             try {
+                f.createNewFile();
+             } catch (IOException e) {
+                hlog("Err: "+message);
+                return;
+             }
+          }
+          Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+          intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+          sTemp = f.getAbsolutePath();
+          context.startActivityForResult( intent, ACTION_TAKE_PHOTO );
+
        } else {
 
           nPos1 = message.indexOf(":",nPos+1);

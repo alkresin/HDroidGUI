@@ -75,6 +75,27 @@ FUNCTION cb_Style( cId )
 
    RETURN HDStyle():toString( Val(cId) )
 
+FUNCTION cb_Photo( cPath, b )
+
+   STATIC block
+
+   IF Valtype(b) == "B"
+      block := b
+   ELSEIF Valtype(cPath) == "C" .AND. Valtype(block) == "B"
+      Eval( block, cPath )
+   ENDIF
+
+   RETURN "0"
+
+FUNCTION hd_takePhoto( cDir, cName, block )
+
+   IF Valtype(block) == "B"
+      cb_Photo( , block )
+   ENDIF
+   hd_calljava_s_v( "photo:" + Iif( Empty(cDir),"",cDir ) + ":" + Iif( Empty(cName),"",cName ) + ":" )
+
+   RETURN Nil
+
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 
@@ -82,7 +103,7 @@ FUNCTION hd_Toast( cMessage )
    RETURN hd_calljava_s_v( cMessage, "toast" )
 
 FUNCTION hd_getSysDir( cType )
-   RETURN hd_calljava_s_s( cType, "getSysDir" )
+   RETURN hd_calljava_s_s( Iif( Empty(cType),"ext",cType ), "getSysDir" )
 
 FUNCTION hd_ColorN2C( nColor )
 

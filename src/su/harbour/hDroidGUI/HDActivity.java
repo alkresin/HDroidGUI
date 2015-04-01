@@ -83,4 +83,14 @@ public class HDActivity extends Activity {
        return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if(requestCode == Harbour.ACTION_TAKE_PHOTO && resultCode == RESULT_OK ) {
+          String sPath = Harbour.sTemp;
+          if( sPath != null ) {
+             Harbour.hbobj.hrbCall( "CB_PHOTO", sPath );
+          }
+       }
+    }
+
 }

@@ -7,7 +7,7 @@
 
 CLASS HDColumn INHERIT HDGUIObject
 
-   DATA nWidth INIT 0
+   DATA nWidth
    DATA block
    DATA cHead, cFoot
    DATA nAlign, nHeadAlign
@@ -19,7 +19,7 @@ ENDCLASS
 METHOD New( block, nWidth, cHeader, cFooter, nAlign, nHeadAlign ) CLASS HDColumn
 
    ::block  := block
-   ::nWidth := nWidth
+   ::nWidth := Iif( Empty(nWidth), 0, nWidth )
    ::cHead := cHeader
    ::cFoot := cFooter
 

@@ -1,4 +1,13 @@
 
+2015-04-01 13:44 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    ! Small fix
+  * src/prg/hdmain.prg
+    * hd_takePhoto( cDir, cName, block ) function added
+  * src/su/harbour/hDroidGUI/Harbour.java
+  * src/su/harbour/hDroidGUI/HDActivity.java
+    * Added support for a snapshot with the help of device camera
+
 2015-03-31 20:48 UTC+0300 Alexander Kresin <alex@belacy.ru>
   + src/su/harbour/hDroidGUI/HDActivity.java
     + Added a prototype class for activities
