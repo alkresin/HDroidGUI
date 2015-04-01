@@ -42,6 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.provider.MediaStore;
 import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 
 public class Harbour {
@@ -159,30 +161,7 @@ public class Harbour {
        hbobj.hrbCall( "HD_CLOSEACT", id );
 
     }
-/*
-    public static void SetMenu( Menu menu ) {
 
-       if( jaMenu == null )
-          return;
-
-       int i, ilen = jaMenu.length();
-       try {
-          for( i = 1; i<ilen; i++ ) {
-
-             menu.add( Menu.NONE, i, Menu.NONE, jaMenu.getString(i) );
-          }
-       }
-       catch (JSONException e) {
-          Harbour.hlog("jaMenu error");
-          return;
-       }
-       jaMenu = null;
-    }
-
-    public static void onMenuSel( int id ) {
-       hbobj.hrbCall( "EVENT_MENU", "/" + id );
-    }
-*/
     private void CopyFromAsset( String hrbName ) {
 
        String sFile = cHomePath + hrbName;
@@ -253,6 +232,34 @@ public class Harbour {
        } while( nPos2 > 0 );
 
        sActions = null;
+    }
+
+    private static void setImage( ImageView iv, String sPath ) {
+
+       int targetW = iv.getWidth();
+       int targetH = iv.getHeight();
+
+       BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+       bmOptions.inJustDecodeBounds = true;
+       BitmapFactory.decodeFile( sPath, bmOptions );
+       int photoW = bmOptions.outWidth;
+       int photoH = bmOptions.outHeight;
+
+       /* Figure out which way needs to be reduced less */
+       int scaleFactor = 1;
+       if ((targetW > 0) || (targetH > 0)) {
+          scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+       }
+
+       /* Set bitmap options to scale the image decode target */
+       bmOptions.inJustDecodeBounds = false;
+       bmOptions.inSampleSize = scaleFactor;
+       bmOptions.inPurgeable = true;
+
+       /* Decode the JPEG file into a Bitmap */
+       Bitmap bitmap = BitmapFactory.decodeFile( sPath, bmOptions );
+
+       iv.setImageBitmap(bitmap);
     }
 
     public static void jcb_sz_v( String message ) {
@@ -348,9 +355,10 @@ public class Harbour {
              } else if( scmd.equals( "setsels" ) ) {
                 ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
              } else if( scmd.equals( "setimg" ) ) {
-                Uri uri = Uri.fromFile( new File( message.substring(nPos1+1) ) );
-                if( uri != null )
-                   ((ImageView)view).setImageURI( uri );
+                //Uri uri = Uri.fromFile( new File( message.substring(nPos1+1) ) );
+                //if( uri != null )
+                   setImage( (ImageView)view, message.substring(nPos1+1) );
+                   //((ImageView)view).setImageURI( uri );
              }
           }
        }

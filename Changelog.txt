@@ -1,4 +1,10 @@
 
+2015-04-01 20:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed 3
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Some changes in setImage() support
+
 2015-04-01 16:32 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     * Added support for multiply edittext widgets in a dialog
