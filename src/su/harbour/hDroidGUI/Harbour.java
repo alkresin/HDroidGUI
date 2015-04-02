@@ -65,7 +65,7 @@ public class Harbour {
     private static String sActivity = null;
     private static String sActions = null;
 
-    private static ProgressDialog progress;
+    private static ProgressDialog progress = null;
 
     public static String sTemp;
 
@@ -291,7 +291,12 @@ public class Harbour {
           }
           progress = ProgressDialog.show( context, sTitle, sMess );
        } else if( scmd.equals( "pdend" ) ) {
-          progress.dismiss();
+          try {
+             progress.dismiss();
+          }
+          catch (Exception e) {
+             hlog( "progress dismiss error" );
+          }
        } else if( scmd.equals( "photo" ) ) {
 
           String sDir = "", sName = "";

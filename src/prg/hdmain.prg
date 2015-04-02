@@ -247,6 +247,10 @@ FUNCTION hd_ThreadClosed( oTimer )
 
    RETURN Nil
 
+FUNCTION hd_getCurrWindow()
+
+   RETURN Atail( HDWindow():aWindows )
+
 
 FUNCTION hd_HrbLoad( cName )
 

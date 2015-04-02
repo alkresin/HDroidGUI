@@ -1,7 +1,16 @@
 
+2015-04-02 10:58 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+    * hd_getCurrWindow() function added - it returns on object of current window
+  * src/prg/hdactiv.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    ! Bugs fixed.
+
+    ----- Version 0.4 build 4 -----
+
 2015-04-01 20:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
-    * build number is changed 3
+    * build number is changed 4
   * src/su/harbour/hDroidGUI/Harbour.java
     * Some changes in setImage() support
 

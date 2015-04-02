@@ -191,7 +191,7 @@ METHOD OnError() CLASS HDActivity
 
    LOCAL cMsg := __GetMessage()
    LOCAL oError
-   LOCAL aControls := ::aControls, oItem
+   LOCAL oItem
 
    IF ( oItem := ::FindByName( cMsg ) ) != Nil
       RETURN oItem
