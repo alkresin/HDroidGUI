@@ -220,13 +220,16 @@ FUNCTION hd_MsgGet( cMessage, cHint, bExit )
 
    RETURN Nil
 
-FUNCTION hd_Progress( symfunc, cTitle, cMess )
+FUNCTION hd_Progress( symfunc, cTitle, cMess, bNext )
 
    LOCAL oTimer
    LOCAL bTimer := {||
       IF !oTimer:cargo
          oTimer:End()
          hd_calljava_s_v( "pdend:" )
+         IF bNext != Nil
+            Eval( bNext )
+         ENDIF
       ENDIF
       Return Nil
    }

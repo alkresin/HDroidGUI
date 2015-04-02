@@ -1,4 +1,9 @@
 
+2015-04-02 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+    * Forth optional parameter added to hd_progress() - the codeblock,
+      which should be evaluated after process finish.
+
 2015-04-02 15:03 UTC+0300 Alexander Kresin <alex@belacy.ru>
   + src/su/harbour/hDroidGUI/Common.java
     * Added java source file for common procedures,

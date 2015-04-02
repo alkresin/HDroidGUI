@@ -11,8 +11,19 @@ import android.widget.ImageView;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 
 public class Common {
+
+    public static Bitmap imageRotate( Bitmap bitmap, int angle ) {
+
+       Matrix mat = new Matrix();
+       mat.postRotate(angle);
+
+       return Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(), 
+             bitmap.getHeight(), mat, true );
+
+    }
 
     public static void setImage( ImageView iv, String sPath ) {
 
@@ -39,7 +50,10 @@ public class Common {
        /* Decode the JPEG file into a Bitmap */
        Bitmap bitmap = BitmapFactory.decodeFile( sPath, bmOptions );
 
-       iv.setImageBitmap(bitmap);
+       if( (photoW > photoH) != (targetW > targetH) )
+          iv.setImageBitmap( imageRotate(bitmap,90) );
+       else
+          iv.setImageBitmap( bitmap );
     }
 
    @SuppressWarnings("deprecation")
