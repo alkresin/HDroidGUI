@@ -1,4 +1,13 @@
 
+2015-04-02 15:03 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  + src/su/harbour/hDroidGUI/Common.java
+    * Added java source file for common procedures,
+      two methods added there: lockOrientation() and unlockOrientation()
+      which disable and enable the changing orientation while device rotation.
+      setImage() moved here from Harbour.java
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Changing of orientation is disabled while dialogs are on the screen.
+
 2015-04-02 10:58 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
     * hd_getCurrWindow() function added - it returns on object of current window

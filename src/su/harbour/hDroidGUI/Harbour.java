@@ -42,8 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.provider.MediaStore;
 import android.net.Uri;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 
 public class Harbour {
@@ -234,34 +232,6 @@ public class Harbour {
        sActions = null;
     }
 
-    private static void setImage( ImageView iv, String sPath ) {
-
-       int targetW = iv.getWidth();
-       int targetH = iv.getHeight();
-
-       BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-       bmOptions.inJustDecodeBounds = true;
-       BitmapFactory.decodeFile( sPath, bmOptions );
-       int photoW = bmOptions.outWidth;
-       int photoH = bmOptions.outHeight;
-
-       /* Figure out which way needs to be reduced less */
-       int scaleFactor = 1;
-       if ((targetW > 0) || (targetH > 0)) {
-          scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-       }
-
-       /* Set bitmap options to scale the image decode target */
-       bmOptions.inJustDecodeBounds = false;
-       bmOptions.inSampleSize = scaleFactor;
-       bmOptions.inPurgeable = true;
-
-       /* Decode the JPEG file into a Bitmap */
-       Bitmap bitmap = BitmapFactory.decodeFile( sPath, bmOptions );
-
-       iv.setImageBitmap(bitmap);
-    }
-
     public static void jcb_sz_v( String message ) {
 
        String scmd, stag;
@@ -289,8 +259,10 @@ public class Harbour {
              if( nPos1 > 0 )
                 sMess = message.substring( nPos,nPos1 );
           }
+          Common.lockOrientation();
           progress = ProgressDialog.show( context, sTitle, sMess );
        } else if( scmd.equals( "pdend" ) ) {
+          Common.unlockOrientation();
           try {
              progress.dismiss();
           }
@@ -360,10 +332,7 @@ public class Harbour {
              } else if( scmd.equals( "setsels" ) ) {
                 ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
              } else if( scmd.equals( "setimg" ) ) {
-                //Uri uri = Uri.fromFile( new File( message.substring(nPos1+1) ) );
-                //if( uri != null )
-                   setImage( (ImageView)view, message.substring(nPos1+1) );
-                   //((ImageView)view).setImageURI( uri );
+                Common.setImage( (ImageView)view, message.substring(nPos1+1) );
              }
           }
        }
@@ -542,6 +511,7 @@ public class Harbour {
           builder.setCancelable(false);
     	
         AlertDialog alert = builder.create();
+        Common.lockOrientation();
         alert.show();
 
     }
@@ -575,6 +545,7 @@ public class Harbour {
               s = jsonArr.toString();
            }
            dialog.cancel();
+           Common.unlockOrientation();
            hbobj.hrbCall( "EVENT_BTNCLICK", sBtnName + s );
         }
     }
