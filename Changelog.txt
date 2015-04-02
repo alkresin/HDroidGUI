@@ -1,4 +1,9 @@
 
+2015-04-02 21:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+    * Fifth optional parameter added to hd_progress() - a parameter,
+      passed to thread function.
+
 2015-04-02 16:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
     * Forth optional parameter added to hd_progress() - the codeblock,

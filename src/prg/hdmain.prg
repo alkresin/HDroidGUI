@@ -220,7 +220,7 @@ FUNCTION hd_MsgGet( cMessage, cHint, bExit )
 
    RETURN Nil
 
-FUNCTION hd_Progress( symfunc, cTitle, cMess, bNext )
+FUNCTION hd_Progress( symfunc, cTitle, cMess, bNext, aData )
 
    LOCAL oTimer
    LOCAL bTimer := {||
@@ -238,7 +238,7 @@ FUNCTION hd_Progress( symfunc, cTitle, cMess, bNext )
       SET TIMER oTimer VALUE 300 ACTION bTimer
       oTimer:cargo := .T.
 
-      hb_threadDetach( hb_threadStart( symfunc, oTimer ) )
+      hb_threadDetach( hb_threadStart( symfunc, oTimer, aData ) )
       hd_calljava_s_v( "pdstart:" + Iif(Empty(cTitle),"Progress",cTitle)+":" + Iif(Empty(cMess),"Wait",cMess) + ":" )
    ENDIF
 
