@@ -25,10 +25,12 @@ public class BrowseAdapter extends BaseAdapter {
    int [] aColHeadAlign = null;
    int iRowHeight = 0, iRowtColor = -10;
    String sRowStyle = null;
+   String sFont = null;
 
-   BrowseAdapter( Context context, String tag, JSONArray jaRow, JSONArray jaCol ) {
+   BrowseAdapter( Context context, String tag, JSONArray jaRow, JSONArray jaCol, String sf ) {
      ctx = context;
      stag = tag;
+     sFont = sf;
 
      int i, nPos, ilen;
      String sItem, sName;
@@ -133,11 +135,13 @@ public class BrowseAdapter extends BaseAdapter {
               parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT );
            tv.setLayoutParams(parms);
            if( aColHeadAlign[i] > 0 )
-              CreateUI.SetAlign( tv, aColHeadAlign[i], TEXT );
+              CreateUI.setAlign( tv, aColHeadAlign[i], TEXT );
            else
               tv.setGravity( Gravity.CENTER_VERTICAL );
            if( iRowtColor != -10 )
               tv.setTextColor(iRowtColor);
+           if( sFont != null )
+              CreateUI.setFont( tv, sFont );
            ll.addView( tv );
         }
 

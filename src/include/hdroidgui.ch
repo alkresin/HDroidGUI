@@ -87,6 +87,13 @@
           => ;
     <oFont> := HDFont():New( <face>, <style>, <height> )
 
+#xcommand INIT FONT <oFont>        ;
+             [ FACE <face> ]       ;
+             [ STYLE <style> ]     ;
+             [ HEIGHT <height> ]   ;
+          => ;
+    <oFont> := HDFont():New( <face>, <style>, <height> )
+
 #xcommand BEGIN LAYOUT <oLay>               ;
              [<lHorz: HORIZONTAL>]          ;
              [ SIZE <width>, <height> ]     ;

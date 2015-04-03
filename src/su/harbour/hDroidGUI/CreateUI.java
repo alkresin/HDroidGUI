@@ -160,7 +160,7 @@ public class CreateUI {
              }
              iArr ++;
           }
-          SetSize( (View)ll, aParams, LAYOUT );
+          setSize( (View)ll, aParams, LAYOUT );
        }
 
        JSONArray jArr1 = jArray.getJSONArray(i), jArr2;
@@ -342,6 +342,7 @@ public class CreateUI {
           boolean bHead = false, bFoot = false;
           LinearLayout llv = null;
           JSONArray jaRow = null, jaCol = null, ja;
+          String sFont = null;
           int ihdh = -10, ihdcb = -10, ihdct = -10;
           int ifth = -10, iftcb = -10, iftct = -10;
           int j, iCols = 0, ilen1, iBWidth = 0;
@@ -349,6 +350,7 @@ public class CreateUI {
           String [] aColHead = null;
           String [] aColFoot = null;
           int [] aColHeadAlign = null;
+          String sFontHead = null;
 
           ListView mlv = new ListView(Harbour.context);
 
@@ -356,6 +358,8 @@ public class CreateUI {
              scmd = aParams[iArr][0];
              if( scmd.equals("hscroll") ) {
                 bHScroll = true;
+             } else if( scmd.equals("f") ) {
+                sFont =  aParams[iArr][1];
              } else if( scmd.equals("row") ) {
                 jaRow = new JSONArray(aParams[iArr][1]);
              } else if( scmd.equals("col") ) {
@@ -407,6 +411,8 @@ public class CreateUI {
              } else if( scmd.equals("ftct") ) {
                 iftct = parseColor(aParams[iArr][1]);
                 bFoot = true;
+             } else if( scmd.equals("hdf") ) {
+                sFontHead =  aParams[iArr][1];
              } else if( scmd.equals("bcli") ) {
                 if( !sObjName.isEmpty() )
                    mlv.setOnItemClickListener(new OnItemClickListener() {
@@ -460,7 +466,9 @@ public class CreateUI {
                    tv.setLayoutParams(prms);
                    tv.setPadding( 2, 2, 2, 2 );
                    tv.setText( aColHead[i] );
-                   SetAlign( tv, aColHeadAlign[i], TEXT );
+                   setAlign( tv, aColHeadAlign[i], TEXT );
+                   if( sFontHead != null )
+                      setFont( tv, sFontHead );
                    llh.addView( tv );
                 }
                 if( bFoot ) {
@@ -482,7 +490,7 @@ public class CreateUI {
              }
           }
 
-          mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName, jaRow, jaCol ) );
+          mlv.setAdapter( new BrowseAdapter(Harbour.context, sObjName, jaRow, jaCol, sFont ) );
           mlv.setTag( sObjName );
           sObjName = "";
 
@@ -513,17 +521,17 @@ public class CreateUI {
 
           sv.addView(mView);
 
-          SetSize( sv, aParams, TEXTINSCROLL );
+          setSize( sv, aParams, TEXTINSCROLL );
           return sv;
 
        } else {
 
-          SetSize( mView, aParams, TEXT );
+          setSize( mView, aParams, TEXT );
           return mView;
        }
     }
 
-    private static void setFont( TextView mView, String sFont ) {
+    public static void setFont( TextView mView, String sFont ) {
        
        int nface = Integer.parseInt( sFont.substring(0,1) );
        int nstyle = Integer.parseInt( sFont.substring(2,3) );
@@ -551,7 +559,7 @@ public class CreateUI {
            mView.setTextSize( TypedValue.COMPLEX_UNIT_DIP,nsize );
     }
 
-    public static void SetAlign( View mView, int iAlign, int ivType ) {
+    public static void setAlign( View mView, int iAlign, int ivType ) {
 
        if( iAlign != 0 ) {
           int gravity = ( ( (iAlign & 1)>0 )? Gravity.CENTER_HORIZONTAL : 0 ) |
@@ -571,7 +579,7 @@ public class CreateUI {
        }
     }
 
-    private static void SetSize( View mView, String [][] aParams, int ivType ) throws JSONException {
+    private static void setSize( View mView, String [][] aParams, int ivType ) throws JSONException {
 
        if( aParams == null )
           return;
@@ -641,7 +649,7 @@ public class CreateUI {
        if( bp )
           mView.setPadding( ipl, ipt, ipr, ipb );
 
-       SetAlign( mView, iAlign, ivType );
+       setAlign( mView, iAlign, ivType );
 
        if( sStyle != null )
           UIStyle.setDrawable( mView, sStyle );

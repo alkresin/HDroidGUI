@@ -39,6 +39,7 @@ CLASS HDBrowse INHERIT HDWidget
 
    DATA nHeadHeight, HeadBColor, HeadTColor
    DATA nFootHeight, FootBColor, FootTColor
+   DATA oFontHead
 
    DATA bRowcount
    DATA bClick
@@ -153,6 +154,10 @@ METHOD ToArray( arr ) CLASS HDBrowse
    ENDIF
    IF ::FootTColor != Nil
       Aadd( arr, "ftct:" + Iif( Valtype(::FootTColor)=="C", ::FootTColor, hd_ColorN2C(::FootTColor) ) )
+   ENDIF
+   IF ::oFontHead != Nil
+      Aadd( arr, "hdf:" + Ltrim(Str(::oFont:typeface)) + "/" + ;
+            Ltrim(Str(::oFont:style)) + "/" + Ltrim(Str(::oFont:height)) )
    ENDIF
 
    arr1 := {}

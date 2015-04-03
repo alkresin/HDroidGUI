@@ -1,4 +1,11 @@
 
+2015-04-03 14:08 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    * :oFontHead variable added to HDBrowse
+  * src/su/harbour/hDroidGUI/CreateUI.java
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    * Added support for fonts in Browse
+
 2015-04-03 13:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
     ! HDColumn():New() - :nAlign, :nHeadAlign wasn't initialized
@@ -8,7 +15,7 @@
   * src/prg/hdwidget.prg
     ! Small fix
   * src/prg/hdbrowse.prg
-    * :oRowStyle, :RowTClor bariables added to HDBrowse
+    * :oRowStyle, :RowTClor variables added to HDBrowse
   * src/su/harbour/hDroidGUI/CreateUI.java
   * src/su/harbour/hDroidGUI/BrowseAdapter.java
     * Added support for styles, headers and columns align in Browse
