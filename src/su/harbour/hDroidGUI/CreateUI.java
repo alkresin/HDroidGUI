@@ -348,6 +348,7 @@ public class CreateUI {
           int [] aColumns = null;
           String [] aColHead = null;
           String [] aColFoot = null;
+          int [] aColHeadAlign = null;
 
           ListView mlv = new ListView(Harbour.context);
 
@@ -363,6 +364,7 @@ public class CreateUI {
                 aColumns = new int [iCols];
                 aColHead = new String [iCols];
                 aColFoot = new String [iCols];
+                aColHeadAlign = new int [iCols];
                 for( i = 0; i<iCols; i++ ) {
                    ja = jaCol.getJSONArray(i);
                    ilen1 = ja.length();
@@ -382,6 +384,8 @@ public class CreateUI {
                       } else if( sName.equals("ft") ) {
                          aColFoot[i] = sItem.substring( nPos+1 );
                          bFoot = true;
+                      } else if( sName.equals("hali") ) {
+                         aColHeadAlign[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
                       }
                    }
                 }
@@ -456,6 +460,7 @@ public class CreateUI {
                    tv.setLayoutParams(prms);
                    tv.setPadding( 2, 2, 2, 2 );
                    tv.setText( aColHead[i] );
+                   SetAlign( tv, aColHeadAlign[i], TEXT );
                    llh.addView( tv );
                 }
                 if( bFoot ) {
@@ -546,6 +551,26 @@ public class CreateUI {
            mView.setTextSize( TypedValue.COMPLEX_UNIT_DIP,nsize );
     }
 
+    public static void SetAlign( View mView, int iAlign, int ivType ) {
+
+       if( iAlign != 0 ) {
+          int gravity = ( ( (iAlign & 1)>0 )? Gravity.CENTER_HORIZONTAL : 0 ) |
+                ( ( (iAlign & 2)>0 )? Gravity.RIGHT : 0 ) |
+                ( ( (iAlign & 4)>0 )? Gravity.CENTER_VERTICAL : 0 ) |
+                ( ( (iAlign & 8)>0 )? Gravity.BOTTOM : 0 );
+          try {
+             if( ivType == TEXT )
+                ((TextView)mView).setGravity( gravity );
+             else if( ivType == TEXTINSCROLL )
+                ((TextView) ((ViewGroup)mView).getChildAt(0)).setGravity( gravity );
+             else if( ivType == LAYOUT )
+                ((LinearLayout)mView).setGravity( gravity );
+          }
+          catch (Exception e) {
+          }
+       }
+    }
+
     private static void SetSize( View mView, String [][] aParams, int ivType ) throws JSONException {
 
        if( aParams == null )
@@ -615,27 +640,14 @@ public class CreateUI {
        }
        if( bp )
           mView.setPadding( ipl, ipt, ipr, ipb );
-       if( iAlign != 0 ) {
-          int gravity = ( ( (iAlign & 1)>0 )? Gravity.CENTER_HORIZONTAL : 0 ) |
-                ( ( (iAlign & 2)>0 )? Gravity.RIGHT : 0 ) |
-                ( ( (iAlign & 4)>0 )? Gravity.CENTER_VERTICAL : 0 ) |
-                ( ( (iAlign & 8)>0 )? Gravity.BOTTOM : 0 );
-          try {
-             if( ivType == TEXT )
-                ((TextView)mView).setGravity( gravity );
-             else if( ivType == TEXTINSCROLL )
-                ((TextView) ((ViewGroup)mView).getChildAt(0)).setGravity( gravity );
-             else if( ivType == LAYOUT )
-                ((LinearLayout)mView).setGravity( gravity );
-          }
-          catch (Exception e) {
-          }
-       }
+
+       SetAlign( mView, iAlign, ivType );
+
        if( sStyle != null )
           UIStyle.setDrawable( mView, sStyle );
     }
 
-    private static int parseColor( String sColor ) {
+    public static int parseColor( String sColor ) {
 
        int iColor;
 
@@ -675,7 +687,7 @@ public class CreateUI {
        return id;
     }
 
-    private static class UIStyle {
+    public static class UIStyle {
 
        private static final GradientDrawable.Orientation [] aOrient = { GradientDrawable.Orientation.BL_TR,
          GradientDrawable.Orientation.BOTTOM_TOP, GradientDrawable.Orientation.BR_TL,

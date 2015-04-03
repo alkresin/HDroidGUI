@@ -33,6 +33,8 @@ CLASS HDBrowse INHERIT HDWidget
    DATA nCurrent   INIT  1
 
    DATA nRowHeight INIT 0
+   DATA RowTColor, oRowStyle
+
    DATA nHeadHeight, HeadBColor, HeadTColor
    DATA nFootHeight, FootBColor, FootTColor
 
@@ -98,7 +100,7 @@ METHOD GetRow( nRow ) CLASS HDBrowse
 
 METHOD ToArray( arr ) CLASS HDBrowse
 
-   LOCAL arr1, arr2, i
+   LOCAL arr1, arr2, i, s
 
    IF arr == Nil
       arr := {}
@@ -111,8 +113,25 @@ METHOD ToArray( arr ) CLASS HDBrowse
    IF ::bClick != Nil
       Aadd( arr, "bcli:1" )
    ENDIF
-   IF ::nRowHeight > 0
-      arr1 := { "h:" + Ltrim(Str(::nRowHeight)) }
+   IF ::nRowHeight > 0 .OR. ::RowTColor != Nil .OR. ::oRowStyle != Nil
+      arr1 := {}
+      IF ::nRowHeight > 0
+         Aadd( arr1, "h:" + Ltrim(Str(::nRowHeight)) )
+      ENDIF
+      IF ::RowTColor != Nil
+         Aadd( arr1, "ct:" + Iif( Valtype(::RowTColor)=="C", ::RowTColor, hd_ColorN2C(::RowTColor) ) )
+      ENDIF
+      IF ::oRowStyle != Nil
+         IF Valtype( ::oRowStyle ) == "A"
+            s := ""
+            FOR i := 1 TO Len( ::oRowStyle )
+               s += Iif( i>1, ",", "" ) + Iif( Empty(::oRowStyle[i]), "", Ltrim(Str(::oRowStyle[i]:id)) )
+            NEXT
+            Aadd( arr1, "stl:" + s )
+         ELSE
+            Aadd( arr1, "stl:" + Ltrim(Str(::oRowStyle:id)) )
+         ENDIF
+      ENDIF
       Aadd( arr, "row:" + hb_jsonEncode(arr1) )
    ENDIF
    IF !Empty( ::nHeadHeight )

@@ -129,8 +129,8 @@ METHOD ToArray( arr ) CLASS HDWidget
          s := ""
          FOR i := 1 TO Len( ::oStyle )
             s += Iif( i>1, ",", "" ) + Iif( Empty(::oStyle[i]), "", Ltrim(Str(::oStyle[i]:id)) )
-            Aadd( arr, "stl:" + s )
          NEXT
+         Aadd( arr, "stl:" + s )
       ELSE
          Aadd( arr, "stl:" + Ltrim(Str(::oStyle:id)) )
       ENDIF

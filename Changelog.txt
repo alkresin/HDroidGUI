@@ -1,4 +1,13 @@
 
+2015-04-03 12:38 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdwidget.prg
+    ! Small fix
+  * src/prg/hdbrowse.prg
+    * :oRowStyle, :RowTClor bariables added to HDBrowse
+  * src/su/harbour/hDroidGUI/CreateUI.java
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    * Added support for styles, headers and columns align in Browse
+
 2015-04-02 21:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
     * Fifth optional parameter added to hd_progress() - a parameter,

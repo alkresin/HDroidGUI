@@ -13,13 +13,18 @@ import org.json.JSONException;
 import android.widget.LinearLayout.LayoutParams;
 import android.view.Gravity;
 
+import org.json.JSONException;
+
 
 public class BrowseAdapter extends BaseAdapter {
 
+   static final int TEXT = 2;
    Context ctx;
    String stag = null;
    int [] aColumns = null;
-   int iRowHeight = 0;
+   int [] aColHeadAlign = null;
+   int iRowHeight = 0, iRowtColor = -10;
+   String sRowStyle = null;
 
    BrowseAdapter( Context context, String tag, JSONArray jaRow, JSONArray jaCol ) {
      ctx = context;
@@ -36,7 +41,11 @@ public class BrowseAdapter extends BaseAdapter {
               nPos = sItem.indexOf( ":" );
               sName = sItem.substring( 0,nPos );
               if( sName.equals("h") )
-                 iRowHeight = Integer.parseInt( sItem.substring( nPos+1 ) );
+                 iRowHeight = Integer.parseInt( sItem.substring(nPos+1) );
+              else if( sName.equals("stl") )
+                 sRowStyle = sItem.substring(nPos+1);
+              else if( sName.equals("ct") )
+                 iRowtColor = CreateUI.parseColor( sItem.substring(nPos+1) );
            }
         }   
         catch (JSONException e) {
@@ -46,6 +55,7 @@ public class BrowseAdapter extends BaseAdapter {
      }
      ilen = jaCol.length();
      aColumns = new int [ilen];
+     aColHeadAlign = new int [ilen];
      try {
         JSONArray ja;
         int j, ilen1;
@@ -58,6 +68,8 @@ public class BrowseAdapter extends BaseAdapter {
               sName = sItem.substring( 0,nPos );
               if( sName.equals("w") )
                  aColumns[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
+              else if( sName.equals("ali") )
+                 aColHeadAlign[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
            }
         }
      }   
@@ -103,6 +115,14 @@ public class BrowseAdapter extends BaseAdapter {
            AbsListView.LayoutParams params = new AbsListView.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, iRowHeight );
            ll.setLayoutParams(params);
         }
+        if( sRowStyle != null ) {
+           try {
+              CreateUI.UIStyle.setDrawable( ll, sRowStyle );
+           }
+           catch (JSONException e) {
+              Harbour.hlog("getview: json error");
+           }
+        }
 
         for( i=0; i<iLength; i++ ) {
            nWidth = aColumns[i];
@@ -112,7 +132,12 @@ public class BrowseAdapter extends BaseAdapter {
            else
               parms = new LinearLayout.LayoutParams(  nWidth, LinearLayout.LayoutParams.MATCH_PARENT );
            tv.setLayoutParams(parms);
-           tv.setGravity( Gravity.CENTER_VERTICAL );
+           if( aColHeadAlign[i] > 0 )
+              CreateUI.SetAlign( tv, aColHeadAlign[i], TEXT );
+           else
+              tv.setGravity( Gravity.CENTER_VERTICAL );
+           if( iRowtColor != -10 )
+              tv.setTextColor(iRowtColor);
            ll.addView( tv );
         }
 
