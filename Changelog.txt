@@ -1,4 +1,12 @@
 
+2015-04-03 15:18 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * INIT FONT command added - the synonyme for PREPARE FONT
+    * TITLE clause in INIT WINDOW became optional
+  * src/prg/hdactiv.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * It is possible now to hide an activity title bar.
+
 2015-04-03 14:08 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
     * :oFontHead variable added to HDBrowse

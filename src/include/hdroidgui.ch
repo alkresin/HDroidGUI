@@ -35,9 +35,10 @@
 #define TR_BL           7
 
 
-#xcommand INIT WINDOW <oAct> TITLE <cTitle> ;
-             [ ON INIT <bInit> ]            ;
-             [ ON EXIT <bExit> ]            ;
+#xcommand INIT WINDOW <oAct>           ;
+             [TITLE <cTitle>   ]       ;
+             [ ON INIT <bInit> ]       ;
+             [ ON EXIT <bExit> ]       ;
           => ;
    <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 
@@ -46,9 +47,10 @@
    <oAct>:Activate()
 
 
-#xcommand ACTIVITY <oAct> TITLE <cTitle>    ;
-             [ ON INIT <bInit> ]            ;
-             [ ON EXIT <bExit> ]            ;
+#xcommand ACTIVITY <oAct>              ;
+             [TITLE <cTitle>   ]       ;
+             [ ON INIT <bInit> ]       ;
+             [ ON EXIT <bExit> ]       ;
           => ;
    <oAct> := HDActivity():New( <cTitle>,<bInit>,<bExit> )
 

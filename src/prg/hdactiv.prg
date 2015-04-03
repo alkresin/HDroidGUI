@@ -107,6 +107,7 @@ CLASS HDActivity INHERIT HDWindow
    DATA oFont
    DATA aMenu
    DATA oStyleHead
+   DATA lNoTitle  INIT .F.
 
    METHOD New( cTitle, bInit, bExit )
    METHOD Activate()
@@ -123,6 +124,9 @@ ENDCLASS
 METHOD New( cTitle, bInit, bExit ) CLASS HDActivity
 
    ::Super:New( cTitle, bInit, bExit )
+   IF cTitle == Nil
+      ::lNoTitle := .T.
+   ENDIF
 
    RETURN Self
 
@@ -167,8 +171,14 @@ METHOD AddMenuItem( cTitle, nId, bAction ) CLASS HDActivity
 
 METHOD ToArray() CLASS HDActivity
 
-   LOCAL arr := { "act:" + ::id, "t:" + ::title }, arr2, i
+   LOCAL arr := { "act:" + ::id }, arr2, i
 
+   IF !Empty( ::title )
+      Aadd( arr, "t:" + ::title )
+   ENDIF
+   IF ::lNoTitle
+      Aadd( arr, "notitle:1" )
+   ENDIF
    IF ::oStyleHead != Nil
       IF Valtype( ::oStyleHead ) == "O"
          Aadd( arr, "stlh:" + Ltrim(Str(::oStyleHead:id)) )
