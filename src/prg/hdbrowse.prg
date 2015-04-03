@@ -22,6 +22,8 @@ METHOD New( block, nWidth, cHeader, cFooter, nAlign, nHeadAlign ) CLASS HDColumn
    ::nWidth := Iif( Empty(nWidth), 0, nWidth )
    ::cHead := cHeader
    ::cFoot := cFooter
+   ::nAlign := nAlign
+   ::nHeadAlign := nHeadAlign
 
    RETURN Self
 

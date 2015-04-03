@@ -1,4 +1,9 @@
 
+2015-04-03 13:20 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    ! HDColumn():New() - :nAlign, :nHeadAlign wasn't initialized
+  * src/su/harbour/hDroidGUI/CreateUI.java
+
 2015-04-03 12:38 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdwidget.prg
     ! Small fix

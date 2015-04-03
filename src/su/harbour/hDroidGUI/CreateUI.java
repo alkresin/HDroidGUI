@@ -767,10 +767,12 @@ public class CreateUI {
 
        public static void setDrawable( View mView, String sStyle ) throws JSONException {
 
-          UIStyle style1 = null, style2 = null, style3 = null;
-          int tColor1 = -10, tColor2 = -10, tColor3 = -10;
           if( mView == null )
              return;
+
+          UIStyle style1 = null, style2 = null, style3 = null;
+          int tColor1 = -10, tColor2 = -10, tColor3 = -10;
+          boolean bLay = ( mView instanceof LinearLayout );
 
           int nPos = sStyle.indexOf( "," );
           if( nPos > 0 ) {
@@ -801,14 +803,14 @@ public class CreateUI {
                states.addState(new int[] {}, style1.getDrawable());
             mView.setBackground( states );
 
-            if( tColor1 != -10 )
+            if( !bLay && tColor1 != -10 )
                ((TextView)mView).setTextColor (new ColorStateList ( aStates,
                       new int [] { tColor3, tColor2, tColor1 } ));
           } else {
             style1 = find( sStyle, true );
             if( style1 != null ) {
                 mView.setBackground( style1.getDrawable() );
-                if( style1.tColor != -10 )
+                if( !bLay && style1.tColor != -10 )
                    ((TextView)mView).setTextColor( style1.tColor );
             }
           }
