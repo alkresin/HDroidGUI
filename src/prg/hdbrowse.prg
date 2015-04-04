@@ -9,6 +9,7 @@ CLASS HDColumn INHERIT HDGUIObject
 
    DATA nWidth
    DATA block
+   DATA lBool  INIT .F.
    DATA cHead, cFoot
    DATA nAlign, nHeadAlign
 
@@ -42,7 +43,7 @@ CLASS HDBrowse INHERIT HDWidget
    DATA oFontHead
 
    DATA bRowcount
-   DATA bClick
+   DATA bClick, bLong, bCheck
 
    METHOD New( cName, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bClick )
    METHOD AddColumn( oColumn )
@@ -116,6 +117,9 @@ METHOD ToArray( arr ) CLASS HDBrowse
    IF ::bClick != Nil
       Aadd( arr, "bcli:1" )
    ENDIF
+   IF ::bLong != Nil
+      Aadd( arr, "blong:1" )
+   ENDIF
    IF ::nRowHeight > 0 .OR. ::RowTColor != Nil .OR. ::oRowStyle != Nil
       arr1 := {}
       IF ::nRowHeight > 0
@@ -163,6 +167,9 @@ METHOD ToArray( arr ) CLASS HDBrowse
    arr1 := {}
    FOR i := 1 TO Len( ::aColumns )
       arr2 := { "w:" + Ltrim(Str(::aColumns[i]:nWidth)) }
+      IF ::aColumns[i]:lBool
+         Aadd( arr2, "bool:1" )
+      ENDIF
       IF !Empty( ::aColumns[i]:cHead )
          Aadd( arr2, "hd:"+::aColumns[i]:cHead )
       ENDIF

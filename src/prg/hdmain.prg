@@ -52,7 +52,7 @@ FUNCTION event_Timer( cName )
 
 FUNCTION cb_Browse( cCmd )
    
-   LOCAL nPos := hb_At( ":",cCmd,5 ), sq, nRow
+   LOCAL nPos := hb_At( ":",cCmd,5 ), sq, nRow, i
    LOCAL oItem := Atail( HDWindow():aWindows ):FindByName( Substr( cCmd, 5, nPos-5 ) )
 
    IF Empty( oItem ) .AND. Len(HDWindow():aWindows) > 1
@@ -65,7 +65,23 @@ FUNCTION cb_Browse( cCmd )
          RETURN LTrim( Str( oItem:RowCount() ) )
       ELSEIF sq == "cli"
          oItem:GoTo( nRow := ( Val( Substr( cCmd, nPos+1 ) ) + 1 ) )
-         RETURN Eval( oItem:bClick, oItem, nRow )
+         RETURN Iif( !Empty(oItem:bClick), Eval( oItem:bClick, oItem, nRow ), "0" )
+      ELSEIF sq == "lng"
+         oItem:GoTo( nRow := ( Val( Substr( cCmd, nPos+1 ) ) + 1 ) )
+         RETURN Iif( !Empty(oItem:bLong), Eval( oItem:bLong, oItem, nRow ), "0" )
+      ELSEIF sq == "che"
+         sq := Substr( cCmd, nPos+1 )
+         nPos := At( ":", sq )
+         nRow := ( Val(sq) + 1 )
+         IF Empty(oItem:bCheck)
+            FOR i := 1 TO Len(oItem:aColumns)
+               IF oItem:aColumns[i]:lBool
+                  Eval( oItem:aColumns[i]:block, oItem:aColumns[i], i, nRow, (Substr(sq,nPos+1,1)=="1") )
+                  RETURN ""
+               ENDIF
+            NEXT
+         ENDIF
+         RETURN Eval( oItem:bCheck, oItem, nRow, (Substr(sq,nPos+1,1)=="1") )
       ENDIF
    ENDIF
 

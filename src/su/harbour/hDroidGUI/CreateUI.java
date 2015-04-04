@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.HorizontalScrollView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.text.method.PasswordTransformationMethod;
 
 import android.webkit.WebView;
@@ -426,6 +427,15 @@ public class CreateUI {
                          public void onItemClick(AdapterView<?> p, View v,
                              int pos, long id) {
                             Harbour.hbobj.hrbCall( "CB_BROWSE","cli:"+(String)p.getTag()+":"+pos );
+                         }
+                       });
+             } else if( scmd.equals("blong") ) {
+                if( !sObjName.isEmpty() )
+                   mlv.setOnItemLongClickListener(new OnItemLongClickListener() {
+                         public boolean onItemLongClick(AdapterView<?> p, View v,
+                             int pos, long id) {
+                            Harbour.hbobj.hrbCall( "CB_BROWSE","lng:"+(String)p.getTag()+":"+pos );
+                            return true;
                          }
                        });
              }

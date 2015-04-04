@@ -1,4 +1,14 @@
 
+2015-04-04 17:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+  * src/prg/hdbrowse.prg
+    * :bLong and :bCheck variables added to HDBrowse - codeblocks for a long click and a checkbox click
+    * Added support for a checkbox in a column
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * browse long click support added
+  * src/su/harbour/hDroidGUI/BrowseAdapter.java
+    * Added support for a checkbox in a column
+
 2015-04-03 15:18 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * INIT FONT command added - the synonyme for PREPARE FONT
