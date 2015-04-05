@@ -93,4 +93,10 @@ public class HDActivity extends Activity {
        }
     }
 
+    @Override 
+    public void onBackPressed() {
+       if( Harbour.hbobj.hrbCall( "EVENT_BACK", "/" ).equals( "1" ) )
+          super.onBackPressed();
+    }
+
 }

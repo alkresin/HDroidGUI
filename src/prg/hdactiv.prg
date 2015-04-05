@@ -26,7 +26,7 @@ CLASS HDWindow INHERIT HDGUIObject
 
    DATA id
    DATA title
-   DATA bInit, bExit
+   DATA bInit, bExit, bBack
 
    DATA aItems   INIT {}
 

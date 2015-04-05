@@ -50,6 +50,17 @@ FUNCTION event_Timer( cName )
 
    RETURN HDTimer():TimerFunc( cName )
 
+FUNCTION event_Back()
+
+   LOCAL oWnd := hd_getCurrWindow(), bBack := oWnd:bBack
+
+   IF !Empty( bBack )
+      Eval( bBack )
+      RETURN "0"
+   ENDIF
+
+   RETURN "1"
+
 FUNCTION cb_Browse( cCmd )
    
    LOCAL nPos := hb_At( ":",cCmd,5 ), sq, nRow, i

@@ -1,4 +1,13 @@
 
+2015-04-05 11:42 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed 4
+  * src/prg/hdmain.prg
+  * src/prg/hdactiv.prg
+  * src/su/harbour/hDroidGUI/HDActivity.java
+    * Added possibility to capture pressing of the device "Back" button.
+    * HDWindow():bBack codeblock added to handle it
+
 2015-04-05 10:12 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
   * src/su/harbour/hDroidGUI/Harbour.java
