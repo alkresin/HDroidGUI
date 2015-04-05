@@ -1,4 +1,9 @@
 
+2015-04-05 10:12 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+     * hd_LockOrient(), hd_UnLockOrient() functions added
+
 2015-04-04 17:30 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
   * src/prg/hdbrowse.prg

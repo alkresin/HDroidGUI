@@ -121,6 +121,12 @@ FUNCTION hd_Toast( cMessage )
 FUNCTION hd_getSysDir( cType )
    RETURN hd_calljava_s_s( Iif( Empty(cType),"ext",cType ), "getSysDir" )
 
+FUNCTION hd_LockOrient()
+   RETURN hd_calljava_s_v( "lock:" )
+
+FUNCTION hd_UnLockOrient()
+   RETURN hd_calljava_s_v( "unlock:" )
+
 FUNCTION hd_ColorN2C( nColor )
 
    LOCAL s := "#", n1, n2, i

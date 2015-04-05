@@ -249,6 +249,10 @@ public class Harbour {
        } else if( scmd.equals( "finish" ) ) {
 
           ((Activity)context).finish();
+       } else if( scmd.equals( "lock" ) ) {
+          Common.lockOrientation();
+       } else if( scmd.equals( "unlock" ) ) {
+          Common.unlockOrientation();
        } else if( scmd.equals( "pdstart" ) ) {
           String sTitle = "", sMess = "";
           nPos1 = message.indexOf(":",nPos+1);
