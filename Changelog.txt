@@ -1,7 +1,12 @@
 
+2015-04-06 12:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * utils/newproject.prg
+
+    ----- Version 0.4 build 5 -----
+
 2015-04-05 11:42 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
-    * build number is changed 4
+    * build number is changed to 5
   * src/prg/hdmain.prg
   * src/prg/hdactiv.prg
   * src/su/harbour/hDroidGUI/HDActivity.java
@@ -82,7 +87,7 @@
 
 2015-04-01 20:45 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
-    * build number is changed 4
+    * build number is changed to 4
   * src/su/harbour/hDroidGUI/Harbour.java
     * Some changes in setImage() support
 

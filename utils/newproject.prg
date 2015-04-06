@@ -316,7 +316,6 @@ STATIC FUNCTION CreateScripts( aFullName )
       ". ./setenv.sh" + crlf + crlf + ;
       "rm -f src/$PACKAGE_PATH/R.java" + crlf + ;
       "rm -f assets/*" + crlf + ;
-      "rm -f bin/*" + crlf + ;
       "rm -f *.out" + crlf
    IF !lHrb
       cBody += "rm -f -r lib" + crlf + ;
@@ -328,7 +327,10 @@ STATIC FUNCTION CreateScripts( aFullName )
    ENDIF
    cBody += "rm -f -r obj" + crlf + ;
       "mkdir obj" + crlf + ;
-      "chmod a+w+r+x obj"
+      "chmod a+w+r+x obj" + crlf + ;
+      "rm -f -r bin" + crlf + ;
+      "mkdir bin" + crlf + ;
+      "chmod a+w+r+x bin" + crlf
 
    FWrite( handle, cBody )
    FClose( handle )
@@ -428,10 +430,11 @@ STATIC FUNCTION CreateScripts( aFullName )
    cBody := "@call setenv" + crlf + ;
       "@del src\%PACKAGE_PATH%\R.java" + crlf + ;
       "@del /q assets\*.*" + crlf + ;
-      "@del /s /f /q bin\*.*" + crlf + ;
       "@del /q *.out" + crlf + ;
       "@rmdir /s /q obj" + crlf + ;
-      "@md obj"
+      "@md obj" + crlf + ;
+      "@rmdir /s /q bin" + crlf + ;
+      "@md bin"
    IF !lHrb
       cBody += crlf + "@rmdir /s /q lib" + crlf + ;
          "@md lib" + crlf + ;
