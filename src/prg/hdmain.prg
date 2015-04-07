@@ -129,6 +129,9 @@ FUNCTION hd_WrLog( cMessage )
 FUNCTION hd_Toast( cMessage )
    RETURN hd_calljava_s_v( cMessage, "toast" )
 
+FUNCTION hd_cpFromAsset( cFileIn, cFileOut )
+   RETURN hd_calljava_s_v( "cpasset:" + cFileIn + ":" + cFileOut + ":" )
+
 FUNCTION hd_getSysDir( cType )
    RETURN hd_calljava_s_s( Iif( Empty(cType),"ext",cType ), "getSysDir" )
 

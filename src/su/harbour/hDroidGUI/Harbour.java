@@ -85,8 +85,10 @@ public class Harbour {
     public void Init( boolean bHrb ) {
        this.bHrb = bHrb;
        vmInit();
-       if( bHrb )
-          CopyFromAsset( MAINHRB );
+       if( bHrb ) {
+          setHrb( MAINHRB );
+          CopyFromAsset( MAINHRB, cHomePath + MAINHRB );
+       }
     }
 
     public static void setDopClass( Class dclass ) {
@@ -160,16 +162,12 @@ public class Harbour {
 
     }
 
-    private void CopyFromAsset( String hrbName ) {
+    private static void CopyFromAsset( String sFileIn, String sFileOut ) {
 
-       String sFile = cHomePath + hrbName;
-
-       setHrb( hrbName );
-
-       if( ! (new File(sFile).isFile()) ) {
+       if( ! (new File(sFileOut).isFile()) ) {
           try {
-               InputStream myInput = context.getAssets().open(hrbName);
-               OutputStream myOutput = new FileOutputStream( sFile );
+               InputStream myInput = context.getAssets().open( sFileIn );
+               OutputStream myOutput = new FileOutputStream( sFileOut );
 
                byte[] buffer = new byte[myInput.available()];
                int read;
@@ -182,7 +180,6 @@ public class Harbour {
                myInput.close();
 
           } catch (IOException e) {
-               // toast( "copyDataBase Error : " + e.getMessage() );
           }
        }
     }
@@ -253,6 +250,18 @@ public class Harbour {
           Common.lockOrientation();
        } else if( scmd.equals( "unlock" ) ) {
           Common.unlockOrientation();
+       } else if( scmd.equals( "cpasset" ) ) {
+          String sIn = "", sOut = "";
+          nPos1 = message.indexOf(":",nPos+1);
+          if( nPos1 > 0 ) {
+             sIn = message.substring( nPos+1,nPos1 );
+             nPos = nPos1 + 1;
+             nPos1 = message.indexOf(":",nPos+1);
+             if( nPos1 > 0 )
+                sOut = message.substring( nPos,nPos1 );
+          }
+          if( !sIn.isEmpty() && !sOut.isEmpty() )
+             CopyFromAsset( sIn, sOut );
        } else if( scmd.equals( "pdstart" ) ) {
           String sTitle = "", sMess = "";
           nPos1 = message.indexOf(":",nPos+1);

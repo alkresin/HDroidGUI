@@ -99,4 +99,9 @@ public class HDActivity extends Activity {
           super.onBackPressed();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    }
+
+
 }
