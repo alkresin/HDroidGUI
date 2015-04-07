@@ -1,4 +1,9 @@
 
+2015-04-07 21:07 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+    * hd_MsgGet(): cText parameter added
+  * src/su/harbour/hDroidGUI/Harbour.java
+
 2015-04-07 19:35 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
     * New function added - hd_cpFromAsset( cFileIn, cFileOut )

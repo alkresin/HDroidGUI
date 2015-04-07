@@ -484,6 +484,8 @@ public class Harbour {
                       EditText ev = new EditText(context);
                       if( !sHint.isEmpty() )
                          ev.setHint( sHint );
+                      if( !sText.isEmpty() )
+                         ev.setText(CreateUI.getStr(sText));
                       if( bPass )
                          ev.setTransformationMethod(new PasswordTransformationMethod());
                       aResults[iResults] = ev;

@@ -240,13 +240,16 @@ FUNCTION hd_MsgYesNo( cMessage, bExit )
 
    RETURN Nil
 
-FUNCTION hd_MsgGet( cMessage, cHint, bExit )
+FUNCTION hd_MsgGet( cMessage, cText, cHint, bExit )
 
    LOCAL oDlg, oEdit1, oBtn
 
    INIT DIALOG oDlg TITLE cMessage ON EXIT bExit
 
    EDITBOX oEdit1
+   IF cText != Nil
+      oEdit1:cText := cText
+   ENDIF
    IF cHint != Nil
       oEdit1:cHint := cHint
    ENDIF
