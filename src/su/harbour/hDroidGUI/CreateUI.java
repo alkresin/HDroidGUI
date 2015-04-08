@@ -341,6 +341,18 @@ public class CreateUI {
        } else if( sName.equals("img") ) {
 
           ImageView mImg = new ImageView(Harbour.context);
+          while( aParams[iArr][0] != null ) {
+             scmd = aParams[iArr][0];
+             if( scmd.equals("uri") ) {
+                String s = aParams[iArr][1];
+                if( s.length() > 2 && s.substring( 0,2 ).equals( "$$" ) ) {
+                   int id = resID( s.substring( 2 ), "drawable" );
+                   if( id > 0 )
+                      mImg.setImageResource( id );
+                }
+             }
+             iArr ++;
+          }
 
           mView = mImg;
 
@@ -688,17 +700,15 @@ public class CreateUI {
 
     public static String getStr( String sRes ) {
        if( sRes.length() > 2 && sRes.substring( 0,2 ).equals( "$$" ) ) {
+
           int id = resID( sRes.substring( 2 ), "string" );
-          if( id == 0 )
-             return "";
-          else
-             return Harbour.context.getString( id );
+          return ( id == 0 )? "" : Harbour.context.getString( id );
        }
        else
           return sRes;
     }
 
-    private static int resID( String sRes, String sType ) {
+    public static int resID( String sRes, String sType ) {
 
        int id = 0;
 

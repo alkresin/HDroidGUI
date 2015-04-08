@@ -402,15 +402,19 @@ METHOD ToArray( arr ) CLASS HDWebView
 
 CLASS HDImageView INHERIT HDWidget
 
-   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
+   DATA cUri
+
+   METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, cUri )
    METHOD SetImage( cPath )
    METHOD ToArray( arr )
 
 ENDCLASS
 
-METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDImageView
+METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont, cUri ) CLASS HDImageView
 
    ::Super:New( cName,, nWidth, nHeight,, bcolor )
+
+   ::cUri := cUri
 
    RETURN Self
 
@@ -429,5 +433,9 @@ METHOD ToArray( arr ) CLASS HDImageView
    ENDIF
 
    Aadd( arr, "img:" + ::objname )
+   IF !Empty( ::cUri )
+      Aadd( arr, "uri:" + ::cUri )
+   ENDIF
+
 
    RETURN ::Super:ToArray( arr )

@@ -161,10 +161,11 @@
    <oWeb> := HDWebView():New( <(oWeb)>,<cText>,<width>,<height>,,<bcolor>,,<.lZoom.>,<.lJS.> )
 
 #xcommand IMAGEVIEW <oImg>                  ;
+             [ URI  <cUri> ]                ;
              [ SIZE <width>, <height> ]     ;
              [ BACKCOLOR <bcolor> ]         ;
           => ;
-   <oImg> := HDImageView():New( <(oImg)>,,<width>,<height>,,<bcolor> )
+   <oImg> := HDImageView():New( <(oImg)>,,<width>,<height>,,<bcolor>,,<cUri> )
 
 #xcommand BROWSE <oBrw>                     ;
              [ SIZE <width>, <height> ]     ;

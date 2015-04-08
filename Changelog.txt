@@ -1,4 +1,11 @@
 
+2015-04-08 16:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * URI clause added to IMAGEVIEW command
+  * src/prg/hdwidget.prg
+  * src/su/harbour/hDroidGUI/CreateUI.java
+    * Added possibility to set images from resources
+
 2015-04-07 21:07 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdmain.prg
     * hd_MsgGet(): cText parameter added
