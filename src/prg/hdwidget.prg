@@ -22,6 +22,7 @@ CLASS HDWidget INHERIT HDGUIObject
    METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont )
    METHOD GetText()
    METHOD SetText( cText )
+   METHOD GetSize()
    METHOD ToArray( arr )
 
 ENDCLASS
@@ -55,20 +56,22 @@ METHOD New( cName, cText, nWidth, nHeight, tcolor, bcolor, oFont ) CLASS HDWidge
 
 METHOD GetText() CLASS HDWidget
 
-   IF !Empty( ::objname )
-      ::cText := hd_calljava_s_s( "gettxt:" + ::objname + ":" )
-   ENDIF
+   ::cText := hd_calljava_s_s( "gettxt:" + ::objname + ":" )
 
    RETURN ::cText
 
 METHOD SetText( cText ) CLASS HDWidget
 
-   IF !Empty( ::objname )
-      ::cText := cText
-      hd_calljava_s_v( "settxt:" + ::objname + ":" + cText )
-   ENDIF
+   ::cText := cText
+   hd_calljava_s_v( "settxt:" + ::objname + ":" + cText )
 
    RETURN cText
+
+METHOD GetSize() CLASS HDWidget
+
+   LOCAL cSize := hd_calljava_s_s( "getsiz:" + ::objname + ":" )
+
+   RETURN hb_aTokens( cSize, "/" )
 
 METHOD ToArray( arr ) CLASS HDWidget
 

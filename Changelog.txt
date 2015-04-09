@@ -1,4 +1,10 @@
 
+2015-04-08 16:54 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdwidget.prg
+    * :getsize() method added to HDWidget
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * added support for the :getsize() method
+
 2015-04-08 16:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/include/hdroidgui.ch
     * URI clause added to IMAGEVIEW command

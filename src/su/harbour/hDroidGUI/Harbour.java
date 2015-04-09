@@ -382,6 +382,8 @@ public class Harbour {
                    return (String) "" + tview.getSelectionStart();
                 } else if( scmd.equals( "getsele" ) ) {
                    return (String) "" + tview.getSelectionEnd();
+                } else if( scmd.equals( "getsiz" ) ) {
+                   return (String) "" + tview.getWidth() + "/" + tview.getHeight();
                 }
              }
           }
