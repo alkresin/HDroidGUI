@@ -363,7 +363,7 @@ public class Harbour {
           scmd = message.substring( 0,nPos );
           if( scmd.equals( "getscrsiz" ) ) {
 
-             return "" + aScrSize[0] + "/" + aScrSize[1] + "/" + aScrSize[2] + "/" + aScrSize[3] + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
+             return "" + aScrSize[0] + "/" + aScrSize[1] + "/" + aScrSize[2] + "/" + aScrSize[3] + "/" + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
           } else {
 
              nPos1 = message.indexOf(":",nPos+1);

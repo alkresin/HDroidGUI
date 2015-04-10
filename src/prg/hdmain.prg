@@ -168,18 +168,11 @@ FUNCTION hd_Version( n )
 FUNCTION hd_getScreenSize()
 
    LOCAL s := hd_calljava_s_s( "getscrsiz:" )
-   LOCAL nPos1 := 1, nPos2 := At( "/", s ), arr[7], i := 1
+   LOCAL i, arr := hb_aTokens( s, "/" )
 
-   DO WHILE i <= 7
-      IF nPos2 < 0
-         arr[i] := Val( Substr(s,nPos1) )
-         EXIT
-      ENDIF
-      arr[i] := Val( Substr(s,nPos1,nPos2-nPos1) )
-      nPos1 := nPos2 + 1
-      nPos2 := hb_At( "/", s, nPos1 )
-      i ++
-   ENDDO
+   FOR i := 1 TO Len( arr )
+      arr[i] := Val( arr[i] )
+   NEXT
 
    RETURN arr
 

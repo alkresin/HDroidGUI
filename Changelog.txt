@@ -1,4 +1,9 @@
 
+2015-04-10 15:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdmain.prg
+  * src/su/harbour/hDroidGUI/Harbour.java
+    ! hd_getScreenSize() fixed.
+
 2015-04-08 16:54 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdwidget.prg
     * :getsize() method added to HDWidget
