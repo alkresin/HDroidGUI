@@ -355,7 +355,6 @@ public class Harbour {
     public static String jcb_sz_sz( String message ) {
 
        String scmd, stag;
-       TextView tview = null;
        int nPos = message.indexOf(":");
        int nPos1;
        
@@ -366,23 +365,23 @@ public class Harbour {
 
              return "" + (int)(aScrSize[0]/fDensity+0.5) + "/" + (int)(aScrSize[1]/fDensity+0.5) + "/" + aScrSize[2] + "/" + aScrSize[3] + "/" + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
           } else {
-
+             View tview = null;
              nPos1 = message.indexOf(":",nPos+1);
              if( nPos1 > 0 ) {
                 stag = message.substring( nPos+1,nPos1 );
-                tview = (TextView) mainView.findViewWithTag( stag );
+                tview = mainView.findViewWithTag( stag );
              }
 
              if( tview != null ) {
                 if( scmd.equals( "gettxt" ) ) {
-                   return (String) tview.getText().toString();
+                   return (String) ((TextView)tview).getText().toString();
                 } else if( scmd.equals( "getval" ) ) {
                    if( tview instanceof CheckBox )
                       return ((CheckBox)tview).isChecked()? "1" : "0";
                 } else if( scmd.equals( "getsels" ) ) {
-                   return (String) "" + tview.getSelectionStart();
+                   return (String) "" + ((TextView)tview).getSelectionStart();
                 } else if( scmd.equals( "getsele" ) ) {
-                   return (String) "" + tview.getSelectionEnd();
+                   return (String) "" + ((TextView)tview).getSelectionEnd();
                 } else if( scmd.equals( "getsiz" ) ) {
                    return (String) "" + (int)(tview.getWidth()/fDensity+0.5) + "/" + (int)(tview.getHeight()/fDensity+0.5);
                 }

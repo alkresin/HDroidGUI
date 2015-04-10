@@ -1,4 +1,8 @@
 
+2015-04-10 21:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/su/harbour/hDroidGUI/Harbour.java
+    ! Some fix
+
 2015-04-10 18:06 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/BrowseAdapter.java
   * src/su/harbour/hDroidGUI/CreateUI.java
