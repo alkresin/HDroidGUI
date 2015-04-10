@@ -400,8 +400,10 @@ public class CreateUI {
                          aColumns[i] = Integer.parseInt( sItem.substring( nPos+1 ) );
                          if( aColumns[i] == 0 )
                             iBWidth = -999999;
-                         else
+                         else {
+                            aColumns[i] = (int)(aColumns[i]*Harbour.fDensity+0.5);
                             iBWidth += aColumns[i];
+                         }
                       } else if( sName.equals("hd") ) {
                          aColHead[i] = sItem.substring( nPos+1 );
                          bHead = true;
@@ -414,7 +416,7 @@ public class CreateUI {
                    }
                 }
              } else if( scmd.equals("hdh") ) {
-                ihdh = Integer.parseInt(aParams[iArr][1]);
+                ihdh = (int)(Integer.parseInt(aParams[iArr][1])*Harbour.fDensity+0.5);
                 bHead = true;
              } else if( scmd.equals("hdcb") ) {
                 ihdcb = parseColor(aParams[iArr][1]);
@@ -423,7 +425,7 @@ public class CreateUI {
                 ihdct = parseColor(aParams[iArr][1]);
                 bHead = true;
              } else if( scmd.equals("fth") ) {
-                ifth = Integer.parseInt(aParams[iArr][1]);
+                ifth = (int)(Integer.parseInt(aParams[iArr][1])*Harbour.fDensity+0.5);
                 bFoot = true;
              } else if( scmd.equals("ftcb") ) {
                 iftcb = parseColor(aParams[iArr][1]);
@@ -667,16 +669,22 @@ public class CreateUI {
              iHeight = LinearLayout.LayoutParams.MATCH_PARENT;
           if( iWidth == -10 )
              iWidth = LinearLayout.LayoutParams.MATCH_PARENT;
+          if( iHeight >0 )
+             iHeight = (int)(iHeight*Harbour.fDensity+0.5);
+          if( iWidth >0 )
+             iWidth = (int)(iWidth*Harbour.fDensity+0.5);
           if( iHeight == 0 || iWidth == 0 )
-             parms = new LinearLayout.LayoutParams(iWidth,iHeight,1);
+             parms = new LinearLayout.LayoutParams( iWidth,iHeight,1 );
           else
-             parms = new LinearLayout.LayoutParams(iWidth,iHeight);
+             parms = new LinearLayout.LayoutParams( iWidth, iHeight );
           if( bm )
-             parms.setMargins( iml, imt, imr, imb );
+             parms.setMargins( (int)(iml*Harbour.fDensity+0.5), (int)(imt*Harbour.fDensity+0.5),
+                 (int)(imr*Harbour.fDensity+0.5), (int)(imb*Harbour.fDensity+0.5) );
           mView.setLayoutParams(parms);
        }
        if( bp )
-          mView.setPadding( ipl, ipt, ipr, ipb );
+          mView.setPadding( (int)(ipl*Harbour.fDensity+0.5), (int)(ipt*Harbour.fDensity+0.5),
+              (int)(ipr*Harbour.fDensity+0.5), (int)(ipb*Harbour.fDensity+0.5) );
 
        setAlign( mView, iAlign, ivType );
 
@@ -771,7 +779,7 @@ public class CreateUI {
              int iCorners = (ilen==1)? 1:8;
              aCorners = new float[iCorners];
              for( i=0; i<iCorners; i++ )
-                aCorners[i] = (i<ilen)? (float)Integer.parseInt(jArr1.getString(i)) : 0;
+                aCorners[i] = (i<ilen)? (float) ( (int)(Integer.parseInt(jArr1.getString(i))*Harbour.fDensity*0.5) ) : 0;
           }
           else
              aCorners = null;

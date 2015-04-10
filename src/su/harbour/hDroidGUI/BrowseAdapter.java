@@ -45,7 +45,7 @@ public class BrowseAdapter extends BaseAdapter {
               nPos = sItem.indexOf( ":" );
               sName = sItem.substring( 0,nPos );
               if( sName.equals("h") )
-                 iRowHeight = Integer.parseInt( sItem.substring(nPos+1) );
+                 iRowHeight = (int)(Integer.parseInt( sItem.substring(nPos+1) )*Harbour.fDensity+0.5);
               else if( sName.equals("stl") )
                  sRowStyle = sItem.substring(nPos+1);
               else if( sName.equals("ct") )

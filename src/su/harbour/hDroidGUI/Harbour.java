@@ -58,6 +58,7 @@ public class Harbour {
     public static Class dopClass = null;
     public static String cHomePath;
     public static float [] aScrSize = { 0,0,0,0,0,0,0 };
+    public static float fDensity = 1;
 
     public static JSONArray jaMenu = null;
     private static String sActivity = null;
@@ -112,7 +113,7 @@ public class Harbour {
        aScrSize[1] = dmetrics.heightPixels;
        aScrSize[2] = dmetrics.xdpi;
        aScrSize[3] = dmetrics.ydpi;
-       aScrSize[4] = dmetrics.density;
+       aScrSize[4] = fDensity = dmetrics.density;
        aScrSize[5] = dmetrics.densityDpi;
        aScrSize[6] = dmetrics.scaledDensity;
 
@@ -363,7 +364,7 @@ public class Harbour {
           scmd = message.substring( 0,nPos );
           if( scmd.equals( "getscrsiz" ) ) {
 
-             return "" + aScrSize[0] + "/" + aScrSize[1] + "/" + aScrSize[2] + "/" + aScrSize[3] + "/" + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
+             return "" + (int)(aScrSize[0]/fDensity+0.5) + "/" + (int)(aScrSize[1]/fDensity+0.5) + "/" + aScrSize[2] + "/" + aScrSize[3] + "/" + aScrSize[4] + "/" + aScrSize[5] + "/" + aScrSize[6];
           } else {
 
              nPos1 = message.indexOf(":",nPos+1);
@@ -383,7 +384,7 @@ public class Harbour {
                 } else if( scmd.equals( "getsele" ) ) {
                    return (String) "" + tview.getSelectionEnd();
                 } else if( scmd.equals( "getsiz" ) ) {
-                   return (String) "" + tview.getWidth() + "/" + tview.getHeight();
+                   return (String) "" + (int)(tview.getWidth()/fDensity+0.5) + "/" + (int)(tview.getHeight()/fDensity+0.5);
                 }
              }
           }
