@@ -1,4 +1,11 @@
 
+2015-04-11 08:37 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdwidget.prg
+    * :setsize() method added to HDWidget, it allows to change the size of
+      widgets while runtime.
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * added support for the :setsize() method
+
 2015-04-10 21:00 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/su/harbour/hDroidGUI/Harbour.java
     ! Some fix

@@ -233,7 +233,6 @@ public class Harbour {
     public static void jcb_sz_v( String message ) {
 
        String scmd, stag;
-       View view = null;
        int nPos = message.indexOf(":");
        int nPos1;
        
@@ -320,7 +319,7 @@ public class Harbour {
           context.startActivityForResult( intent, ACTION_TAKE_PHOTO );
 
        } else {
-
+          View view = null;
           nPos1 = message.indexOf(":",nPos+1);
           if( nPos1 > 0 ) {
              stag = message.substring( nPos+1,nPos1 );
@@ -338,15 +337,26 @@ public class Harbour {
           }
 
           if( view != null ) {
+             nPos1 ++;
              if( scmd.equals( "settxt" ) ) {
-                ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1+1 ) ) );
+                ((TextView)view).setText( CreateUI.getStr( message.substring( nPos1 ) ) );
              } else if( scmd.equals( "setval" ) ) {
                 if( view instanceof CheckBox )
-                   ((CheckBox)view).setChecked( message.substring( nPos1+1 ).equals("1") );
+                   ((CheckBox)view).setChecked( message.substring( nPos1 ).equals("1") );
              } else if( scmd.equals( "setsels" ) ) {
-                ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1+1 ) ) );
+                ((EditText)view).setSelection( Integer.parseInt( message.substring( nPos1 ) ) );
              } else if( scmd.equals( "setimg" ) ) {
-                Common.setImage( (ImageView)view, message.substring(nPos1+1) );
+                Common.setImage( (ImageView)view, message.substring(nPos1) );
+             } else if( scmd.equals( "setsiz" ) ) {
+                int iWidth, iHeight;
+                nPos = message.indexOf("/",nPos1);
+                iWidth = ( nPos == nPos1 )? view.getWidth() : (int)(Integer.parseInt(message.substring(nPos1,nPos))*fDensity+0.5);
+                iHeight = ( message.length() == nPos+1 )? view.getHeight() : (int)(Integer.parseInt(message.substring(nPos+1))*fDensity+0.5);
+
+                LinearLayout.LayoutParams parms;
+                parms = new LinearLayout.LayoutParams( iWidth, iHeight );
+                view.setLayoutParams(parms);
+                view.requestLayout();
              }
           }
        }
