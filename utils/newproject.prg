@@ -316,6 +316,7 @@ STATIC FUNCTION CreateScripts( aFullName )
       ". ./setenv.sh" + crlf + crlf + ;
       "rm -f src/$PACKAGE_PATH/R.java" + crlf + ;
       "rm -f assets/*" + crlf + ;
+      "rm -f jni/*.c" + crlf + ;
       "rm -f *.out" + crlf
    IF !lHrb
       cBody += "rm -f -r lib" + crlf + ;
@@ -430,6 +431,7 @@ STATIC FUNCTION CreateScripts( aFullName )
    cBody := "@call setenv" + crlf + ;
       "@del src\%PACKAGE_PATH%\R.java" + crlf + ;
       "@del /q assets\*.*" + crlf + ;
+      "@del /q jni\*.c" + crlf + ;
       "@del /q *.out" + crlf + ;
       "@rmdir /s /q obj" + crlf + ;
       "@md obj" + crlf + ;

@@ -1,4 +1,13 @@
 
+    ----- Version 0.4 build 6 -----
+
+2015-04-11 16:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/include/hdroidgui.ch
+    * build number is changed to 6
+  * src/prg/hdwidget.prg
+    ! :getSize() fixed
+  * utils/newproject.prg
+
 2015-04-11 08:37 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdwidget.prg
     * :setsize() method added to HDWidget, it allows to change the size of

@@ -71,8 +71,13 @@ METHOD setText( cText ) CLASS HDWidget
 METHOD getSize() CLASS HDWidget
 
    LOCAL cSize := hd_calljava_s_s( "getsiz:" + ::objname + ":" )
+   LOCAL i, arr := hb_aTokens( cSize, "/" )
 
-   RETURN hb_aTokens( cSize, "/" )
+   FOR i := 1 TO Len( arr )
+      arr[i] := Val( arr[i] )
+   NEXT
+
+   RETURN arr
 
 METHOD setSize( nWidth, nHeight ) CLASS HDWidget
 
