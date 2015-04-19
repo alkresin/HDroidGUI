@@ -211,6 +211,7 @@ METHOD New( cName, aArray, nWidth, nHeight, tcolor, bcolor, oFont, lHScroll, bCl
 METHOD RowCount() CLASS HDBrwArray
    RETURN Len( ::data )
 
+#define BROWSE_BUFFER_SIZE   48
 
 CLASS HDBrwDbf INHERIT HDBrowse
 
@@ -293,7 +294,7 @@ METHOD GetRow( nRow, lUpd ) CLASS HDBrwDbf
          ::nBufSize ++
       ELSE
          ADel( ::aBuffer, 1 )
-         ::aBuffer[::nBufMax] := {}
+         ::aBuffer[::nBufMax] := { Nil,Nil }
       ENDIF
       ::nBufCurr := ::nBufSize
       ::aBuffer[::nBufCurr,1] := nRow
@@ -349,7 +350,7 @@ METHOD Rebuild( xFilter ) CLASS HDBrwDbf
       ENDIF
    ELSE
       ::lFilter := .F.
-      ::nBufMax := 48
+      ::nBufMax := BROWSE_BUFFER_SIZE
       ::nBufSize := ::nBufCurr := 0
       ::aBuffer := Array( ::nBufMax, 2 )
       (::data)->( dbGoTop() )

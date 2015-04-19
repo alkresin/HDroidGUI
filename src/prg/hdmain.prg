@@ -123,6 +123,14 @@ FUNCTION hd_takePhoto( cDir, cName, block )
 
    RETURN Nil
 
+FUNCTION hd_callPhone( cNumber )
+
+   IF Valtype( cNumber ) == "C"
+      hd_calljava_s_v( "tel:" + cNumber + ":" )
+   ENDIF
+
+   RETURN Nil
+
 FUNCTION hd_WrLog( cMessage )
    RETURN hd_calljava_s_v( cMessage, "hlog" )
 

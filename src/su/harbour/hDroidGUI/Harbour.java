@@ -281,8 +281,22 @@ public class Harbour {
           }
           catch (Exception e) {
              hlog( "progress dismiss error" );
-          }
-       } else if( scmd.equals( "photo" ) ) {
+          } 
+
+       }  
+       else if( scmd.equals( "tel" ) ) {
+             Intent intent = new Intent("android.intent.action.DIAL");
+             String sIn = "" ;
+             nPos1 = message.indexOf(":",nPos+1);
+             if( nPos1 > 0 ) {
+                sIn = message.substring( nPos+1,nPos1+1 );
+             }
+             Uri data = Uri.parse("tel:"+ sIn );
+             toast(sIn);
+             intent.setData(data);
+             context.startActivity(intent);
+       }
+       else if( scmd.equals( "photo" ) ) {
 
           String sDir = "", sName = "";
           nPos1 = message.indexOf(":",nPos+1);

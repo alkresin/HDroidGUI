@@ -1,4 +1,12 @@
 
+2015-04-18 17:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * src/prg/hdbrowse.prg
+    ! Bug fixed.
+  * src/prg/hdmain.prg
+    * Function added: hd_callPhone( cNumber )  
+  * src/su/harbour/hDroidGUI/Harbour.java
+    * Added support for phone calls, code provided by Alfredo Franceschetti
+
     ----- Version 0.4 build 6 -----
 
 2015-04-11 16:40 UTC+0300 Alexander Kresin <alex@belacy.ru>
