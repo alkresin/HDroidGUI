@@ -1,6 +1,7 @@
+@call setenv
 @call clear
 @call ndkBuild
-@if exist lib\armeabi\libh4droid.so goto comp
+@if exist lib\%NDK_TARGET%\libh4droid.so goto comp
 @echo Errors while compiling C sources
 @pause
 @goto end

@@ -1,9 +1,9 @@
 #!/bin/bash
 
+. ./setenv.sh
 ./clear.sh
 ./ndkbuild.sh
-if [ -f lib/armeabi/libh4droid.so ];
-then
+if [ -f lib/$NDK_TARGET/libh4droid.so ]; then
    ./comp.sh
 else
    echo "Errors while compiling C sources"

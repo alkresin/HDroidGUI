@@ -1,1 +1,2 @@
-APP_ABI := armeabi
+APP_ABI := $(NDK_TARGET)
+APP_PLATFORM := $(NDK_PLATFORM)
