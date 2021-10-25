@@ -7,5 +7,6 @@ jni/*.c
 
 *.a
 *.o
+*.jar
 *.log
 *.out

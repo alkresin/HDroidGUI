@@ -1,4 +1,20 @@
 
+2021-10-21 19:50 UTC+0300 Alexander Kresin <alex@belacy.ru>
+  * jni/Android.mk
+  * jni/Application.mk
+  * jni/libharbour.so
+  * static/jni/Android.mk
+  * static/jni/Application.mk
+  * buildall.bat
+  * comp.bat
+  * ndkBuild.bat
+  * setenv.bat
+  * buildall.sh
+  * comp.sh
+  * ndkbuild.sh
+  * setenv.sh
+    * scripts optimized and updated for a new Android Build Tools.
+
 2015-04-18 17:55 UTC+0300 Alexander Kresin <alex@belacy.ru>
   * src/prg/hdbrowse.prg
     ! Bug fixed.
